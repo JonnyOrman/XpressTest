@@ -5,7 +5,7 @@ Write expressive and fluent tests in .NET
 
 Install by running the following:
 ```
-dotnet add package XpressTest --version 1.0.0-alpha.1
+dotnet add package XpressTest --version 1.0.0-alpha.2
 ```
 
 Also install a testing framework such as Xunit:
@@ -78,11 +78,11 @@ public class Tests
 
     [Fact]
     public void ValidParameters() =>
-        GivenA<ParametersProcessor, Entity>
+        GivenA<ParametersProcessor>
             .WithA<IValidator>()
-                .That<IValidator, bool>(validator => validator.IsValid(_entityParameters), true)
+                .That(validator => validator.IsValid(_entityParameters), true)
             .WithA<ICreator>()
-                .That<ICreator, Entity>(creator => creator.Create(_entityParameters), _entity)
+                .That(creator => creator.Create(_entityParameters), _entity)
             .WhenIt(sut => sut.Process(_entityParameters))
             .ThenItShould(result => {
                 Assert.Equal(_entity, result);
@@ -91,9 +91,9 @@ public class Tests
 
     [Fact]
     public void InvalidParameters() =>
-        GivenA<ParametersProcessor, Entity>
+        GivenA<ParametersProcessor>
             .WithA<IValidator>()
-                .That<IValidator, bool>(validator => validator.IsValid(_entityParameters), false)
+                .That(validator => validator.IsValid(_entityParameters), false)
             .WithA<ICreator>()
             .WhenIt(sut => sut.Process(_entityParameters))
             .ThenItShould(result => {

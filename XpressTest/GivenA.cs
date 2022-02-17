@@ -1,56 +1,55 @@
-﻿namespace XpressTest;
+﻿using Moq;
 
-public static class GivenA<TSut, TResult>
-    where TSut : class
-{
-    public static ITestBuilder<Func<TSut, TResult>, Action<TResult>> WithA<TDependency>()
-        where TDependency : class
-    {
-        var builder = new ResultTestBuilder<TSut, TResult>(new List<IDependency>());
-
-        builder.WithA<TDependency>();
-
-        return builder;
-    }
-
-    public static ITestBuilder<Func<TSut, TResult>, Action<TResult>> WhenIt(Func<TSut, TResult> func)
-    {
-        var builder = new ResultTestBuilder<TSut, TResult>(new List<IDependency>());
-
-        builder.WhenIt(func);
-
-        return builder;
-    }
-}
+namespace XpressTest;
 
 public static class GivenA<TSut>
     where TSut : class
 {
-    public static ITestBuilder<Action<TSut>, Action> WithA<TDependency>()
+    public static IMockDependencyBuilder<TSut, TDependency> WithA<TDependency>()
         where TDependency : class
     {
-        var builder = new VoidTestBuilder<TSut>(new List<IDependency>());
+        var dependencyMock = new Mock<TDependency>();
 
-        builder.WithA<TDependency>();
-
-        return builder;
-    }
-
-    public static ITestBuilder<Action<TSut>, Action> With<TDependency>(TDependency dependency)
-        where TDependency : class
-    {
-        var builder = new VoidTestBuilder<TSut>(new List<IDependency>());
+        var dependencies = new List<IDependency>();
         
-        builder.With(dependency);
+        var builder = new MockDependencyBuilder<TSut, TDependency>(
+            dependencyMock,
+            dependencies
+            );
 
         return builder;
     }
-
-    public static ITestBuilder<Action<TSut>, Action> WhenIt(Action<TSut> func)
+    
+    public static IDependencyBuilder<TSut> With<TDependency>(TDependency dependency)
     {
-        var builder = new VoidTestBuilder<TSut>(new List<IDependency>());
+        var builder = new DependencyBuilder<TSut, TDependency>(
+            dependency,
+            new List<IDependency>()
+            );
+        
+        return builder;
+    }
+    
+    public static IAsserter<Action> WhenIt(Action<TSut> action)
+    {
+        var dependencies = new List<IDependency>();
+        
+        var builder = new VoidAsserter<TSut>(
+            action,
+            dependencies
+            );
 
-        builder.WhenIt(func);
+        return builder;
+    }
+    
+    public static IAsserter<Action<TResult>> WhenIt<TResult>(Func<TSut, TResult> func)
+    {
+        var dependencies = new List<IDependency>();
+        
+        var builder = new ResultAsserter<TSut, TResult>(
+            func,
+            dependencies
+        );
 
         return builder;
     }

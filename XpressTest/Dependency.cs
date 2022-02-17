@@ -1,8 +1,8 @@
 namespace XpressTest;
 
-public class ValueDependency<T> : IDependency
+public class Dependency<T> : IDependency
 {
-    public ValueDependency(T obj)
+    public Dependency(T obj)
     {
         Object = obj;
     }
