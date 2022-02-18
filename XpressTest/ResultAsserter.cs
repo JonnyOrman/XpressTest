@@ -1,26 +1,30 @@
 namespace XpressTest;
 
-public class ResultAsserter<TSut, TResult> : IAsserter<Action<TResult>>
+public class ResultAsserter<TSut, TResult> : IAsserter<System.Action<IAssertion<TSut, TResult>>>
     where TSut : class
 {
-    private readonly Func<TSut, TResult> _action;
-    private readonly ICollection<IDependency> _dependencies;
+    private readonly Func<IAction<TSut>, TResult> _action;
+    private readonly IDependencyCollection _dependencies;
+    private readonly IObjectCollection _objects;
 
     public ResultAsserter(
-        Func<TSut, TResult> action,
-        ICollection<IDependency> dependencies
+        Func<IAction<TSut>, TResult> action,
+        IDependencyCollection dependencies,
+        IObjectCollection objects
         )
     {
         _action = action;
         _dependencies = dependencies;
+        _objects = objects;
     }
     
-    public ITester ThenItShould(Action<TResult> assertion)
+    public ITester ThenItShould(System.Action<IAssertion<TSut, TResult>> assertion)
     {
         return new ResultTester<TSut, TResult>(
             _action,
             assertion,
-            _dependencies
+            _dependencies,
+            _objects
             );
     }
 }

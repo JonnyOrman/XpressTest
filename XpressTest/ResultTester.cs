@@ -1,17 +1,19 @@
 namespace XpressTest;
 
-public class ResultTester<TSut, TResult> : Tester<TSut, Action<TResult>>
+public class ResultTester<TSut, TResult> : Tester<TSut, System.Action<IAssertion<TSut, TResult>>>
     where TSut : class
 {
-    private readonly Func<TSut, TResult> _func;
+    private readonly Func<IAction<TSut>, TResult> _func;
 
     public ResultTester(
-        Func<TSut, TResult> func,
-        Action<TResult> assertion,
-        ICollection<IDependency> dependencies
+        Func<IAction<TSut>, TResult> func,
+        System.Action<IAssertion<TSut, TResult>> assertion,
+        IDependencyCollection dependencies,
+        IObjectCollection objects
         ) : base(
         assertion,
-        dependencies
+        dependencies,
+        objects
         )
     {
         _func = func;
@@ -19,8 +21,25 @@ public class ResultTester<TSut, TResult> : Tester<TSut, Action<TResult>>
 
     protected override void ActAndAssert(TSut sut)
     {
-        var actualResult = _func.Invoke(sut);
+        var arrangement = new Arrangement(
+            _objects,
+            _dependencies
+            );
+        
+        var action = new Action<TSut>(
+            sut,
+            arrangement
+            );
+        
+        var actualResult = _func.Invoke(action);
 
-        _assertion.Invoke(actualResult);
+        var assertion = new Assertion<TSut, TResult>(
+            actualResult,
+            action
+            );
+        
+        _assertion.Invoke(
+            assertion
+            );
     }
 }

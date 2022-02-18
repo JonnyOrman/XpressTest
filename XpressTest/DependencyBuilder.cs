@@ -8,27 +8,32 @@ public class DependencyBuilder<TSut, TDependency> :
 {
     private readonly TDependency _dependency;
     
-    private readonly ICollection<IDependency> _dependencies;
+    private readonly IDependencyCollection _dependencies;
     
+    private readonly IObjectCollection _objects;
+
     public DependencyBuilder(
         TDependency dependency,
-        ICollection<IDependency> dependencies
+        IDependencyCollection dependencies,
+        IObjectCollection objects
         )
     {
         _dependency = dependency;
         _dependencies = dependencies;
+        _objects = objects;
     }
     
     
-    public IDependencyBuilder<TSut> With<TNewDependency>(TNewDependency newDependency)
+    public IDependencyBuilder<TSut> With<TNewDependency>(TNewDependency newDependency, string name)
     {
-        var dependency = new Dependency<TDependency>(_dependency);
+        var dependency = new Dependency<TDependency>(_dependency, name);
         
         _dependencies.Add(dependency);
         
         var builder = new DependencyBuilder<TSut, TNewDependency>(
             newDependency,
-            _dependencies
+            _dependencies,
+            _objects
         );
         
         return builder;
@@ -44,13 +49,14 @@ public class DependencyBuilder<TSut, TDependency> :
         
         var builder = new MockDependencyBuilder<TSut, TNewDependency>(
             newMock,
-            _dependencies
+            _dependencies,
+            _objects
             );
         
         return builder;
     }
     
-    public IAsserter<Action<TResult>> WhenIt<TResult>(Func<TSut, TResult> func)
+    public IAsserter<System.Action<IAssertion<TSut, TResult>>> WhenIt<TResult>(Func<IAction<TSut>, TResult> func)
     {
         var dependency = new Dependency<TDependency>(_dependency);
         
@@ -58,13 +64,14 @@ public class DependencyBuilder<TSut, TDependency> :
         
         var builder = new ResultAsserter<TSut, TResult>(
             func,
-            _dependencies
+            _dependencies,
+            _objects
         );
 
         return builder;
     }
 
-    public IAsserter<Action> WhenIt(Action<TSut> func)
+    public IAsserter<System.Action<IArrangement>> WhenIt(System.Action<IAction<TSut>> func)
     {
         var dependency = new Dependency<TDependency>(_dependency);
         
@@ -72,7 +79,8 @@ public class DependencyBuilder<TSut, TDependency> :
         
         var builder = new VoidAsserter<TSut>(
             func,
-            _dependencies
+            _dependencies,
+            _objects
         );
 
         return builder;

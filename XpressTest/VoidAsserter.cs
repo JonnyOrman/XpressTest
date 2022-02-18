@@ -1,26 +1,30 @@
 namespace XpressTest;
 
-public class VoidAsserter<TSut> : IAsserter<Action>
+public class VoidAsserter<TSut> : IAsserter<System.Action<IArrangement>>
     where TSut : class
 {
-    private readonly Action<TSut> _action;
-    private readonly ICollection<IDependency> _dependencies;
+    private readonly System.Action<IAction<TSut>> _action;
+    private readonly IDependencyCollection _dependencies;
+    private readonly IObjectCollection _objects;
 
     public VoidAsserter(
-        Action<TSut> action,
-        ICollection<IDependency> dependencies
+        System.Action<IAction<TSut>> action,
+        IDependencyCollection dependencies,
+        IObjectCollection objects
         )
     {
         _action = action;
         _dependencies = dependencies;
+        _objects = objects;
     }
     
-    public ITester ThenItShould(Action assertion)
+    public ITester ThenItShould(System.Action<IArrangement> assertion)
     {
         return new VoidTester<TSut>(
             _action,
             assertion,
-            _dependencies
+            _dependencies,
+            _objects
             );
     }
 }

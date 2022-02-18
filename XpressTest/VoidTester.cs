@@ -1,17 +1,19 @@
 namespace XpressTest;
 
-public class VoidTester<TSut> : Tester<TSut, Action>
+public class VoidTester<TSut> : Tester<TSut, System.Action<IArrangement>>
     where TSut : class
 {
-    private readonly Action<TSut> _func;
+    private readonly System.Action<IAction<TSut>> _func;
 
     public VoidTester(
-        Action<TSut> func,
-        Action assertion,
-        ICollection<IDependency> dependencies
+        System.Action<IAction<TSut>> func,
+        System.Action<IArrangement> assertion,
+        IDependencyCollection dependencies,
+        IObjectCollection objects
         ) : base(
         assertion,
-        dependencies
+        dependencies,
+        objects
         )
     {
         _func = func;
@@ -19,8 +21,18 @@ public class VoidTester<TSut> : Tester<TSut, Action>
     
     protected override void ActAndAssert(TSut sut)
     {
-        _func.Invoke(sut);
+        var arrangement = new Arrangement(
+            _objects,
+            _dependencies
+        );
         
-        _assertion.Invoke();
+        var action = new Action<TSut>(
+            sut,
+            arrangement
+        );
+        
+        _func.Invoke(action);
+        
+        _assertion.Invoke(arrangement);
     }
 }

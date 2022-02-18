@@ -2,7 +2,7 @@ namespace XpressTest;
 
 public interface IActor<TSut>
 {
-    IAsserter<Action<TResult>> WhenIt<TResult>(Func<TSut, TResult> func);
+    IAsserter<System.Action<IAssertion<TSut, TResult>>> WhenIt<TResult>(Func<IAction<TSut>, TResult> func);
     
-    IAsserter<Action> WhenIt(Action<TSut> func);
+    IAsserter<System.Action<IArrangement>> WhenIt(System.Action<IAction<TSut>> func);
 }

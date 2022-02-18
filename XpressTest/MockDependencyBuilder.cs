@@ -10,15 +10,18 @@ public class MockDependencyBuilder<TSut, TDependency> :
 {
     private readonly Mock<TDependency> _dependencyMock;
     
-    private readonly ICollection<IDependency> _dependencies;
+    private readonly IDependencyCollection _dependencies;
+    private readonly IObjectCollection _objects;
 
     public MockDependencyBuilder(
         Mock<TDependency> dependencyMock,
-        ICollection<IDependency> dependencies
+        IDependencyCollection dependencies,
+        IObjectCollection objects
         )
     {
         _dependencyMock = dependencyMock;
         _dependencies = dependencies;
+        _objects = objects;
     }
 
     public IDependencyBuilder<TSut> With<TNewDependency>(TNewDependency newDependency)
@@ -32,10 +35,16 @@ public class MockDependencyBuilder<TSut, TDependency> :
 
         var builder = new DependencyBuilder<TSut, TNewDependency>(
             newDependency,
-            _dependencies
+            _dependencies,
+            _objects
             );
 
         return builder;
+    }
+
+    public IDependencyBuilder<TSut> With<TNewDependency>(TNewDependency newDependency, string name)
+    {
+        throw new NotImplementedException();
     }
 
     public IMockDependencyBuilder<TSut, TNewDependency> WithA<TNewDependency>() where TNewDependency : class
@@ -51,20 +60,30 @@ public class MockDependencyBuilder<TSut, TDependency> :
 
         var builder = new MockDependencyBuilder<TSut, TNewDependency>(
             newMock,
-            _dependencies
+            _dependencies,
+            _objects
         );
 
         return builder;
     }
 
-    public IMockDependencyBuilder<TSut, TDependency> That<TDependencyResult>(Expression<Func<TDependency, TDependencyResult>> func, TDependencyResult dependencyResult)
+    public IMockDependencyBuilder<TSut, TDependency> That<TDependencyResult>(
+        Func<IArrangement, MockSetup<TDependency, TDependencyResult>> func
+        )
     {
-         _dependencyMock.Setup(func).Returns(dependencyResult);
+        var arrangement = new Arrangement(
+            _objects,
+            _dependencies
+        );
+        
+        var result = func.Invoke(arrangement);
+
+         _dependencyMock.Setup(result.When).Returns(result.Then);
          
          return this;
     }
 
-    public IAsserter<Action<TResult>> WhenIt<TResult>(Func<TSut, TResult> func)
+    public IAsserter<System.Action<IAssertion<TSut, TResult>>> WhenIt<TResult>(Func<IAction<TSut>, TResult> func)
     {
         var dependency = new MockDependency<TDependency>(_dependencyMock);
         
@@ -72,13 +91,14 @@ public class MockDependencyBuilder<TSut, TDependency> :
         
         var builder = new ResultAsserter<TSut, TResult>(
             func,
-            _dependencies
+            _dependencies,
+            _objects
         );
 
         return builder;
     }
 
-    public IAsserter<Action> WhenIt(Action<TSut> func)
+    public IAsserter<System.Action<IArrangement>> WhenIt(System.Action<IAction<TSut>> func)
     {
         var dependency = new MockDependency<TDependency>(_dependencyMock);
         
@@ -86,7 +106,8 @@ public class MockDependencyBuilder<TSut, TDependency> :
         
         var builder = new VoidAsserter<TSut>(
             func,
-            _dependencies
+            _dependencies,
+            _objects
         );
 
         return builder;

@@ -4,6 +4,7 @@ namespace XpressTest;
 
 public interface IMockDependencyBuilder<TSut, TDependency> : IDependencyBuilder<TSut>
 {
-    IMockDependencyBuilder<TSut, TDependency> That<TDependencyResult>(Expression<Func<TDependency, TDependencyResult>> func,
-        TDependencyResult dependencyResult);
+    IMockDependencyBuilder<TSut, TDependency> That<TDependencyResult>(
+        Func<IArrangement, MockSetup<TDependency, TDependencyResult>> func
+        );
 }

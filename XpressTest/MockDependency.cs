@@ -5,12 +5,15 @@ namespace XpressTest;
 public class MockDependency<T> : IDependency
     where T : class
 {
-    private readonly Mock _mock;
-    
     public MockDependency(Mock<T> mock)
     {
-        _mock = mock;
+        Mock = mock;
+        Name = typeof(T).Name;
     }
 
-    public object Object => _mock.Object;
+    public object Object => Mock.Object;
+    
+    public string Name { get; }
+
+    public Mock<T> Mock { get; }
 }

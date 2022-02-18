@@ -5,7 +5,7 @@ Write expressive and fluent tests in .NET
 
 Install by running the following:
 ```
-dotnet add package XpressTest --version 1.0.0-alpha.2
+dotnet add package XpressTest --version 1.0.0-alpha.3
 ```
 
 Also install a testing framework such as Xunit:
@@ -15,20 +15,61 @@ dotnet add package xunit
 
 If we have the following classes and interfaces:
 ```
-namespace XpressTestExample;
+namespace XpressTest.Examples;
 
-public class Entity {}
+public class Entity
+{
+    public Entity(
+        int id,
+        string name)
+    {
+        Id = id;
+        Name = name;
+    }
 
-public class EntityParameters {}
+    public int Id { get; }
+    
+    public string Name { get; }
+}
+
+public class EntityParameters
+{
+    public EntityParameters(string name)
+    {
+        Name = name;
+    }
+    
+    public string Name { get; }
+}
 
 public interface IValidator
 {
     bool IsValid(EntityParameters entityParameters);
 }
 
+public class Validator : IValidator
+{
+    public bool IsValid(EntityParameters entityParameters)
+    {
+        return !string.IsNullOrWhiteSpace(entityParameters.Name);
+    }
+}
+
 public interface ICreator
 {
     Entity Create(EntityParameters entityParameters);
+}
+
+public class Creator : ICreator
+{
+    public Entity Create(EntityParameters entityParameters)
+    {
+        var nextId = 1;
+        
+        return new Entity(
+            1,
+            entityParameters.Name);
+    }
 }
 
 public class ParametersProcessor
@@ -57,47 +98,96 @@ public class ParametersProcessor
 }
 ```
 
-Then we can test the `ParametersProcessor` class like this:
+Then we can test them like this:
 ```
-using XpressTest;
+using Moq;
 using Xunit;
 
-namespace XpressTestExample;
+namespace XpressTest.Examples;
 
-public class Tests
+public class ValidatorTests
 {
-    private EntityParameters _entityParameters;
+    [Theory]
+    [InlineData("ValidName", true)]
+    [InlineData(" ", false)]
+    [InlineData("", false)]
+    [InlineData(null, false)]
+    public void ValidateParameters(string name, bool expectedResult) =>
+        GivenA<Validator>
+            .And(new EntityParameters(name), "EntityParameters")
+            .WhenIt(action => action.Sut.IsValid(action.Objects.Get<EntityParameters>("EntityParameters")))
+            .ThenItShould(assertion => { Assert.Equal(expectedResult, assertion.Result); })
+            .Test();
+}
 
-    private Entity _entity;
-
-    public Tests()
-    {
-        _entityParameters = new EntityParameters();
-        _entity = new Entity();
-    }
-
+public class CreatorTests
+{
     [Fact]
-    public void ValidParameters() =>
+    public void CreateEntity() =>
+        GivenA<Creator>
+            .And(new EntityParameters("EntityName"), "EntityParameters")
+            .WhenIt(action => action.Sut.Create(action.Objects.Get<EntityParameters>("EntityParameters")))
+            .ThenItShould(assertion =>
+            {
+                Assert.Equal(1, assertion.Result.Id);
+                Assert.Equal("EntityName", assertion.Result.Name);
+            })
+            .Test();
+}
+
+public class ParametersProcessorTests
+{
+    [Fact]
+    public void ProcessValidParameters() =>
         GivenA<ParametersProcessor>
+            .And(new EntityParameters(string.Empty), "parameters")
+            .And(new Entity(1, string.Empty), "entity")
             .WithA<IValidator>()
-                .That(validator => validator.IsValid(_entityParameters), true)
+            .That(arrangement =>
+                new MockSetup<IValidator, bool>(
+                    validator => validator.IsValid(arrangement.Objects.Get<EntityParameters>("parameters")),
+                    true))
             .WithA<ICreator>()
-                .That(creator => creator.Create(_entityParameters), _entity)
-            .WhenIt(sut => sut.Process(_entityParameters))
-            .ThenItShould(result => {
-                Assert.Equal(_entity, result);
+            .That(arrangement =>
+                new MockSetup<ICreator, Entity>(
+                    creator => creator.Create(arrangement.Objects.Get<EntityParameters>("parameters")),
+                    arrangement.Objects.Get<Entity>("entity")
+                ))
+            .WhenIt(action => action.Sut.Process(action.Objects.Get<EntityParameters>("parameters")))
+            .ThenItShould(assertion =>
+            {
+                assertion.Dependencies.GetMock<IValidator>()
+                    .Verify(validator => validator.IsValid(assertion.Objects.Get<EntityParameters>("parameters")),
+                        Times.Once);
+                assertion.Dependencies.GetMock<ICreator>()
+                    .Verify(
+                        creator => creator.Create(assertion.Objects.Get<EntityParameters>("parameters")),
+                        Times.Once);
+                Assert.Equal(assertion.Objects.Get<Entity>("entity"), assertion.Result);
             })
             .Test();
 
     [Fact]
-    public void InvalidParameters() =>
+    public void ProcessInvalidParameters() =>
         GivenA<ParametersProcessor>
+            .And(new EntityParameters(string.Empty), "parameters")
             .WithA<IValidator>()
-                .That(validator => validator.IsValid(_entityParameters), false)
+            .That(arrangement => new MockSetup<IValidator, bool>(
+                validator => validator.IsValid(arrangement.Objects.Get<EntityParameters>("parameters")),
+                false))
             .WithA<ICreator>()
-            .WhenIt(sut => sut.Process(_entityParameters))
-            .ThenItShould(result => {
-                Assert.Null(result);
+            .WhenIt(action => action.Sut.Process(action.Objects.Get<EntityParameters>("parameters")))
+            .ThenItShould(assertion =>
+            {
+                assertion.Dependencies.GetMock<IValidator>()
+                    .Verify(
+                        validator => validator.IsValid(assertion.Objects.Get<EntityParameters>("parameters")),
+                        Times.Once);
+                assertion.Dependencies.GetMock<ICreator>()
+                    .Verify(
+                        creator => creator.Create(It.IsAny<EntityParameters>()),
+                        Times.Never);
+                Assert.Null(assertion.Result);
             })
             .Test();
 }
