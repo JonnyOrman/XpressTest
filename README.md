@@ -1,7 +1,16 @@
 # XpressTest
 Write expressive and fluent tests in .NET
 
-## Quick start
+```
+[Fact]
+public void AddsNumbers =>
+    GivenA<Calculator>
+        .WhenIt(action => action.Sut.Add(2, 2))
+        .ThenItShould(assertion => { Assert.Equal(4, assertion.Result); })
+        .Test();
+```
+
+## Getting started
 
 Install by running the following:
 ```
