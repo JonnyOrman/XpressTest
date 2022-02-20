@@ -1,6 +1,9 @@
 # XpressTest
-Write expressive and fluent tests in .NET
+`XpressTest` is a testing framework that allows you to easily write well structured tests in a consistent given-when-then format. It avoids common, repetitive tasks often involved in writing tests such as instantiating the SUT (System Under Test), and it saves your tests from being cluttered with loose variables.
 
+Tests are written by specifying the SUT, arranging any mocks or other objects required for the test case, specifying the action to be tested and then performing an assertion on the result and mocks.
+
+Tests written with `XpressTest` will look something like this:
 ```
 [Fact]
 public void AddsNumbers =>
