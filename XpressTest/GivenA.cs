@@ -1,6 +1,4 @@
-﻿using Moq;
-
-namespace XpressTest;
+﻿namespace XpressTest;
 
 public static class GivenA<TSut>
     where TSut : class
@@ -8,86 +6,32 @@ public static class GivenA<TSut>
     public static IMockObjectBuilder<TSut, TObject> AndA<TObject>(string name)
         where TObject : class
     {
-        var objectMock = new Mock<TObject>();
-
-        var objects = new ObjectCollection();
-        
-        var builder = new MockObjectBuilder<TSut, TObject>(
-            objectMock,
-            name,
-            objects
-            );
-
-        return builder;
+        return MockObjectTestInitialiser<TSut, TObject>.Initialise(name);
     }
 
     public static IObjectBuilder<TSut> And<TObject>(TObject obj, string name)
     {
-        var builder = new ObjectBuilder<TSut, TObject>(
-            obj,
-            name,
-            new ObjectCollection()
-            );
-
-        return builder;
+        return ObjectTestInitialiser<TSut, TObject>.Initialise(obj, name);
     }
     
     public static IMockDependencyBuilder<TSut, TDependency> WithA<TDependency>()
         where TDependency : class
     {
-        var dependencyMock = new Mock<TDependency>();
-
-        var dependencies = new DependencyCollection();
-
-        var objects = new ObjectCollection();
-        
-        var builder = new MockDependencyBuilder<TSut, TDependency>(
-            dependencyMock,
-            dependencies,
-            objects
-            );
-
-        return builder;
+        return MockDependencyTestInitialiser<TSut>.Initialise<TDependency>();
     }
     
     public static IDependencyBuilder<TSut> With<TDependency>(TDependency dependency)
     {
-        var builder = new DependencyBuilder<TSut, TDependency>(
-            dependency,
-            new DependencyCollection(),
-            new ObjectCollection()
-            );
-        
-        return builder;
+        return DependencyTestInitialiser<TSut>.Initialise(dependency);
     }
     
     public static IAsserter<System.Action<IArrangement>> WhenIt(System.Action<IAction<TSut>> action)
     {
-        var dependencies = new DependencyCollection();
-        
-        var objects = new ObjectCollection();
-        
-        var builder = new VoidAsserter<TSut>(
-            action,
-            dependencies,
-            objects
-            );
-
-        return builder;
+        return ActionInitialiser<TSut>.Initialise(action);
     }
     
     public static IAsserter<System.Action<IAssertion<TSut, TResult>>> WhenIt<TResult>(Func<IAction<TSut>, TResult> func)
     {
-        var dependencies = new DependencyCollection();
-        
-        var objects = new ObjectCollection();
-        
-        var builder = new ResultAsserter<TSut, TResult>(
-            func,
-            dependencies,
-            objects
-        );
-
-        return builder;
+        return ResultActionInitialiser<TSut>.Initialise(func);
     }
 }

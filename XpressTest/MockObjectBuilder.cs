@@ -8,18 +8,24 @@ public class MockObjectBuilder<TSut, TObject> : IMockObjectBuilder<TSut, TObject
     where TObject : class
 {
     private readonly Mock<TObject> _mockObject;
+
     private readonly string _name;
-    private readonly IObjectCollection _objects;
+
+    private readonly IObjectCollection _objectCollection;
+
+    private readonly ITestComposer<TSut> _testComposer;
 
     public MockObjectBuilder(
         Mock<TObject> mockObject,
         string name,
-        IObjectCollection objects
+        IObjectCollection objectCollection,
+        ITestComposer<TSut> testComposer
         )
     {
         _mockObject = mockObject;
         _name = name;
-        _objects = objects;
+        _objectCollection = objectCollection;
+        _testComposer = testComposer;
     }
 
     public IAsserter<System.Action<IAssertion<TSut, TResult>>> WhenIt<TResult>(Func<IAction<TSut>, TResult> func)
@@ -46,14 +52,21 @@ public class MockObjectBuilder<TSut, TObject> : IMockObjectBuilder<TSut, TObject
     {
         var mockObject = new MockObject<TObject>(_mockObject, _name);
         
-        _objects.Add(mockObject);
+        _objectCollection.Add(mockObject);
 
         var mock = new Mock<TNewDependency>();
 
+        var dependencyCollection = new DependencyCollection();
+
+        var arrangement = new Arrangement(
+            _objectCollection,
+            dependencyCollection
+        );
+
         return new MockDependencyBuilder<TSut, TNewDependency>(
             mock,
-            new DependencyCollection(),
-            _objects
+            arrangement,
+            _testComposer
         );
     }
 

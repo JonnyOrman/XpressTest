@@ -6,18 +6,24 @@ public class ObjectBuilder<TSut, TObject> : IObjectBuilder<TSut>
     where TSut : class
 {
     private readonly TObject _obj;
+
     private readonly string _name;
-    private readonly IObjectCollection _objects;
+
+    private readonly IObjectCollection _objectCollection;
+
+    private readonly ITestComposer<TSut> _testComposer;
 
     public ObjectBuilder(
         TObject obj,
         string name,
-        IObjectCollection objects
+        IObjectCollection objectCollection,
+        ITestComposer<TSut> testComposer
         )
     {
         _obj = obj;
         _name = name;
-        _objects = objects;
+        _objectCollection = objectCollection;
+        _testComposer = testComposer;
     }
 
     public IObjectBuilder<TSut> AndA<TNewObject>()
@@ -42,12 +48,13 @@ public class ObjectBuilder<TSut, TObject> : IObjectBuilder<TSut>
             _name
             );
         
-        _objects.Add(objct);
+        _objectCollection.Add(objct);
         
         var builder = new ObjectBuilder<TSut, TNewObject>(
             obj,
             name,
-            _objects
+            _objectCollection,
+            _testComposer
         );
 
         return builder;
@@ -60,14 +67,31 @@ public class ObjectBuilder<TSut, TObject> : IObjectBuilder<TSut>
             _name
             );
         
-        _objects.Add(obj);
+        _objectCollection.Add(obj);
 
-        var dependencies = new DependencyCollection();
+        var dependencyCollection = new DependencyCollection();
+
+        var arrangement = new Arrangement(
+            _objectCollection,
+            dependencyCollection
+            );
+
+        var sutComposer = new SutComposer<TSut>(
+            arrangement
+        );
         
+        var actionExecutor = new ResultActionExecutor<TSut, TResult>(
+            func
+            );
+
+        var sutTesterComposer = new SutTesterComposer<TSut, IAssertion<TSut, TResult>>(
+            actionExecutor,
+            arrangement
+        );
+
         var builder = new ResultAsserter<TSut, TResult>(
-            func,
-            dependencies,
-            _objects
+            sutComposer,
+            sutTesterComposer
         );
 
         return builder;
@@ -95,16 +119,21 @@ public class ObjectBuilder<TSut, TObject> : IObjectBuilder<TSut>
             _name
         );
         
-        _objects.Add(objct);
+        _objectCollection.Add(objct);
         
         var dependencyMock = new Mock<TNewDependency>();
 
-        var dependencies = new DependencyCollection();
-        
+        var dependencyCollection = new DependencyCollection();
+
+        var arrangement = new Arrangement(
+            _objectCollection,
+            dependencyCollection
+            );
+
         var builder = new MockDependencyBuilder<TSut, TNewDependency>(
             dependencyMock,
-            dependencies,
-            _objects
+            arrangement,
+            _testComposer
         );
 
         return builder;

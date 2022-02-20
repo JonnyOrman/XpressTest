@@ -1,47 +1,25 @@
 namespace XpressTest;
 
-public abstract class Tester<TSut, TAssertion> : ITester
+public class Tester<TSut> : ITester
     where TSut : class
 {
-    protected readonly TAssertion _assertion;
-    protected readonly IDependencyCollection _dependencies;
-    protected readonly IObjectCollection _objects;
+    private readonly ISutComposer<TSut> _sutComposer;
+    
+    private readonly ISutTester<TSut> _sutTester;
 
-    protected Tester(
-        TAssertion assertion,
-        IDependencyCollection dependencies,
-        IObjectCollection objects
+    public Tester(
+        ISutComposer<TSut> sutComposer,
+        ISutTester<TSut> sutTester
         )
     {
-        _assertion = assertion;
-        _dependencies = dependencies;
-        _objects = objects;
+        _sutComposer = sutComposer;
+        _sutTester = sutTester;
     }
 
     public void Test()
     {
-        object sut = null;
-
-        if (_dependencies.Any())
-        {
-            var parameters = new List<object>();
-
-            foreach (var dependency in _dependencies.GetAll())
-            {
-                parameters.Add(dependency.Object);
-            }
-
-            sut = Activator.CreateInstance(typeof(TSut), parameters.ToArray());
-        }
-        else
-        {
-            sut = Activator.CreateInstance<TSut>();
-        }
+        var sut = _sutComposer.Compose();
         
-        var typedSut = sut as TSut;
-
-        ActAndAssert(typedSut);
+        _sutTester.Test(sut);
     }
-
-    protected abstract void ActAndAssert(TSut sut);
 }

@@ -3,7 +3,8 @@ namespace XpressTest;
 public class Dependency<T> : IDependency
 {
     public Dependency(
-        T obj)
+        T obj
+        )
     {
         Object = obj;
         Name = typeof(T).Name;
@@ -11,7 +12,8 @@ public class Dependency<T> : IDependency
     
     public Dependency(
         T obj,
-        string name)
+        string name
+        )
     {
         Object = obj;
         Name = name;

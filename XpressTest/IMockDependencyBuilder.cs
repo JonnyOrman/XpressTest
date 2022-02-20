@@ -1,5 +1,3 @@
-using System.Linq.Expressions;
-
 namespace XpressTest;
 
 public interface IMockDependencyBuilder<TSut, TDependency> : IDependencyBuilder<TSut>

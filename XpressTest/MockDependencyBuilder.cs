@@ -1,5 +1,4 @@
 using Moq;
-using System.Linq.Expressions;
 
 namespace XpressTest;
 
@@ -9,37 +8,31 @@ public class MockDependencyBuilder<TSut, TDependency> :
     where TDependency : class
 {
     private readonly Mock<TDependency> _dependencyMock;
-    
-    private readonly IDependencyCollection _dependencies;
-    private readonly IObjectCollection _objects;
+
+    private readonly IArrangement _arrangement;
+
+    private readonly ITestComposer<TSut> _testComposer;
 
     public MockDependencyBuilder(
         Mock<TDependency> dependencyMock,
-        IDependencyCollection dependencies,
-        IObjectCollection objects
+        IArrangement arrangement,
+        ITestComposer<TSut> testComposer
         )
     {
         _dependencyMock = dependencyMock;
-        _dependencies = dependencies;
-        _objects = objects;
+        _arrangement = arrangement;
+        _testComposer = testComposer;
     }
 
     public IDependencyBuilder<TSut> With<TNewDependency>(TNewDependency newDependency)
     {
-        if (_dependencyMock != null)
-        {
-            var dependency = new MockDependency<TDependency>(_dependencyMock);
-            
-            _dependencies.Add(dependency);
-        }
-
-        var builder = new DependencyBuilder<TSut, TNewDependency>(
+        return _testComposer.ComposeDependencyBuilder(
+            _dependencyMock,
             newDependency,
-            _dependencies,
-            _objects
-            );
-
-        return builder;
+            null,
+            _arrangement,
+            _testComposer
+        );
     }
 
     public IDependencyBuilder<TSut> With<TNewDependency>(TNewDependency newDependency, string name)
@@ -49,34 +42,18 @@ public class MockDependencyBuilder<TSut, TDependency> :
 
     public IMockDependencyBuilder<TSut, TNewDependency> WithA<TNewDependency>() where TNewDependency : class
     {
-        if (_dependencyMock != null)
-        {
-            var dependency = new MockDependency<TDependency>(_dependencyMock);
-            
-            _dependencies.Add(dependency);
-        }
-
-        var newMock = new Mock<TNewDependency>();
-
-        var builder = new MockDependencyBuilder<TSut, TNewDependency>(
-            newMock,
-            _dependencies,
-            _objects
+        return _testComposer.ComposeMockDependencyBuilder<TDependency, TNewDependency>(
+            _dependencyMock,
+            _arrangement,
+            _testComposer
         );
-
-        return builder;
     }
 
     public IMockDependencyBuilder<TSut, TDependency> That<TDependencyResult>(
         Func<IArrangement, MockSetup<TDependency, TDependencyResult>> func
         )
     {
-        var arrangement = new Arrangement(
-            _objects,
-            _dependencies
-        );
-        
-        var result = func.Invoke(arrangement);
+        var result = func.Invoke(_arrangement);
 
          _dependencyMock.Setup(result.When).Returns(result.Then);
          
@@ -85,31 +62,19 @@ public class MockDependencyBuilder<TSut, TDependency> :
 
     public IAsserter<System.Action<IAssertion<TSut, TResult>>> WhenIt<TResult>(Func<IAction<TSut>, TResult> func)
     {
-        var dependency = new MockDependency<TDependency>(_dependencyMock);
-        
-        _dependencies.Add(dependency);
-        
-        var builder = new ResultAsserter<TSut, TResult>(
+        return _testComposer.ComposeMockAsserter(
+            _dependencyMock,
             func,
-            _dependencies,
-            _objects
-        );
-
-        return builder;
+            _arrangement
+            );
     }
 
     public IAsserter<System.Action<IArrangement>> WhenIt(System.Action<IAction<TSut>> func)
     {
-        var dependency = new MockDependency<TDependency>(_dependencyMock);
-        
-        _dependencies.Add(dependency);
-        
-        var builder = new VoidAsserter<TSut>(
+        return _testComposer.ComposeMockAsserter(
+            _dependencyMock,
             func,
-            _dependencies,
-            _objects
+            _arrangement
         );
-
-        return builder;
     }
 }

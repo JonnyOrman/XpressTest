@@ -3,28 +3,26 @@ namespace XpressTest;
 public class VoidAsserter<TSut> : IAsserter<System.Action<IArrangement>>
     where TSut : class
 {
-    private readonly System.Action<IAction<TSut>> _action;
-    private readonly IDependencyCollection _dependencies;
-    private readonly IObjectCollection _objects;
+    private readonly ISutComposer<TSut> _sutComposer;
+
+    private readonly ISutTesterComposer<TSut, System.Action<IAssertion<TSut>>> _sutTesterComposer;
 
     public VoidAsserter(
-        System.Action<IAction<TSut>> action,
-        IDependencyCollection dependencies,
-        IObjectCollection objects
+        ISutComposer<TSut> sutComposer,
+        ISutTesterComposer<TSut, System.Action<IAssertion<TSut>>> sutTesterComposer
         )
     {
-        _action = action;
-        _dependencies = dependencies;
-        _objects = objects;
+        _sutComposer = sutComposer;
+        _sutTesterComposer = sutTesterComposer;
     }
     
     public ITester ThenItShould(System.Action<IArrangement> assertion)
     {
-        return new VoidTester<TSut>(
-            _action,
-            assertion,
-            _dependencies,
-            _objects
+        var sutTester = _sutTesterComposer.Compose(assertion);
+
+        return new Tester<TSut>(
+            _sutComposer,
+            sutTester
             );
     }
 }

@@ -1,5 +1,3 @@
-using Moq;
-
 namespace XpressTest;
 
 public class DependencyBuilder<TSut, TDependency> :
@@ -7,82 +5,58 @@ public class DependencyBuilder<TSut, TDependency> :
     where TSut : class
 {
     private readonly TDependency _dependency;
-    
-    private readonly IDependencyCollection _dependencies;
-    
-    private readonly IObjectCollection _objects;
+
+    private readonly IArrangement _arrangement;
+
+    private readonly ITestComposer<TSut> _testComposer;
 
     public DependencyBuilder(
         TDependency dependency,
-        IDependencyCollection dependencies,
-        IObjectCollection objects
-        )
+        IArrangement arrangement,
+        ITestComposer<TSut> testComposer
+            )
     {
         _dependency = dependency;
-        _dependencies = dependencies;
-        _objects = objects;
+        _arrangement = arrangement;
+        _testComposer = testComposer;
     }
     
     
     public IDependencyBuilder<TSut> With<TNewDependency>(TNewDependency newDependency, string name)
     {
-        var dependency = new Dependency<TDependency>(_dependency, name);
-        
-        _dependencies.Add(dependency);
-        
-        var builder = new DependencyBuilder<TSut, TNewDependency>(
+        return _testComposer.ComposeDependencyBuilder(
+            _dependency,
             newDependency,
-            _dependencies,
-            _objects
+            name,
+            _arrangement,
+            _testComposer
         );
-        
-        return builder;
     }
     
     public IMockDependencyBuilder<TSut, TNewDependency> WithA<TNewDependency>() where TNewDependency : class
     {
-        var dependency = new Dependency<TDependency>(_dependency);
-        
-        _dependencies.Add(dependency);
-
-        var newMock = new Mock<TNewDependency>();
-        
-        var builder = new MockDependencyBuilder<TSut, TNewDependency>(
-            newMock,
-            _dependencies,
-            _objects
-            );
-        
-        return builder;
+        return _testComposer.ComposeDependencyBuilder<TDependency, TNewDependency>(
+            _dependency,
+            _arrangement,
+            _testComposer
+        );
     }
     
     public IAsserter<System.Action<IAssertion<TSut, TResult>>> WhenIt<TResult>(Func<IAction<TSut>, TResult> func)
     {
-        var dependency = new Dependency<TDependency>(_dependency);
-        
-        _dependencies.Add(dependency);
-        
-        var builder = new ResultAsserter<TSut, TResult>(
+        return _testComposer.ComposeAsserter(
+            _dependency,
             func,
-            _dependencies,
-            _objects
+            _arrangement
         );
-
-        return builder;
     }
 
     public IAsserter<System.Action<IArrangement>> WhenIt(System.Action<IAction<TSut>> func)
     {
-        var dependency = new Dependency<TDependency>(_dependency);
-        
-        _dependencies.Add(dependency);
-        
-        var builder = new VoidAsserter<TSut>(
+        return _testComposer.ComposeAsserter(
+            _dependency,
             func,
-            _dependencies,
-            _objects
+            _arrangement
         );
-
-        return builder;
     }
 }
