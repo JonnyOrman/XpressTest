@@ -3,13 +3,13 @@
 public static class GivenA<TSut>
     where TSut : class
 {
-    public static IMockObjectBuilder<TSut, TObject> AndA<TObject>(string name)
+    public static IMockObjectBuilder<TSut, TObject> AndGivenA<TObject>(string name)
         where TObject : class
     {
         return MockObjectTestInitialiser<TSut, TObject>.Initialise(name);
     }
 
-    public static IObjectBuilder<TSut> And<TObject>(TObject obj, string name)
+    public static IObjectBuilder<TSut> AndGiven<TObject>(TObject obj, string name)
     {
         return ObjectTestInitialiser<TSut, TObject>.Initialise(obj, name);
     }

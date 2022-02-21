@@ -49,7 +49,7 @@ public class MockDependencyBuilder<TSut, TDependency> :
         );
     }
 
-    public IMockDependencyBuilder<TSut, TDependency> That<TDependencyResult>(
+    public IMockDependencyBuilder<TSut, TDependency> ThatDoes<TDependencyResult>(
         Func<IArrangement, MockSetup<TDependency, TDependencyResult>> func
         )
     {

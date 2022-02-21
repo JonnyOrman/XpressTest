@@ -2,11 +2,11 @@ namespace XpressTest;
 
 public interface IObjectBuilder<TSut> : IDependencyBuilder<TSut>
 {
-    IObjectBuilder<TSut> AndA<TNewObject>();
+    IObjectBuilder<TSut> AndGivenA<TNewObject>();
 
-    IObjectBuilder<TSut> And<TNewObject>();
+    IObjectBuilder<TSut> AndGiven<TNewObject>();
     
-    IObjectBuilder<TSut> AndA<TNewObject>(string name);
+    IObjectBuilder<TSut> AndGivenA<TNewObject>(string name);
 
-    IObjectBuilder<TSut> And<TNewObject>(TNewObject obj, string name);
+    IObjectBuilder<TSut> AndGiven<TNewObject>(TNewObject obj, string name);
 }

@@ -1,4 +1,6 @@
-﻿namespace XpressTest;
+﻿using Moq;
+
+namespace XpressTest;
 
 public class VoidAssertion<TSut> : IAssertion<TSut>
 {
@@ -13,5 +15,9 @@ public class VoidAssertion<TSut> : IAssertion<TSut>
 
     public IDependencyCollection Dependencies => Action.Dependencies;
 
+    public T GetObject<T>(string name) => Objects.Get<T>(name);
+
     public IAction<TSut> Action { get; }
+
+    public Mock<T> GetMock<T>() where T : class => Dependencies.GetMock<T>();
 }

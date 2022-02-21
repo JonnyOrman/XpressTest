@@ -14,4 +14,6 @@ public class Arrangement : IArrangement
     public IObjectCollection Objects { get; }
     
     public IDependencyCollection Dependencies { get; }
+
+    public T GetObject<T>(string name) => Objects.Get<T>(name);
 }

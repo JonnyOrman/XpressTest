@@ -26,22 +26,22 @@ public class ObjectBuilder<TSut, TObject> : IObjectBuilder<TSut>
         _testComposer = testComposer;
     }
 
-    public IObjectBuilder<TSut> AndA<TNewObject>()
+    public IObjectBuilder<TSut> AndGivenA<TNewObject>()
     {
         throw new NotImplementedException();
     }
 
-    public IObjectBuilder<TSut> And<TNewObject>()
+    public IObjectBuilder<TSut> AndGiven<TNewObject>()
     {
         throw new NotImplementedException();
     }
 
-    public IObjectBuilder<TSut> AndA<TNewObject>(string name)
+    public IObjectBuilder<TSut> AndGivenA<TNewObject>(string name)
     {
         throw new NotImplementedException();
     }
 
-    public IObjectBuilder<TSut> And<TNewObject>(TNewObject obj, string name)
+    public IObjectBuilder<TSut> AndGiven<TNewObject>(TNewObject obj, string name)
     {
         var objct = new Object<TObject>(
             _obj,
