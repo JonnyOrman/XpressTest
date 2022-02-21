@@ -3,25 +3,17 @@
 public static class ResultActionInitialiser<TSut>
     where TSut : class
 {
-    public static IAsserter<System.Action<IAssertion<TSut, TResult>>> Initialise<TResult>(Func<IAction<TSut>, TResult> func)
+    public static ISimpleAsserter<TResult> Initialise<TResult>(Func<TSut, TResult> func)
     {
-        var arrangement = ArrangementInitialiser.Initialise();
-
-        var sutComposer = new SutComposer<TSut>(
-            arrangement
-            );
-        
-        var actionExecutor = new ResultActionExecutor<TSut, TResult>(
+        var actionExecutor = new SimpleResultActionExecutor<TSut, TResult>(
             func
             );
 
-        var sutTesterComposer = new SutTesterComposer<TSut, IAssertion<TSut, TResult>>(
-            actionExecutor,
-            arrangement
+        var sutTesterComposer = new SimpleSutTesterComposer<TSut, TResult>(
+            actionExecutor
         );
 
-        var builder = new ResultAsserter<TSut, TResult>(
-            sutComposer,
+        var builder = new SimpleResultAsserter<TSut, TResult>(
             sutTesterComposer
         );
 

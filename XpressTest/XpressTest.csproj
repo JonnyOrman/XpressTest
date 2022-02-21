@@ -1,10 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <Version>1.0.0-alpha.3</Version>
+    <Version>1.0.0-alpha.4</Version>
+    <IsTestProject>false</IsTestProject>
     <Authors>Jonathan Orman</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <ProjectUrl>https://github.com/JonnyOrman/XpressTest</ProjectUrl>
@@ -12,6 +13,7 @@
 
   <ItemGroup>
     <PackageReference Include="Moq" Version="4.16.1" />
+    <PackageReference Include="xunit" Version="2.4.1" />
   </ItemGroup>
 
 </Project>

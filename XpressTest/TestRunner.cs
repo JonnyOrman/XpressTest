@@ -1,7 +1,6 @@
 ﻿namespace XpressTest;
 
 public class TestRunner<TSut, TAssertion> : ITestRunner<TSut>
-    where TAssertion : IAssertion<TSut>
 {
     private readonly IActionExecutor<TSut, TAssertion> _actionExecutor;
     private readonly System.Action<TAssertion> _assertion;

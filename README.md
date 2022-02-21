@@ -3,13 +3,45 @@
 
 Tests are written by specifying the SUT, arranging any mocks or other objects required for the test case, specifying the action to be tested and then performing an assertion on the result and mocks.
 
-Tests written with `XpressTest` will look something like this:
+Simple tests written with `XpressTest` will look something like this:
 ```
 [Fact]
-public void AddsNumbers =>
+public void AddNumbers() =>
     GivenA<Calculator>
-        .WhenIt(action => action.Sut.Add(2, 2))
-        .ThenItShould(assertion => { Assert.Equal(4, assertion.Result); })
+        .WhenIt(sut => sut.Add(2, 2))
+        .ThenTheResultShouldBe(4);
+```
+
+Tests that require more detailed setup and assertion will look something like this:
+```
+[Fact]
+public void ProcessValidParameters() =>
+    GivenA<ParametersProcessor>
+        .And(new EntityParameters(string.Empty), "parameters")
+        .And(new Entity(1, string.Empty), "entity")
+        .WithA<IValidator>()
+        .That(arrangement =>
+            new MockSetup<IValidator, bool>(
+                validator => validator.IsValid(arrangement.Objects.Get<EntityParameters>("parameters")),
+                true))
+        .WithA<ICreator>()
+        .That(arrangement =>
+            new MockSetup<ICreator, Entity>(
+                creator => creator.Create(arrangement.Objects.Get<EntityParameters>("parameters")),
+                arrangement.Objects.Get<Entity>("entity")
+            ))
+        .WhenIt(action => action.Sut.Process(action.Objects.Get<EntityParameters>("parameters")))
+        .ThenItShould(assertion =>
+        {
+            assertion.Dependencies.GetMock<IValidator>()
+                .Verify(validator => validator.IsValid(assertion.Objects.Get<EntityParameters>("parameters")),
+                    Times.Once);
+            assertion.Dependencies.GetMock<ICreator>()
+                .Verify(
+                    creator => creator.Create(assertion.Objects.Get<EntityParameters>("parameters")),
+                    Times.Once);
+            Assert.Equal(assertion.Objects.Get<Entity>("entity"), assertion.Result);
+        })
         .Test();
 ```
 
@@ -17,12 +49,7 @@ public void AddsNumbers =>
 
 Install by running the following:
 ```
-dotnet add package XpressTest --version 1.0.0-alpha.3
-```
-
-Also install a testing framework such as Xunit:
-```
-dotnet add package xunit
+dotnet add package XpressTest --version 1.0.0-alpha.4
 ```
 
 If we have the following classes and interfaces:

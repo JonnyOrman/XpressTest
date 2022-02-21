@@ -30,7 +30,7 @@ public static class GivenA<TSut>
         return ActionInitialiser<TSut>.Initialise(action);
     }
     
-    public static IAsserter<System.Action<IAssertion<TSut, TResult>>> WhenIt<TResult>(Func<IAction<TSut>, TResult> func)
+    public static ISimpleAsserter<TResult> WhenIt<TResult>(Func<TSut, TResult> func)
     {
         return ResultActionInitialiser<TSut>.Initialise(func);
     }
