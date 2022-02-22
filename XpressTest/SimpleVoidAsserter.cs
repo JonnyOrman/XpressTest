@@ -1,16 +1,16 @@
 ﻿namespace XpressTest;
 
-public class SimpleResultAsserter : ISimpleAsserter
+public class SimpleVoidAsserter : ISimpleAsserter
 {
     private readonly IExceptionAsserter _exceptionAsserter;
 
-    public SimpleResultAsserter(
+    public SimpleVoidAsserter(
         IExceptionAsserter exceptionAsserter
         )
     {
         _exceptionAsserter = exceptionAsserter;
     }
-    
+
     public void ThenItShouldThrow<TException>()
         where TException : Exception
     {

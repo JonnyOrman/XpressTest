@@ -25,9 +25,9 @@ public static class GivenA<TSut>
         return DependencyTestInitialiser<TSut>.Initialise(dependency);
     }
     
-    public static void WhenIt(System.Action<TSut> action)
+    public static ISimpleAsserter WhenIt(System.Action<TSut> action)
     {
-        ActionInitialiser<TSut>.Initialise(action);
+        return VoidActionInitialiser<TSut>.Initialise(action);
     }
 
     public static ISimpleAsserter WhenIt<TResult>(Func<TSut, TResult> func)
