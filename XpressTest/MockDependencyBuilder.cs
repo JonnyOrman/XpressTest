@@ -8,19 +8,15 @@ public class MockDependencyBuilder<TSut, TDependency> :
     where TDependency : class
 {
     private readonly Mock<TDependency> _dependencyMock;
-
-    private readonly IArrangement _arrangement;
-
+    
     private readonly ITestComposer<TSut> _testComposer;
 
     public MockDependencyBuilder(
         Mock<TDependency> dependencyMock,
-        IArrangement arrangement,
         ITestComposer<TSut> testComposer
         )
     {
         _dependencyMock = dependencyMock;
-        _arrangement = arrangement;
         _testComposer = testComposer;
     }
 
@@ -29,9 +25,7 @@ public class MockDependencyBuilder<TSut, TDependency> :
         return _testComposer.ComposeDependencyBuilder(
             _dependencyMock,
             newDependency,
-            null,
-            _arrangement,
-            _testComposer
+            null
         );
     }
 
@@ -43,9 +37,7 @@ public class MockDependencyBuilder<TSut, TDependency> :
     public IMockDependencyBuilder<TSut, TNewDependency> WithA<TNewDependency>() where TNewDependency : class
     {
         return _testComposer.ComposeMockDependencyBuilder<TDependency, TNewDependency>(
-            _dependencyMock,
-            _arrangement,
-            _testComposer
+            _dependencyMock
         );
     }
 
@@ -53,7 +45,7 @@ public class MockDependencyBuilder<TSut, TDependency> :
         Func<IArrangement, MockSetup<TDependency, TDependencyResult>> func
         )
     {
-        var result = func.Invoke(_arrangement);
+        var result = func.Invoke(_testComposer.Arrangement);
 
          _dependencyMock.Setup(result.When).Returns(result.Then);
          
@@ -65,7 +57,7 @@ public class MockDependencyBuilder<TSut, TDependency> :
         return _testComposer.ComposeMockAsserter(
             _dependencyMock,
             func,
-            _arrangement
+            _testComposer.Arrangement
             );
     }
 
@@ -74,7 +66,7 @@ public class MockDependencyBuilder<TSut, TDependency> :
         return _testComposer.ComposeMockAsserter(
             _dependencyMock,
             func,
-            _arrangement
+            _testComposer.Arrangement
         );
     }
 }

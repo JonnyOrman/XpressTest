@@ -6,10 +6,22 @@ Tests are written by specifying the SUT, arranging any mocks or other objects re
 Simple tests written with `XpressTest` will look something like this:
 ```
 [Fact]
-public void AddNumbers() =>
+public void MultiplyNumbers() =>
     GivenA<Calculator>
-        .WhenIt(sut => sut.Add(2, 2))
-        .ThenTheResultShouldBe(4);
+        .WhenIt().Multiply(3, 2)
+        .ThenTheResultShouldBe(6);
+
+[Fact]
+public void DivideNumbers() =>
+    GivenA<Calculator>
+        .WhenIt().Divide(6, 3)
+        .ThenTheResultShouldBe(2);
+
+[Fact]
+public void DivideByZero() =>
+    GivenA<Calculator>
+        .WhenIt(sut => sut.Divide(6, 0))
+        .ThenItShouldThrow<DivideByZeroException>();
 ```
 
 Tests that require more detailed setup and assertion will look something like this:
@@ -17,30 +29,30 @@ Tests that require more detailed setup and assertion will look something like th
 [Fact]
 public void ProcessValidParameters() =>
     GivenA<ParametersProcessor>
-        .And(new EntityParameters(string.Empty), "parameters")
-        .And(new Entity(1, string.Empty), "entity")
+        .AndGiven(new EntityParameters(string.Empty), "parameters")
+        .AndGiven(new Entity(1, string.Empty), "entity")
         .WithA<IValidator>()
-        .That(arrangement =>
+        .ThatDoes(arrangement =>
             new MockSetup<IValidator, bool>(
-                validator => validator.IsValid(arrangement.Objects.Get<EntityParameters>("parameters")),
+                validator => validator.IsValid(arrangement.GetObject<EntityParameters>("parameters")),
                 true))
         .WithA<ICreator>()
-        .That(arrangement =>
+        .ThatDoes(arrangement =>
             new MockSetup<ICreator, Entity>(
-                creator => creator.Create(arrangement.Objects.Get<EntityParameters>("parameters")),
+                creator => creator.Create(arrangement.GetObject<EntityParameters>("parameters")),
                 arrangement.Objects.Get<Entity>("entity")
             ))
-        .WhenIt(action => action.Sut.Process(action.Objects.Get<EntityParameters>("parameters")))
+        .WhenIt(action => action.Sut.Process(action.GetObject<EntityParameters>("parameters")))
         .ThenItShould(assertion =>
         {
             assertion.Dependencies.GetMock<IValidator>()
-                .Verify(validator => validator.IsValid(assertion.Objects.Get<EntityParameters>("parameters")),
+                .Verify(validator => validator.IsValid(assertion.GetObject<EntityParameters>("parameters")),
                     Times.Once);
             assertion.Dependencies.GetMock<ICreator>()
                 .Verify(
-                    creator => creator.Create(assertion.Objects.Get<EntityParameters>("parameters")),
+                    creator => creator.Create(assertion.GetObject<EntityParameters>("parameters")),
                     Times.Once);
-            Assert.Equal(assertion.Objects.Get<Entity>("entity"), assertion.Result);
+            Assert.Equal(assertion.GetObject<Entity>("entity"), assertion.Result);
         })
         .Test();
 ```
@@ -49,185 +61,7 @@ public void ProcessValidParameters() =>
 
 Install by running the following:
 ```
-dotnet add package XpressTest --version 1.0.0-alpha.4
+dotnet add package XpressTest --version 1.0.0-alpha.5
 ```
 
-If we have the following classes and interfaces:
-```
-namespace XpressTest.Examples;
-
-public class Entity
-{
-    public Entity(
-        int id,
-        string name)
-    {
-        Id = id;
-        Name = name;
-    }
-
-    public int Id { get; }
-    
-    public string Name { get; }
-}
-
-public class EntityParameters
-{
-    public EntityParameters(string name)
-    {
-        Name = name;
-    }
-    
-    public string Name { get; }
-}
-
-public interface IValidator
-{
-    bool IsValid(EntityParameters entityParameters);
-}
-
-public class Validator : IValidator
-{
-    public bool IsValid(EntityParameters entityParameters)
-    {
-        return !string.IsNullOrWhiteSpace(entityParameters.Name);
-    }
-}
-
-public interface ICreator
-{
-    Entity Create(EntityParameters entityParameters);
-}
-
-public class Creator : ICreator
-{
-    public Entity Create(EntityParameters entityParameters)
-    {
-        var nextId = 1;
-        
-        return new Entity(
-            1,
-            entityParameters.Name);
-    }
-}
-
-public class ParametersProcessor
-{
-    private readonly IValidator _validator;
-    private readonly ICreator _creator;
-
-    public ParametersProcessor(
-        IValidator validator,
-        ICreator creator
-    )
-    {
-        _validator = validator;
-        _creator = creator;
-    }
-
-    public Entity Process(EntityParameters entityParameters)
-    {
-        if(_validator.IsValid(entityParameters))
-        {
-            return _creator.Create(entityParameters);
-        }
-
-        return null;
-    }
-}
-```
-
-Then we can test them like this:
-```
-using Moq;
-using Xunit;
-
-namespace XpressTest.Examples;
-
-public class ValidatorTests
-{
-    [Theory]
-    [InlineData("ValidName", true)]
-    [InlineData(" ", false)]
-    [InlineData("", false)]
-    [InlineData(null, false)]
-    public void ValidateParameters(string name, bool expectedResult) =>
-        GivenA<Validator>
-            .And(new EntityParameters(name), "EntityParameters")
-            .WhenIt(action => action.Sut.IsValid(action.Objects.Get<EntityParameters>("EntityParameters")))
-            .ThenItShould(assertion => { Assert.Equal(expectedResult, assertion.Result); })
-            .Test();
-}
-
-public class CreatorTests
-{
-    [Fact]
-    public void CreateEntity() =>
-        GivenA<Creator>
-            .And(new EntityParameters("EntityName"), "EntityParameters")
-            .WhenIt(action => action.Sut.Create(action.Objects.Get<EntityParameters>("EntityParameters")))
-            .ThenItShould(assertion =>
-            {
-                Assert.Equal(1, assertion.Result.Id);
-                Assert.Equal("EntityName", assertion.Result.Name);
-            })
-            .Test();
-}
-
-public class ParametersProcessorTests
-{
-    [Fact]
-    public void ProcessValidParameters() =>
-        GivenA<ParametersProcessor>
-            .And(new EntityParameters(string.Empty), "parameters")
-            .And(new Entity(1, string.Empty), "entity")
-            .WithA<IValidator>()
-            .That(arrangement =>
-                new MockSetup<IValidator, bool>(
-                    validator => validator.IsValid(arrangement.Objects.Get<EntityParameters>("parameters")),
-                    true))
-            .WithA<ICreator>()
-            .That(arrangement =>
-                new MockSetup<ICreator, Entity>(
-                    creator => creator.Create(arrangement.Objects.Get<EntityParameters>("parameters")),
-                    arrangement.Objects.Get<Entity>("entity")
-                ))
-            .WhenIt(action => action.Sut.Process(action.Objects.Get<EntityParameters>("parameters")))
-            .ThenItShould(assertion =>
-            {
-                assertion.Dependencies.GetMock<IValidator>()
-                    .Verify(validator => validator.IsValid(assertion.Objects.Get<EntityParameters>("parameters")),
-                        Times.Once);
-                assertion.Dependencies.GetMock<ICreator>()
-                    .Verify(
-                        creator => creator.Create(assertion.Objects.Get<EntityParameters>("parameters")),
-                        Times.Once);
-                Assert.Equal(assertion.Objects.Get<Entity>("entity"), assertion.Result);
-            })
-            .Test();
-
-    [Fact]
-    public void ProcessInvalidParameters() =>
-        GivenA<ParametersProcessor>
-            .And(new EntityParameters(string.Empty), "parameters")
-            .WithA<IValidator>()
-            .That(arrangement => new MockSetup<IValidator, bool>(
-                validator => validator.IsValid(arrangement.Objects.Get<EntityParameters>("parameters")),
-                false))
-            .WithA<ICreator>()
-            .WhenIt(action => action.Sut.Process(action.Objects.Get<EntityParameters>("parameters")))
-            .ThenItShould(assertion =>
-            {
-                assertion.Dependencies.GetMock<IValidator>()
-                    .Verify(
-                        validator => validator.IsValid(assertion.Objects.Get<EntityParameters>("parameters")),
-                        Times.Once);
-                assertion.Dependencies.GetMock<ICreator>()
-                    .Verify(
-                        creator => creator.Create(It.IsAny<EntityParameters>()),
-                        Times.Never);
-                Assert.Null(assertion.Result);
-            })
-            .Test();
-}
-```
+Examples of usage can be seen in the `XpressTest.Examples` project in this repository.

@@ -1,26 +1,18 @@
-﻿using Moq;
-
-namespace XpressTest;
+﻿namespace XpressTest;
 
 public static class MockObjectTestInitialiser<TSut, TObject>
     where TSut : class
     where TObject : class
 {
-    public static IMockObjectBuilder<TSut, TObject> Initialise(string objectName)
+    public static IMockObjectBuilder<TSut, TObject> Initialise(string mockName)
     {
-        var objectMock = new Mock<TObject>();
-
-        var objectCollection = new ObjectCollection();
-
+        var namedMock = NamedMockInitialiser<TObject>.Initialise(mockName);
+        
         var testComposer = TestComposerInitialiser<TSut>.Initialise();
 
-        var builder = new MockObjectBuilder<TSut, TObject>(
-            objectMock,
-            objectName,
-            objectCollection,
+        return new MockObjectBuilder<TSut, TObject>(
+            namedMock,
             testComposer
         );
-
-        return builder;
     }
 }

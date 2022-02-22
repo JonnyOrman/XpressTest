@@ -1,4 +1,5 @@
-﻿using XpressTest.Examples.Src;
+﻿using System;
+using XpressTest.Examples.Src;
 using Xunit;
 
 namespace XpressTest.Examples.Tests;
@@ -6,8 +7,20 @@ namespace XpressTest.Examples.Tests;
 public class CalculatorTests
 {
     [Fact]
-    public void AddNumbers() =>
+    public void MultiplyNumbers() =>
         GivenA<Calculator>
-            .WhenIt(sut => sut.Add(2, 2))
-            .ThenTheResultShouldBe(4);
+            .WhenIt().Multiply(3, 2)
+            .ThenTheResultShouldBe(6);
+
+    [Fact]
+    public void DivideNumbers() =>
+        GivenA<Calculator>
+            .WhenIt().Divide(6, 3)
+            .ThenTheResultShouldBe(2);
+
+    [Fact]
+    public void DivideByZero() =>
+        GivenA<Calculator>
+            .WhenIt(sut => sut.Divide(6, 0))
+            .ThenItShouldThrow<DivideByZeroException>();
 }

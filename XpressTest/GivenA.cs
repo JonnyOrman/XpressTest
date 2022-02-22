@@ -25,13 +25,18 @@ public static class GivenA<TSut>
         return DependencyTestInitialiser<TSut>.Initialise(dependency);
     }
     
-    public static IAsserter<System.Action<IArrangement>> WhenIt(System.Action<IAction<TSut>> action)
+    public static void WhenIt(System.Action<TSut> action)
     {
-        return ActionInitialiser<TSut>.Initialise(action);
+        ActionInitialiser<TSut>.Initialise(action);
     }
-    
-    public static ISimpleAsserter<TResult> WhenIt<TResult>(Func<TSut, TResult> func)
+
+    public static ISimpleAsserter WhenIt<TResult>(Func<TSut, TResult> func)
     {
         return ResultActionInitialiser<TSut>.Initialise(func);
+    }
+
+    public static TSut WhenIt()
+    {
+        return Activator.CreateInstance<TSut>();
     }
 }

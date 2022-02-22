@@ -8,14 +8,12 @@ public interface IMockDependencyBuilderComposer<TSut>
         Mock<TCurrentDependency> currentMockDependency,
         TNewDependency dependency,
         string name,
-        IArrangement arrangement,
         ITestComposer<TSut> testComposer
         )
         where TCurrentDependency : class;
 
     IMockDependencyBuilder<TSut, TNewDependency> Compose<TCurrentDependency, TNewDependency>(
         Mock<TCurrentDependency> currentDependency,
-        IArrangement arrangement,
         ITestComposer<TSut> testComposer
     )
         where TCurrentDependency : class

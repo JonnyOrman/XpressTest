@@ -1,4 +1,3 @@
-using Moq;
 using System.Linq.Expressions;
 
 namespace XpressTest;
@@ -7,24 +6,16 @@ public class MockObjectBuilder<TSut, TObject> : IMockObjectBuilder<TSut, TObject
     where TSut : class
     where TObject : class
 {
-    private readonly Mock<TObject> _mockObject;
-
-    private readonly string _name;
-
-    private readonly IObjectCollection _objectCollection;
-
+    private readonly INamedMock<TObject> _namedMock;
+    
     private readonly ITestComposer<TSut> _testComposer;
 
     public MockObjectBuilder(
-        Mock<TObject> mockObject,
-        string name,
-        IObjectCollection objectCollection,
+        INamedMock<TObject> namedMock,
         ITestComposer<TSut> testComposer
         )
     {
-        _mockObject = mockObject;
-        _name = name;
-        _objectCollection = objectCollection;
+        _namedMock = namedMock;
         _testComposer = testComposer;
     }
 
@@ -50,24 +41,7 @@ public class MockObjectBuilder<TSut, TObject> : IMockObjectBuilder<TSut, TObject
 
     public IMockDependencyBuilder<TSut, TNewDependency> WithA<TNewDependency>() where TNewDependency : class
     {
-        var mockObject = new MockObject<TObject>(_mockObject, _name);
-        
-        _objectCollection.Add(mockObject);
-
-        var mock = new Mock<TNewDependency>();
-
-        var dependencyCollection = new DependencyCollection();
-
-        var arrangement = new Arrangement(
-            _objectCollection,
-            dependencyCollection
-        );
-
-        return new MockDependencyBuilder<TSut, TNewDependency>(
-            mock,
-            arrangement,
-            _testComposer
-        );
+        return _testComposer.StartNewMockDependencyBuilder<TNewDependency, TObject>(_namedMock);
     }
 
     public IObjectBuilder<TSut> AndGivenA<TNewObject>()

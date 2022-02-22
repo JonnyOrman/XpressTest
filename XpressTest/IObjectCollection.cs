@@ -4,5 +4,5 @@ public interface IObjectCollection
 {
     T Get<T>(string name);
     
-    void Add(IObject objct);
+    void Add<T>(INamedObject<T> namedObject);
 }

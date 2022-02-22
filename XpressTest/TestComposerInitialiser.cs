@@ -19,11 +19,14 @@ public static class TestComposerInitialiser<TSut>
 
         var mockDependencyBuilderComposer = new MockDependencyBuilderComposer<TSut>();
 
+        var arrangement = ArrangementInitialiser.Initialise();
+
         return new TestComposer<TSut>(
             mockDependencyAsserterComposer,
             dependencyAsserterComposer,
             dependencyBuilderComposer,
-            mockDependencyBuilderComposer
+            mockDependencyBuilderComposer,
+            arrangement
         );
     }
 }

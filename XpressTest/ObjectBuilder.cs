@@ -5,24 +5,15 @@ namespace XpressTest;
 public class ObjectBuilder<TSut, TObject> : IObjectBuilder<TSut>
     where TSut : class
 {
-    private readonly TObject _obj;
-
-    private readonly string _name;
-
-    private readonly IObjectCollection _objectCollection;
-
+    private readonly INamedObject<TObject> _namedObject;
     private readonly ITestComposer<TSut> _testComposer;
 
     public ObjectBuilder(
-        TObject obj,
-        string name,
-        IObjectCollection objectCollection,
+        INamedObject<TObject> namedObject,
         ITestComposer<TSut> testComposer
         )
     {
-        _obj = obj;
-        _name = name;
-        _objectCollection = objectCollection;
+        _namedObject = namedObject;
         _testComposer = testComposer;
     }
 
@@ -43,41 +34,20 @@ public class ObjectBuilder<TSut, TObject> : IObjectBuilder<TSut>
 
     public IObjectBuilder<TSut> AndGiven<TNewObject>(TNewObject obj, string name)
     {
-        var objct = new Object<TObject>(
-            _obj,
-            _name
-            );
-        
-        _objectCollection.Add(objct);
-        
-        var builder = new ObjectBuilder<TSut, TNewObject>(
+        var newNamedObject = new NamedObject<TNewObject>(
             obj,
-            name,
-            _objectCollection,
-            _testComposer
+            name
         );
 
-        return builder;
+        return _testComposer.StartNewObjectBuilder(_namedObject, newNamedObject);
     }
 
     public IAsserter<System.Action<IAssertion<TSut, TResult>>> WhenIt<TResult>(Func<IAction<TSut>, TResult> func)
     {
-        var obj = new Object<TObject>(
-            _obj,
-            _name
-            );
+        _testComposer.Arrangement.Add(_namedObject);
         
-        _objectCollection.Add(obj);
-
-        var dependencyCollection = new DependencyCollection();
-
-        var arrangement = new Arrangement(
-            _objectCollection,
-            dependencyCollection
-            );
-
         var sutComposer = new SutComposer<TSut>(
-            arrangement
+            _testComposer.Arrangement
         );
         
         var actionExecutor = new ResultActionExecutor<TSut, TResult>(
@@ -86,7 +56,7 @@ public class ObjectBuilder<TSut, TObject> : IObjectBuilder<TSut>
 
         var sutTesterComposer = new SutTesterComposer<TSut, IAssertion<TSut, TResult>>(
             actionExecutor,
-            arrangement
+            _testComposer.Arrangement
         );
 
         var builder = new ResultAsserter<TSut, TResult>(
@@ -114,28 +84,6 @@ public class ObjectBuilder<TSut, TObject> : IObjectBuilder<TSut>
 
     public IMockDependencyBuilder<TSut, TNewDependency> WithA<TNewDependency>() where TNewDependency : class
     {
-        var objct = new Object<TObject>(
-            _obj,
-            _name
-        );
-        
-        _objectCollection.Add(objct);
-        
-        var dependencyMock = new Mock<TNewDependency>();
-
-        var dependencyCollection = new DependencyCollection();
-
-        var arrangement = new Arrangement(
-            _objectCollection,
-            dependencyCollection
-            );
-
-        var builder = new MockDependencyBuilder<TSut, TNewDependency>(
-            dependencyMock,
-            arrangement,
-            _testComposer
-        );
-
-        return builder;
+        return _testComposer.StartNewMockDependencyBuilder<TNewDependency, TObject>(_namedObject);
     }
 }

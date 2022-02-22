@@ -1,10 +1,13 @@
 namespace XpressTest;
 
-public class Action<TSut> : IAction<TSut>
+public class Action<TSut> : Arrangement, IAction<TSut>
 {
     public Action(
         TSut sut,
         IArrangement arrangement
+        ) :base(
+        arrangement.Objects,
+        arrangement.Dependencies
         )
     {
         Sut = sut;
@@ -14,10 +17,4 @@ public class Action<TSut> : IAction<TSut>
     public TSut Sut { get; }
     
     public IArrangement Arrangement { get; }
-
-    public T GetObject<T>(string name) => Objects.Get<T>(name);
-
-    public IObjectCollection Objects => Arrangement.Objects;
-
-    public IDependencyCollection Dependencies => Arrangement.Dependencies;
 }

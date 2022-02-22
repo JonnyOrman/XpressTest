@@ -12,8 +12,8 @@ public class ValidatorTests
     [InlineData(null, false)]
     public void ValidateParameters(string name, bool expectedResult) =>
         GivenA<Validator>
-            .And(new EntityParameters(name), "EntityParameters")
-            .WhenIt(action => action.Sut.IsValid(action.Objects.Get<EntityParameters>("EntityParameters")))
+            .AndGiven(new EntityParameters(name), "EntityParameters")
+            .WhenIt(action => action.Sut.IsValid(action.GetObject<EntityParameters>("EntityParameters")))
             .ThenItShould(assertion => { Assert.Equal(expectedResult, assertion.Result); })
             .Test();
 }

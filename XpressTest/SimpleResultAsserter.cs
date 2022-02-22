@@ -1,24 +1,29 @@
 ﻿namespace XpressTest;
 
-public class SimpleResultAsserter<TSut, TResult> : ISimpleAsserter<TResult>
+public class SimpleResultAsserter<TResult> : ISimpleAsserter
 {
-    private readonly ISutTesterComposer<TSut, TResult> _sutTesterComposer;
+    private readonly IResultProvider<TResult> _resultProvider;
 
     public SimpleResultAsserter(
-        ISutTesterComposer<TSut, TResult> sutTesterComposer
+        IResultProvider<TResult> resultProvider
         )
     {
-        _sutTesterComposer = sutTesterComposer;
+        _resultProvider = resultProvider;
     }
-
-    public void ThenTheResultShouldBe(TResult expectedResult)
+    
+    public void ThenItShouldThrow<TException>()
+        where TException : Exception
     {
-        var sutTester = _sutTesterComposer.Compose(expectedResult);
-
-        var tester = new SimpleTester<TSut>(
-            sutTester
-        );
-
-        tester.Test();
+        try
+        {
+            _resultProvider.Get();
+        }
+        catch (Exception exception)
+        {
+            if (exception.GetType() != typeof(TException))
+            {
+                throw exception;
+            }
+        }
     }
 }

@@ -8,17 +8,16 @@ public static class ObjectTestInitialiser<TSut, TObject>
         string objectName
         )
     {
-        var objectCollection = new ObjectCollection();
+        var namedObject = NamedObjectInitialiser<TObject>.Initialise(
+            obj,
+            objectName
+        );
 
         var testComposer = TestComposerInitialiser<TSut>.Initialise();
 
-        var builder = new ObjectBuilder<TSut, TObject>(
-            obj,
-            objectName,
-            objectCollection,
+        return new ObjectBuilder<TSut, TObject>(
+            namedObject,
             testComposer
         );
-
-        return builder;
     }
 }

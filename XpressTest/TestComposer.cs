@@ -3,53 +3,51 @@
 namespace XpressTest;
 
 public class TestComposer<TSut> : ITestComposer<TSut>
+    where TSut : class
 {
     private readonly IMockDependencyAsserterComposer<TSut> _mockDependencyAsserterComposer;
     private readonly IDependencyAsserterComposer<TSut> _dependencyAsserterComposer;
     private readonly IDependencyBuilderComposer<TSut> _dependencyBuilderComposer;
     private readonly IMockDependencyBuilderComposer<TSut> _mockDependencyBuilderComposer;
+    private readonly IArrangement _arrangement;
 
     public TestComposer(
         IMockDependencyAsserterComposer<TSut> mockDependencyAsserterComposer,
         IDependencyAsserterComposer<TSut> dependencyAsserterComposer,
         IDependencyBuilderComposer<TSut> dependencyBuilderComposer,
-        IMockDependencyBuilderComposer<TSut> mockDependencyBuilderComposer
+        IMockDependencyBuilderComposer<TSut> mockDependencyBuilderComposer,
+        IArrangement arrangement
         )
     {
         _mockDependencyAsserterComposer = mockDependencyAsserterComposer;
         _dependencyAsserterComposer = dependencyAsserterComposer;
         _dependencyBuilderComposer = dependencyBuilderComposer;
         _mockDependencyBuilderComposer = mockDependencyBuilderComposer;
+        _arrangement = arrangement;
     }
 
     public IDependencyBuilder<TSut> ComposeDependencyBuilder<TDependency, TNewDependency>(
         TDependency dependency,
         TNewDependency newDependency,
-        string name,
-        IArrangement arrangement,
-        ITestComposer<TSut> testComposer
+        string name
         )
     {
         return _dependencyBuilderComposer.Compose(
             dependency,
             newDependency,
             name,
-            arrangement,
-            testComposer
+            this
         );
     }
 
     public IMockDependencyBuilder<TSut, TNewDependency> ComposeDependencyBuilder<TDependency, TNewDependency>(
-        TDependency dependency,
-        IArrangement arrangement,
-        ITestComposer<TSut> testComposer
+        TDependency dependency
         )
             where TNewDependency : class
     {
         return _dependencyBuilderComposer.Compose<TDependency, TNewDependency>(
             dependency,
-            arrangement,
-            testComposer
+            this
         );
     }
 
@@ -108,17 +106,68 @@ public class TestComposer<TSut> : ITestComposer<TSut>
     }
     
     public IMockDependencyBuilder<TSut, TNewDependency> ComposeMockDependencyBuilder<TDependency, TNewDependency>(
-        Mock<TDependency> dependencyMock,
-        IArrangement arrangement,
-        ITestComposer<TSut> testComposer
+        Mock<TDependency> dependencyMock
     )
         where TDependency : class
         where TNewDependency : class
     {
         return _mockDependencyBuilderComposer.Compose<TDependency, TNewDependency>(
             dependencyMock,
-            arrangement,
-            testComposer
+            this
         );
     }
+
+    public IMockDependencyBuilder<TSut, TNewDependency> StartNewMockDependencyBuilder<TNewDependency, TObject>(
+        INamedMock<TObject> mock
+        )
+            where TNewDependency : class
+            where TObject : class
+    {
+        var mockObject = new NamedMock<TObject>(
+            mock.Mock,
+            mock.Name
+        );
+
+        _arrangement.Add(mockObject);
+
+        var newMock = new Mock<TNewDependency>();
+        
+        return new MockDependencyBuilder<TSut, TNewDependency>(
+            newMock,
+            this
+        );
+    }
+
+    public IMockDependencyBuilder<TSut, TNewDependency> StartNewMockDependencyBuilder<TNewDependency, TObject>(
+        INamedObject<TObject> namedObject
+        ) where TNewDependency : class
+    {
+        _arrangement.Add(namedObject);
+
+        var dependencyMock = new Mock<TNewDependency>();
+
+        var builder = new MockDependencyBuilder<TSut, TNewDependency>(
+            dependencyMock,
+            this
+        );
+
+        return builder;
+    }
+
+    public IObjectBuilder<TSut> StartNewObjectBuilder<TNewObject, TObject>(
+        INamedObject<TObject> oldNamedObject,
+        INamedObject<TNewObject> newNamedObject
+        )
+    {
+        _arrangement.Add(oldNamedObject);
+
+        var builder = new ObjectBuilder<TSut, TNewObject>(
+            newNamedObject,
+            this
+        );
+
+        return builder;
+    }
+
+    public IArrangement Arrangement => _arrangement;
 }

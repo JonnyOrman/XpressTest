@@ -16,6 +16,8 @@ public class VoidAssertion<TSut> : IAssertion<TSut>
     public IDependencyCollection Dependencies => Action.Dependencies;
 
     public T GetObject<T>(string name) => Objects.Get<T>(name);
+    
+    public void Add<T>(INamedObject<T> obj) => Objects.Add(obj);
 
     public IAction<TSut> Action { get; }
 

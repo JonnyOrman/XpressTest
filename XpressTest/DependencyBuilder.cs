@@ -5,19 +5,15 @@ public class DependencyBuilder<TSut, TDependency> :
     where TSut : class
 {
     private readonly TDependency _dependency;
-
-    private readonly IArrangement _arrangement;
-
+    
     private readonly ITestComposer<TSut> _testComposer;
 
     public DependencyBuilder(
         TDependency dependency,
-        IArrangement arrangement,
         ITestComposer<TSut> testComposer
             )
     {
         _dependency = dependency;
-        _arrangement = arrangement;
         _testComposer = testComposer;
     }
     
@@ -27,18 +23,14 @@ public class DependencyBuilder<TSut, TDependency> :
         return _testComposer.ComposeDependencyBuilder(
             _dependency,
             newDependency,
-            name,
-            _arrangement,
-            _testComposer
+            name
         );
     }
     
     public IMockDependencyBuilder<TSut, TNewDependency> WithA<TNewDependency>() where TNewDependency : class
     {
         return _testComposer.ComposeDependencyBuilder<TDependency, TNewDependency>(
-            _dependency,
-            _arrangement,
-            _testComposer
+            _dependency
         );
     }
     
@@ -47,7 +39,7 @@ public class DependencyBuilder<TSut, TDependency> :
         return _testComposer.ComposeAsserter(
             _dependency,
             func,
-            _arrangement
+            _testComposer.Arrangement
         );
     }
 
@@ -56,7 +48,7 @@ public class DependencyBuilder<TSut, TDependency> :
         return _testComposer.ComposeAsserter(
             _dependency,
             func,
-            _arrangement
+            _testComposer.Arrangement
         );
     }
 }

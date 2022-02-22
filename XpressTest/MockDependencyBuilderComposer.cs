@@ -9,7 +9,6 @@ public class MockDependencyBuilderComposer<TSut> : IMockDependencyBuilderCompose
         Mock<TCurrentDependency> currentMockDependency,
         TNewDependency newDependency,
         string name,
-        IArrangement arrangement,
         ITestComposer<TSut> testComposer
         )
         where TCurrentDependency : class
@@ -18,12 +17,11 @@ public class MockDependencyBuilderComposer<TSut> : IMockDependencyBuilderCompose
         {
             var dependency = new MockDependency<TCurrentDependency>(currentMockDependency);
 
-            arrangement.Dependencies.Add(dependency);
+            testComposer.Arrangement.Dependencies.Add(dependency);
         }
 
         var builder = new DependencyBuilder<TSut, TNewDependency>(
             newDependency,
-            arrangement,
             testComposer
         );
 
@@ -32,7 +30,6 @@ public class MockDependencyBuilderComposer<TSut> : IMockDependencyBuilderCompose
 
     public IMockDependencyBuilder<TSut, TNewDependency> Compose<TCurrentDependency, TNewDependency>(
         Mock<TCurrentDependency> currentMockDependency,
-        IArrangement arrangement,
         ITestComposer<TSut> testComposer
         )
             where TCurrentDependency : class
@@ -42,12 +39,11 @@ public class MockDependencyBuilderComposer<TSut> : IMockDependencyBuilderCompose
         {
             var dependency = new MockDependency<TCurrentDependency>(currentMockDependency);
 
-            arrangement.Dependencies.Add(dependency);
+            testComposer.Arrangement.Dependencies.Add(dependency);
         }
 
         var builder = new MockDependencyBuilder<TSut, TNewDependency>(
             new Mock<TNewDependency>(),
-            arrangement,
             testComposer
         );
 

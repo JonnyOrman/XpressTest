@@ -9,7 +9,6 @@ public class DependencyBuilderComposer<TSut> : IDependencyBuilderComposer<TSut>
         TCurrentDependency currentDependency,
         TNewDependency newDependency,
         string name,
-        IArrangement arrangement,
         ITestComposer<TSut> testComposer
         )
     {
@@ -17,12 +16,11 @@ public class DependencyBuilderComposer<TSut> : IDependencyBuilderComposer<TSut>
         {
             var dependency = new Dependency<TCurrentDependency>(currentDependency, name);
 
-            arrangement.Dependencies.Add(dependency);
+            testComposer.Arrangement.Dependencies.Add(dependency);
         }
 
         var builder = new DependencyBuilder<TSut, TNewDependency>(
             newDependency,
-            arrangement,
             testComposer
         );
 
@@ -31,7 +29,6 @@ public class DependencyBuilderComposer<TSut> : IDependencyBuilderComposer<TSut>
 
     public IMockDependencyBuilder<TSut, TNewDependency> Compose<TCurrentDependency, TNewDependency>(
         TCurrentDependency currendDependency,
-        IArrangement arrangement,
         ITestComposer<TSut> testComposer
     )
         where TNewDependency : class
@@ -40,12 +37,11 @@ public class DependencyBuilderComposer<TSut> : IDependencyBuilderComposer<TSut>
         {
             var dependency = new Dependency<TCurrentDependency>(currendDependency);
 
-            arrangement.Dependencies.Add(dependency);
+            testComposer.Arrangement.Dependencies.Add(dependency);
         }
 
         var builder = new MockDependencyBuilder<TSut, TNewDependency>(
             new Mock<TNewDependency>(),
-            arrangement,
             testComposer
         );
 

@@ -1,6 +1,7 @@
 ﻿namespace XpressTest;
 
-public interface ISimpleAsserter<TResult>
+public interface ISimpleAsserter
 {
-    void ThenTheResultShouldBe(TResult expectedResult);
+    void ThenItShouldThrow<TException>()
+        where TException : Exception;
 }

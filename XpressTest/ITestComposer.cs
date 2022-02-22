@@ -7,15 +7,11 @@ public interface ITestComposer<TSut>
     IDependencyBuilder<TSut> ComposeDependencyBuilder<TDependency, TNewDependency>(
         TDependency dependency,
         TNewDependency newDependency,
-        string name,
-        IArrangement arrangement,
-        ITestComposer<TSut> testComposer
+        string name
     );
 
     IMockDependencyBuilder<TSut, TNewDependency> ComposeDependencyBuilder<TDependency, TNewDependency>(
-        TDependency dependency,
-        IArrangement arrangement,
-        ITestComposer<TSut> testComposer
+        TDependency dependency
     )
         where TNewDependency : class;
 
@@ -46,10 +42,26 @@ public interface ITestComposer<TSut>
     );
 
     IMockDependencyBuilder<TSut, TNewDependency> ComposeMockDependencyBuilder<TDependency, TNewDependency>(
-        Mock<TDependency> dependencyMock,
-        IArrangement arrangement,
-        ITestComposer<TSut> testComposer
+        Mock<TDependency> mock
         )
         where TDependency : class
         where TNewDependency : class;
+
+    IMockDependencyBuilder<TSut, TNewDependency> StartNewMockDependencyBuilder<TNewDependency, TObject>(
+        INamedMock<TObject> namedMock
+        )
+            where TNewDependency : class
+            where TObject : class;
+
+    IMockDependencyBuilder<TSut, TNewDependency> StartNewMockDependencyBuilder<TNewDependency, TObject>(
+        INamedObject<TObject> namedObject
+        )
+        where TNewDependency : class;
+
+    IObjectBuilder<TSut> StartNewObjectBuilder<TNewDependency, TObject>(
+        INamedObject<TObject> oldNamedObject,
+        INamedObject<TNewDependency> newNamedObject
+        );
+
+    IArrangement Arrangement { get; }
 }

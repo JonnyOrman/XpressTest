@@ -9,48 +9,48 @@ public class ParametersProcessorTests
     [Fact]
     public void ProcessValidParameters() =>
         GivenA<ParametersProcessor>
-            .And(new EntityParameters(string.Empty), "parameters")
-            .And(new Entity(1, string.Empty), "entity")
+            .AndGiven(new EntityParameters(string.Empty), "parameters")
+            .AndGiven(new Entity(1, string.Empty), "entity")
             .WithA<IValidator>()
-            .That(arrangement =>
+            .ThatDoes(arrangement =>
                 new MockSetup<IValidator, bool>(
-                    validator => validator.IsValid(arrangement.Objects.Get<EntityParameters>("parameters")),
+                    validator => validator.IsValid(arrangement.GetObject<EntityParameters>("parameters")),
                     true))
             .WithA<ICreator>()
-            .That(arrangement =>
+            .ThatDoes(arrangement =>
                 new MockSetup<ICreator, Entity>(
-                    creator => creator.Create(arrangement.Objects.Get<EntityParameters>("parameters")),
+                    creator => creator.Create(arrangement.GetObject<EntityParameters>("parameters")),
                     arrangement.Objects.Get<Entity>("entity")
                 ))
-            .WhenIt(action => action.Sut.Process(action.Objects.Get<EntityParameters>("parameters")))
+            .WhenIt(action => action.Sut.Process(action.GetObject<EntityParameters>("parameters")))
             .ThenItShould(assertion =>
             {
                 assertion.Dependencies.GetMock<IValidator>()
-                    .Verify(validator => validator.IsValid(assertion.Objects.Get<EntityParameters>("parameters")),
+                    .Verify(validator => validator.IsValid(assertion.GetObject<EntityParameters>("parameters")),
                         Times.Once);
                 assertion.Dependencies.GetMock<ICreator>()
                     .Verify(
-                        creator => creator.Create(assertion.Objects.Get<EntityParameters>("parameters")),
+                        creator => creator.Create(assertion.GetObject<EntityParameters>("parameters")),
                         Times.Once);
-                Assert.Equal(assertion.Objects.Get<Entity>("entity"), assertion.Result);
+                Assert.Equal(assertion.GetObject<Entity>("entity"), assertion.Result);
             })
             .Test();
 
     [Fact]
     public void ProcessInvalidParameters() =>
         GivenA<ParametersProcessor>
-            .And(new EntityParameters(string.Empty), "parameters")
+            .AndGiven(new EntityParameters(string.Empty), "parameters")
             .WithA<IValidator>()
-            .That(arrangement => new MockSetup<IValidator, bool>(
-                validator => validator.IsValid(arrangement.Objects.Get<EntityParameters>("parameters")),
+            .ThatDoes(arrangement => new MockSetup<IValidator, bool>(
+                validator => validator.IsValid(arrangement.GetObject<EntityParameters>("parameters")),
                 false))
             .WithA<ICreator>()
-            .WhenIt(action => action.Sut.Process(action.Objects.Get<EntityParameters>("parameters")))
+            .WhenIt(action => action.Sut.Process(action.GetObject<EntityParameters>("parameters")))
             .ThenItShould(assertion =>
             {
                 assertion.Dependencies.GetMock<IValidator>()
                     .Verify(
-                        validator => validator.IsValid(assertion.Objects.Get<EntityParameters>("parameters")),
+                        validator => validator.IsValid(assertion.GetObject<EntityParameters>("parameters")),
                         Times.Once);
                 assertion.Dependencies.GetMock<ICreator>()
                     .Verify(
