@@ -2,5 +2,10 @@ namespace XpressTest;
 
 public interface IAsserter<TAssertion>
 {
-    ITester ThenItShould(TAssertion assertion);
+    ITester Then(TAssertion assertion);
+}
+
+public interface IAsserter<TAssertion, TResult> : IAsserter<TAssertion>, IResultPropertyTargeter<TResult>
+{
+
 }

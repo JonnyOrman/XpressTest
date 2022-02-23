@@ -11,7 +11,7 @@ public class DependencyAsserterComposer<TSut> : IDependencyAsserterComposer<TSut
         _asserterComposer = asserterComposer;
     }
 
-    public IAsserter<System.Action<IAssertion<TSut, TResult>>> Compose<TResult, TDependency>(
+    public IAsserter<System.Action<IAssertion<TSut, TResult>>, TResult> Compose<TResult, TDependency>(
         TDependency dependencyValue,
         Func<IAction<TSut>, TResult> func,
         IArrangement arrangement

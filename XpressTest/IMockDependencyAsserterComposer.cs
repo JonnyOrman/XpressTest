@@ -4,7 +4,7 @@ namespace XpressTest;
 
 public interface IMockDependencyAsserterComposer<TSut>
 {
-    IAsserter<System.Action<IAssertion<TSut, TResult>>> Compose<TResult, TDependency>(
+    IAsserter<System.Action<IAssertion<TSut, TResult>>, TResult> Compose<TResult, TDependency>(
         Mock<TDependency> dependencyMock,
         Func<IAction<TSut>, TResult> func,
         IArrangement arrangement

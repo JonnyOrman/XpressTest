@@ -11,9 +11,14 @@ public static class GivenA<TSut>
 
     public static IObjectBuilder<TSut> AndGiven<TObject>(TObject obj, string name)
     {
-        return ObjectTestInitialiser<TSut, TObject>.Initialise(obj, name);
+        return NamedObjectTestInitialiser<TSut, TObject>.Initialise(obj, name);
     }
-    
+
+    public static IObjectBuilder<TSut> AndGiven<TObject>(TObject obj)
+    {
+        return ObjectTestInitialiser<TSut, TObject>.Initialise(obj);
+    }
+
     public static IMockDependencyBuilder<TSut, TDependency> WithA<TDependency>()
         where TDependency : class
     {

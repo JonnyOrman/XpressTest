@@ -13,7 +13,7 @@ public class MockDependencyAsserterComposer<TSut> : IMockDependencyAsserterCompo
         _asserterComposer = asserterComposer;
     }
 
-    public IAsserter<System.Action<IAssertion<TSut, TResult>>> Compose<TResult, TDependency>(
+    public IAsserter<System.Action<IAssertion<TSut, TResult>>, TResult> Compose<TResult, TDependency>(
         Mock<TDependency> dependencyMock,
         Func<IAction<TSut>, TResult> func,
         IArrangement arrangement

@@ -52,7 +52,7 @@ public class MockDependencyBuilder<TSut, TDependency> :
          return this;
     }
 
-    public IAsserter<System.Action<IAssertion<TSut, TResult>>> WhenIt<TResult>(Func<IAction<TSut>, TResult> func)
+    public IAsserter<System.Action<IAssertion<TSut, TResult>>, TResult> WhenIt<TResult>(Func<IAction<TSut>, TResult> func)
     {
         return _testComposer.ComposeMockAsserter(
             _dependencyMock,
@@ -60,7 +60,7 @@ public class MockDependencyBuilder<TSut, TDependency> :
             _testComposer.Arrangement
             );
     }
-
+    
     public IAsserter<System.Action<IArrangement>> WhenIt(System.Action<IAction<TSut>> func)
     {
         return _testComposer.ComposeMockAsserter(

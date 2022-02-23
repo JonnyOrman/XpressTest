@@ -34,7 +34,7 @@ public class DependencyBuilder<TSut, TDependency> :
         );
     }
     
-    public IAsserter<System.Action<IAssertion<TSut, TResult>>> WhenIt<TResult>(Func<IAction<TSut>, TResult> func)
+    public IAsserter<System.Action<IAssertion<TSut, TResult>>, TResult> WhenIt<TResult>(Func<IAction<TSut>, TResult> func)
     {
         return _testComposer.ComposeAsserter(
             _dependency,

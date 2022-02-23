@@ -6,7 +6,11 @@ public interface IArrangement
     
     IDependencyCollection Dependencies { get; }
 
+    T GetObject<T>();
+
     T GetObject<T>(string name);
-    
+
+    void Add<T>(T obj);
+
     void Add<T>(INamedObject<T> namedObject);
 }

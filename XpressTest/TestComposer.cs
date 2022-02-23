@@ -51,7 +51,7 @@ public class TestComposer<TSut> : ITestComposer<TSut>
         );
     }
 
-    public IAsserter<System.Action<IAssertion<TSut, TResult>>> ComposeMockAsserter<TResult, TDependency>(
+    public IAsserter<System.Action<IAssertion<TSut, TResult>>, TResult> ComposeMockAsserter<TResult, TDependency>(
         Mock<TDependency> dependency,
         Func<IAction<TSut>, TResult> func,
         IArrangement arrangement
@@ -79,7 +79,7 @@ public class TestComposer<TSut> : ITestComposer<TSut>
         );
     }
 
-    public IAsserter<System.Action<IAssertion<TSut, TResult>>> ComposeAsserter<TResult, TDependency>(
+    public IAsserter<System.Action<IAssertion<TSut, TResult>>, TResult> ComposeAsserter<TResult, TDependency>(
         TDependency dependency,
         Func<IAction<TSut>, TResult> func,
         IArrangement arrangement
@@ -161,7 +161,7 @@ public class TestComposer<TSut> : ITestComposer<TSut>
     {
         _arrangement.Add(oldNamedObject);
 
-        var builder = new ObjectBuilder<TSut, TNewObject>(
+        var builder = new NamedObjectBuilder<TSut, TNewObject>(
             newNamedObject,
             this
         );

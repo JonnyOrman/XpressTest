@@ -23,7 +23,7 @@ public class ParametersProcessorTests
                     arrangement.Objects.Get<Entity>("entity")
                 ))
             .WhenIt(action => action.Sut.Process(action.GetObject<EntityParameters>("parameters")))
-            .ThenItShould(assertion =>
+            .Then(assertion =>
             {
                 assertion.Dependencies.GetMock<IValidator>()
                     .Verify(validator => validator.IsValid(assertion.GetObject<EntityParameters>("parameters")),
@@ -46,7 +46,7 @@ public class ParametersProcessorTests
                 false))
             .WithA<ICreator>()
             .WhenIt(action => action.Sut.Process(action.GetObject<EntityParameters>("parameters")))
-            .ThenItShould(assertion =>
+            .Then(assertion =>
             {
                 assertion.Dependencies.GetMock<IValidator>()
                     .Verify(

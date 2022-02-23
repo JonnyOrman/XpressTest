@@ -12,19 +12,36 @@ public void MultiplyNumbers() =>
         .ThenTheResultShouldBe(6);
 
 [Fact]
-public void DivideNumbers() =>
-    GivenA<Calculator>
-        .WhenIt().Divide(6, 3)
-        .ThenTheResultShouldBe(2);
-
-[Fact]
 public void DivideByZero() =>
     GivenA<Calculator>
         .WhenIt(sut => sut.Divide(6, 0))
         .ThenItShouldThrow<DivideByZeroException>();
 ```
 
-Tests that require more detailed setup and assertion will look something like this:
+Each test has its own state that allows you to register variables during arrangement. These variables can then be used in the action and assertment:
+```
+[Fact]
+public void CreateEntity() =>
+    GivenA<Creator>
+        .AndGiven(new EntityParameters("EntityName"))
+        .WhenIt(action => action.Sut.Create(action.GetObject<EntityParameters>()))
+        .ThenTheResult(result => result.Id).ShouldBe(1)
+        .ThenTheResult(result => result.Name).ShouldBe("EntityName");
+```
+
+Variables can be given names to identify them if multiple of the same type are registered:
+```
+[Fact]
+public void CreateEntity_Example2() =>
+    GivenA<Creator>
+        .AndGiven(new EntityParameters("EntityName"), "ParametersToUse")
+        .AndGiven(new EntityParameters("AnotherEntityName"), "SomeOtherParameters")
+        .WhenIt(action => action.Sut.Create(action.GetObject<EntityParameters>("ParametersToUse")))
+        .ThenTheResult(result => result.Id).ShouldBe(1)
+        .ThenTheResult(result => result.Name).ShouldBe("EntityName");
+```
+
+More complex setups and assertions including mocks are possible:
 ```
 [Fact]
 public void ProcessValidParameters() =>
@@ -43,7 +60,7 @@ public void ProcessValidParameters() =>
                 arrangement.Objects.Get<Entity>("entity")
             ))
         .WhenIt(action => action.Sut.Process(action.GetObject<EntityParameters>("parameters")))
-        .ThenItShould(assertion =>
+        .Then(assertion =>
         {
             assertion.Dependencies.GetMock<IValidator>()
                 .Verify(validator => validator.IsValid(assertion.GetObject<EntityParameters>("parameters")),
@@ -61,7 +78,7 @@ public void ProcessValidParameters() =>
 
 Install by running the following:
 ```
-dotnet add package XpressTest --version 1.0.0-alpha.5
+dotnet add package XpressTest --version 1.0.0-alpha.7
 ```
 
 Examples of usage can be seen in the `XpressTest.Examples` project in this repository.

@@ -16,7 +16,7 @@ public class VoidAsserter<TSut> : IAsserter<System.Action<IArrangement>>
         _sutTesterComposer = sutTesterComposer;
     }
     
-    public ITester ThenItShould(System.Action<IArrangement> assertion)
+    public ITester Then(System.Action<IArrangement> assertion)
     {
         var sutTester = _sutTesterComposer.Compose(assertion);
 

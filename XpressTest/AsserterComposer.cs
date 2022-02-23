@@ -3,7 +3,7 @@
 public class AsserterComposer<TSut> : IAsserterComposer<TSut>
     where TSut : class
 {
-    public IAsserter<System.Action<IAssertion<TSut, TResult>>> Compose<TResult, TDependency>(
+    public IAsserter<System.Action<IAssertion<TSut, TResult>>, TResult> Compose<TResult, TDependency>(
         IDependency dependency,
         Func<IAction<TSut>, TResult> action, 
         IArrangement arrangement)
@@ -22,10 +22,11 @@ public class AsserterComposer<TSut> : IAsserterComposer<TSut>
             actionExecutor,
             arrangement
         );
-
+        
         var builder = new ResultAsserter<TSut, TResult>(
             sutComposer,
-            sutTesterComposer
+            sutTesterComposer,
+            null
         );
 
         return builder;

@@ -15,7 +15,7 @@ public interface ITestComposer<TSut>
     )
         where TNewDependency : class;
 
-    IAsserter<System.Action<IAssertion<TSut, TResult>>> ComposeMockAsserter<TResult, TDependency>(
+    IAsserter<System.Action<IAssertion<TSut, TResult>>, TResult> ComposeMockAsserter<TResult, TDependency>(
         Mock<TDependency> dependency,
         Func<IAction<TSut>, TResult> func,
         IArrangement arrangement
@@ -29,7 +29,7 @@ public interface ITestComposer<TSut>
     )
         where TDependency : class;
 
-    IAsserter<System.Action<IAssertion<TSut, TResult>>> ComposeAsserter<TResult, TDependency>(
+    IAsserter<System.Action<IAssertion<TSut, TResult>>, TResult> ComposeAsserter<TResult, TDependency>(
         TDependency dependency,
         Func<IAction<TSut>, TResult> func,
         IArrangement arrangement

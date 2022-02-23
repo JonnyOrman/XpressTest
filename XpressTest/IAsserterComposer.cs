@@ -2,7 +2,7 @@
 
 public interface IAsserterComposer<TSut>
 {
-    IAsserter<System.Action<IAssertion<TSut, TResult>>> Compose<TResult, TDependency>(
+    IAsserter<System.Action<IAssertion<TSut, TResult>>, TResult> Compose<TResult, TDependency>(
         IDependency dependency,
         Func<IAction<TSut>, TResult> action,
         IArrangement arrangement
