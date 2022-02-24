@@ -69,7 +69,7 @@ public class ObjectBuilder<TSut, TObject> : IObjectBuilder<TSut>
 
     public IMockDependencyBuilder<TSut, TNewDependency> WithA<TNewDependency>() where TNewDependency : class
     {
-        throw new NotImplementedException();
+        return _testComposer.StartNewMockDependencyBuilder<TNewDependency, TObject>(_obj);
     }
 
     public IObjectBuilder<TSut> AndGivenA<TNewObject>()
@@ -85,6 +85,11 @@ public class ObjectBuilder<TSut, TObject> : IObjectBuilder<TSut>
     public IObjectBuilder<TSut> AndGivenA<TNewObject>(string name)
     {
         throw new NotImplementedException();
+    }
+
+    public IObjectBuilder<TSut> AndGiven<TNewObject>(TNewObject obj)
+    {
+        return _testComposer.StartNewObjectBuilder(_obj, obj);
     }
 
     public IObjectBuilder<TSut> AndGiven<TNewObject>(TNewObject obj, string name)

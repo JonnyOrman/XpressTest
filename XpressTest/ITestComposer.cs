@@ -58,10 +58,20 @@ public interface ITestComposer<TSut>
         )
         where TNewDependency : class;
 
-    IObjectBuilder<TSut> StartNewObjectBuilder<TNewDependency, TObject>(
+    IMockDependencyBuilder<TSut, TNewDependency> StartNewMockDependencyBuilder<TNewDependency, TObject>(
+        TObject obj
+    )
+        where TNewDependency : class;
+
+    IObjectBuilder<TSut> StartNewNamedObjectBuilder<TNewDependency, TObject>(
         INamedObject<TObject> oldNamedObject,
         INamedObject<TNewDependency> newNamedObject
         );
+
+    IObjectBuilder<TSut> StartNewObjectBuilder<TOldObject, TNewObject>(
+        TOldObject oldObject,
+        TNewObject newObject
+    );
 
     IArrangement Arrangement { get; }
 }

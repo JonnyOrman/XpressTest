@@ -30,6 +30,11 @@ public class NamedObjectBuilder<TSut, TObject> : IObjectBuilder<TSut>
         throw new NotImplementedException();
     }
 
+    public IObjectBuilder<TSut> AndGiven<TNewObject>(TNewObject obj)
+    {
+        throw new NotImplementedException();
+    }
+
     public IObjectBuilder<TSut> AndGiven<TNewObject>(TNewObject obj, string name)
     {
         var newNamedObject = new NamedObject<TNewObject>(
@@ -37,7 +42,7 @@ public class NamedObjectBuilder<TSut, TObject> : IObjectBuilder<TSut>
             name
         );
 
-        return _testComposer.StartNewObjectBuilder(_namedObject, newNamedObject);
+        return _testComposer.StartNewNamedObjectBuilder(_namedObject, newNamedObject);
     }
 
     public IAsserter<System.Action<IAssertion<TSut, TResult>>, TResult> WhenIt<TResult>(Func<IAction<TSut>, TResult> func)

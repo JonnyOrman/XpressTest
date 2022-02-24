@@ -59,6 +59,11 @@ public class MockObjectBuilder<TSut, TObject> : IMockObjectBuilder<TSut, TObject
         throw new NotImplementedException();
     }
 
+    public IObjectBuilder<TSut> AndGiven<TNewObject>(TNewObject obj)
+    {
+        throw new NotImplementedException();
+    }
+
     public IObjectBuilder<TSut> AndGiven<TNewObject>(TNewObject obj, string name)
     {
         throw new NotImplementedException();

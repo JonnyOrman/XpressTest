@@ -1,4 +1,5 @@
 using Moq;
+using System.Linq.Expressions;
 
 namespace XpressTest;
 
@@ -40,18 +41,7 @@ public class MockDependencyBuilder<TSut, TDependency> :
             _dependencyMock
         );
     }
-
-    public IMockDependencyBuilder<TSut, TDependency> ThatDoes<TDependencyResult>(
-        Func<IArrangement, MockSetup<TDependency, TDependencyResult>> func
-        )
-    {
-        var result = func.Invoke(_testComposer.Arrangement);
-
-         _dependencyMock.Setup(result.When).Returns(result.Then);
-         
-         return this;
-    }
-
+    
     public IAsserter<System.Action<IAssertion<TSut, TResult>>, TResult> WhenIt<TResult>(Func<IAction<TSut>, TResult> func)
     {
         return _testComposer.ComposeMockAsserter(
@@ -68,5 +58,17 @@ public class MockDependencyBuilder<TSut, TDependency> :
             func,
             _testComposer.Arrangement
         );
+    }
+    
+    public IMockResultDependencyBuilder<TSut, TDependency, TResult> ThatDoes<TResult>(Func<IArrangement, Expression<Func<TDependency, TResult>>> func)
+    {
+        var expression = func.Invoke(_testComposer.Arrangement);
+
+        return new MockResultDependencyBuilder<TSut, TDependency, TResult>(
+            expression,
+            _dependencyMock,
+            this,
+            _testComposer.Arrangement
+            );
     }
 }

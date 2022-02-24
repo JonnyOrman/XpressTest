@@ -154,15 +154,39 @@ public class TestComposer<TSut> : ITestComposer<TSut>
         return builder;
     }
 
-    public IObjectBuilder<TSut> StartNewObjectBuilder<TNewObject, TObject>(
-        INamedObject<TObject> oldNamedObject,
-        INamedObject<TNewObject> newNamedObject
-        )
+    public IMockDependencyBuilder<TSut, TNewDependency> StartNewMockDependencyBuilder<TNewDependency, TObject>(TObject obj) where TNewDependency : class
+    {
+        _arrangement.Add(obj);
+
+        var dependencyMock = new Mock<TNewDependency>();
+
+        var builder = new MockDependencyBuilder<TSut, TNewDependency>(
+            dependencyMock,
+            this
+        );
+
+        return builder;
+    }
+
+    public IObjectBuilder<TSut> StartNewNamedObjectBuilder<TNewDependency, TObject>(INamedObject<TObject> oldNamedObject,
+        INamedObject<TNewDependency> newNamedObject)
     {
         _arrangement.Add(oldNamedObject);
 
-        var builder = new NamedObjectBuilder<TSut, TNewObject>(
+        var builder = new NamedObjectBuilder<TSut, TNewDependency>(
             newNamedObject,
+            this
+        );
+
+        return builder;
+    }
+    
+    public IObjectBuilder<TSut> StartNewObjectBuilder<TOldObject, TNewObject>(TOldObject oldObject, TNewObject newObject)
+    {
+        _arrangement.Add(oldObject);
+
+        var builder = new ObjectBuilder<TSut, TNewObject>(
+            newObject,
             this
         );
 

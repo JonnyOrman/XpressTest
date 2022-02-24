@@ -8,5 +8,7 @@ public interface IObjectBuilder<TSut> : IDependencyBuilder<TSut>
     
     IObjectBuilder<TSut> AndGivenA<TNewObject>(string name);
 
+    IObjectBuilder<TSut> AndGiven<TNewObject>(TNewObject obj);
+
     IObjectBuilder<TSut> AndGiven<TNewObject>(TNewObject obj, string name);
 }

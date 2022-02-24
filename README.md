@@ -32,7 +32,7 @@ public void CreateEntity() =>
 Variables can be given names to identify them if multiple of the same type are registered:
 ```
 [Fact]
-public void CreateEntity_Example2() =>
+public void CreateEntity() =>
     GivenA<Creator>
         .AndGiven(new EntityParameters("EntityName"), "ParametersToUse")
         .AndGiven(new EntityParameters("AnotherEntityName"), "SomeOtherParameters")
@@ -46,30 +46,25 @@ More complex setups and assertions including mocks are possible:
 [Fact]
 public void ProcessValidParameters() =>
     GivenA<ParametersProcessor>
-        .AndGiven(new EntityParameters(string.Empty), "parameters")
-        .AndGiven(new Entity(1, string.Empty), "entity")
+        .AndGiven(new EntityParameters(string.Empty))
+        .AndGiven(new Entity(1, string.Empty))
         .WithA<IValidator>()
-        .ThatDoes(arrangement =>
-            new MockSetup<IValidator, bool>(
-                validator => validator.IsValid(arrangement.GetObject<EntityParameters>("parameters")),
-                true))
+            .ThatDoes<bool>(arrangement => validator => validator.IsValid(arrangement.GetObject<EntityParameters>()))
+            .AndReturns(true)
         .WithA<ICreator>()
-        .ThatDoes(arrangement =>
-            new MockSetup<ICreator, Entity>(
-                creator => creator.Create(arrangement.GetObject<EntityParameters>("parameters")),
-                arrangement.Objects.Get<Entity>("entity")
-            ))
-        .WhenIt(action => action.Sut.Process(action.GetObject<EntityParameters>("parameters")))
+            .ThatDoes<Entity>(arrangement => creator => creator.Create(arrangement.GetObject<EntityParameters>()))
+            .AndReturns(arrangement => arrangement.GetObject<Entity>())
+        .WhenIt(action => action.Sut.Process(action.GetObject<EntityParameters>()))
         .Then(assertion =>
         {
             assertion.Dependencies.GetMock<IValidator>()
-                .Verify(validator => validator.IsValid(assertion.GetObject<EntityParameters>("parameters")),
+                .Verify(validator => validator.IsValid(assertion.GetObject<EntityParameters>()),
                     Times.Once);
             assertion.Dependencies.GetMock<ICreator>()
                 .Verify(
-                    creator => creator.Create(assertion.GetObject<EntityParameters>("parameters")),
+                    creator => creator.Create(assertion.GetObject<EntityParameters>()),
                     Times.Once);
-            Assert.Equal(assertion.GetObject<Entity>("entity"), assertion.Result);
+            Assert.Equal(assertion.GetObject<Entity>(), assertion.Result);
         })
         .Test();
 ```
@@ -78,7 +73,7 @@ public void ProcessValidParameters() =>
 
 Install by running the following:
 ```
-dotnet add package XpressTest --version 1.0.0-alpha.7
+dotnet add package XpressTest --version 1.0.0-alpha.8
 ```
 
 Examples of usage can be seen in the `XpressTest.Examples` project in this repository.
