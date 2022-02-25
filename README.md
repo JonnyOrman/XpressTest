@@ -1,10 +1,10 @@
 # XpressTest
-`XpressTest` is a testing framework that allows you to easily write well structured tests in a consistent given-when-then format. It avoids common, repetitive tasks often involved in writing tests such as instantiating the SUT (System Under Test), and it saves your tests from being cluttered with loose variables.
+`XpressTest` is a fluent testing framework for C# .NET that avoids the need to organise the same, repetitive arrange-act-assert code blocks in every test, and keeps tests free from the clutter of loose variables.
 
-Tests are written by specifying the SUT, arranging any mocks or other objects required for the test case, specifying the action to be tested and then performing an assertion on the result and mocks.
+Tests are written by specifying the SUT, registering and setting up any mocks or other objects required for the test case, specifying the action to be tested and then performing assertions on the result and mocks. The SUT is automatically instantiated with the registered dependencies.
 
-Simple tests written with `XpressTest` will look something like this:
-```
+Simple tests written with `XpressTest` look like this:
+```cs
 [Fact]
 public void MultiplyNumbers() =>
     GivenA<Calculator>
@@ -19,7 +19,7 @@ public void DivideByZero() =>
 ```
 
 Each test has its own state that allows you to register variables during arrangement. These variables can then be used in the action and assertment:
-```
+```cs
 [Fact]
 public void CreateEntity() =>
     GivenA<Creator>
@@ -30,7 +30,7 @@ public void CreateEntity() =>
 ```
 
 Variables can be given names to identify them if multiple of the same type are registered:
-```
+```cs
 [Fact]
 public void CreateEntity() =>
     GivenA<Creator>
@@ -42,7 +42,7 @@ public void CreateEntity() =>
 ```
 
 More complex setups and assertions including mocks are possible:
-```
+```cs
 [Fact]
 public void ProcessValidParameters() =>
     GivenA<ParametersProcessor>
