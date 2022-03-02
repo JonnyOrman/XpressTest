@@ -1,3 +1,5 @@
+using Moq;
+
 namespace XpressTest;
 
 public class Arrangement : IArrangement
@@ -22,4 +24,6 @@ public class Arrangement : IArrangement
     public void Add<T>(T obj) => Objects.Add(obj);
 
     public void Add<T>(INamedObject<T> namedObject) => Objects.Add(namedObject);
+    
+    public Mock<TMock> GetMock<TMock>() where TMock : class => Dependencies.GetMock<TMock>();
 }

@@ -15,7 +15,7 @@ public class ObjectBuilder<TSut, TObject> : IObjectBuilder<TSut>
         _testComposer = testComposer;
     }
     
-    public IAsserter<System.Action<IAssertion<TSut, TResult>>, TResult> WhenIt<TResult>(Func<IAction<TSut>, TResult> func)
+    public IResultAsserter<TSut, TResult> WhenIt<TResult>(Func<IAction<TSut>, TResult> func)
     {
         _testComposer.Arrangement.Add(_obj);
 
@@ -32,7 +32,6 @@ public class ObjectBuilder<TSut, TObject> : IObjectBuilder<TSut>
             _testComposer.Arrangement
         );
 
-
         var sut = sutComposer.Compose();
 
         var action = new Action<TSut>(
@@ -42,22 +41,22 @@ public class ObjectBuilder<TSut, TObject> : IObjectBuilder<TSut>
 
         var result = func.Invoke(action);
 
-        var resultPropertyTargeter = new ResultPropertyTargeter<TResult>(result);
-
-
+        var resultPropertyTargeter = new ResultPropertyTargeter<TResult>(
+            result,
+            _testComposer.Arrangement
+            );
 
         var builder = new ResultAsserter<TSut, TResult>(
+            result,
             sutComposer,
             sutTesterComposer,
             resultPropertyTargeter
         );
 
         return builder;
-
-        
     }
 
-    public IAsserter<System.Action<IArrangement>> WhenIt(System.Action<IAction<TSut>> func)
+    public IVoidAsserter<TSut, System.Action<IArrangement>> WhenIt(System.Action<IAction<TSut>> func)
     {
         throw new NotImplementedException();
     }

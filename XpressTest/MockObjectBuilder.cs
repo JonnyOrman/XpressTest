@@ -19,12 +19,12 @@ public class MockObjectBuilder<TSut, TObject> : IMockObjectBuilder<TSut, TObject
         _testComposer = testComposer;
     }
 
-    public IAsserter<System.Action<IAssertion<TSut, TResult>>, TResult> WhenIt<TResult>(Func<IAction<TSut>, TResult> func)
+    public IResultAsserter<TSut, TResult> WhenIt<TResult>(Func<IAction<TSut>, TResult> func)
     {
         throw new NotImplementedException();
     }
     
-    public IAsserter<System.Action<IArrangement>> WhenIt(System.Action<IAction<TSut>> func)
+    public IVoidAsserter<TSut, System.Action<IArrangement>> WhenIt(System.Action<IAction<TSut>> func)
     {
         throw new NotImplementedException();
     }

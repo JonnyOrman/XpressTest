@@ -45,7 +45,7 @@ public class NamedObjectBuilder<TSut, TObject> : IObjectBuilder<TSut>
         return _testComposer.StartNewNamedObjectBuilder(_namedObject, newNamedObject);
     }
 
-    public IAsserter<System.Action<IAssertion<TSut, TResult>>, TResult> WhenIt<TResult>(Func<IAction<TSut>, TResult> func)
+    public IResultAsserter<TSut, TResult> WhenIt<TResult>(Func<IAction<TSut>, TResult> func)
     {
         _testComposer.Arrangement.Add(_namedObject);
 
@@ -72,10 +72,14 @@ public class NamedObjectBuilder<TSut, TObject> : IObjectBuilder<TSut>
 
         var result = func.Invoke(action);
 
-        var resultPropertyTargeter = new ResultPropertyTargeter<TResult>(result);
+        var resultPropertyTargeter = new ResultPropertyTargeter<TResult>(
+            result,
+            _testComposer.Arrangement
+            );
 
 
         var builder = new ResultAsserter<TSut, TResult>(
+            result,
             sutComposer,
             sutTesterComposer,
             resultPropertyTargeter
@@ -84,7 +88,7 @@ public class NamedObjectBuilder<TSut, TObject> : IObjectBuilder<TSut>
         return builder;
     }
     
-    public IAsserter<System.Action<IArrangement>> WhenIt(System.Action<IAction<TSut>> func)
+    public IVoidAsserter<TSut, System.Action<IArrangement>> WhenIt(System.Action<IAction<TSut>> func)
     {
         throw new NotImplementedException();
     }

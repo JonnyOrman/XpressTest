@@ -18,19 +18,10 @@ public class ParametersProcessorTests
                 .ThatDoes<Entity>(arrangement => creator => creator.Create(arrangement.GetObject<EntityParameters>()))
                 .AndReturns(arrangement => arrangement.GetObject<Entity>())
             .WhenIt(action => action.Sut.Process(action.GetObject<EntityParameters>()))
-            .Then(assertion =>
-            {
-                assertion.Dependencies.GetMock<IValidator>()
-                    .Verify(validator => validator.IsValid(assertion.GetObject<EntityParameters>()),
-                        Times.Once);
-                assertion.Dependencies.GetMock<ICreator>()
-                    .Verify(
-                        creator => creator.Create(assertion.GetObject<EntityParameters>()),
-                        Times.Once);
-                Assert.Equal(assertion.GetObject<Entity>(), assertion.Result);
-            })
-            .Test();
-
+            .Then<IValidator>().Should<bool>(arrangement => validator => validator.IsValid(arrangement.GetObject<EntityParameters>())).Once()
+            .Then<ICreator>().Should<Entity>(arrangement => creator => creator.Create(arrangement.GetObject<EntityParameters>())).Once()
+            .ThenTheResultShouldBe(arrangement => arrangement.GetObject<Entity>());
+            
     [Fact]
     public void ProcessInvalidParameters() =>
         GivenA<ParametersProcessor>
@@ -40,17 +31,7 @@ public class ParametersProcessorTests
                 .AndReturns(false)
             .WithA<ICreator>()
             .WhenIt(action => action.Sut.Process(action.GetObject<EntityParameters>()))
-            .Then(assertion =>
-            {
-                assertion.Dependencies.GetMock<IValidator>()
-                    .Verify(
-                        validator => validator.IsValid(assertion.GetObject<EntityParameters>()),
-                        Times.Once);
-                assertion.Dependencies.GetMock<ICreator>()
-                    .Verify(
-                        creator => creator.Create(It.IsAny<EntityParameters>()),
-                        Times.Never);
-                Assert.Null(assertion.Result);
-            })
-            .Test();
+            .Then<IValidator>().Should<bool>(arrangement => validator => validator.IsValid(arrangement.GetObject<EntityParameters>())).Once()
+            .Then<ICreator>().Should(creator => creator.Create(It.IsAny<EntityParameters>())).Never()
+            .ThenTheResultShouldBeNull();
 }

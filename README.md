@@ -41,9 +41,8 @@ public void CreateEntity() =>
         .ThenTheResult(result => result.Name).ShouldBe("EntityName");
 ```
 
-More complex setups and assertions including mocks are possible:
+Mocks can be set up and verified:
 ```cs
-[Fact]
 public void ProcessValidParameters() =>
     GivenA<ParametersProcessor>
         .AndGiven(new EntityParameters(string.Empty))
@@ -55,25 +54,16 @@ public void ProcessValidParameters() =>
             .ThatDoes<Entity>(arrangement => creator => creator.Create(arrangement.GetObject<EntityParameters>()))
             .AndReturns(arrangement => arrangement.GetObject<Entity>())
         .WhenIt(action => action.Sut.Process(action.GetObject<EntityParameters>()))
-        .Then(assertion =>
-        {
-            assertion.Dependencies.GetMock<IValidator>()
-                .Verify(validator => validator.IsValid(assertion.GetObject<EntityParameters>()),
-                    Times.Once);
-            assertion.Dependencies.GetMock<ICreator>()
-                .Verify(
-                    creator => creator.Create(assertion.GetObject<EntityParameters>()),
-                    Times.Once);
-            Assert.Equal(assertion.GetObject<Entity>(), assertion.Result);
-        })
-        .Test();
+        .Then<IValidator>().Should<bool>(arrangement => validator => validator.IsValid(arrangement.GetObject<EntityParameters>())).Once()
+        .Then<ICreator>().Should<Entity>(arrangement => creator => creator.Create(arrangement.GetObject<EntityParameters>())).Once()
+        .ThenTheResultShouldBe(arrangement => arrangement.GetObject<Entity>());
 ```
 
 ## Getting started
 
 Install by running the following:
 ```
-dotnet add package XpressTest --version 1.0.0-alpha.8
+dotnet add package XpressTest --version 1.0.0-alpha.9
 ```
 
 Examples of usage can be seen in the `XpressTest.Examples` project in this repository.

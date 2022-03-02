@@ -1,3 +1,5 @@
+using Moq;
+
 namespace XpressTest;
 
 public interface IArrangement
@@ -13,4 +15,6 @@ public interface IArrangement
     void Add<T>(T obj);
 
     void Add<T>(INamedObject<T> namedObject);
+    
+    Mock<TMock> GetMock<TMock>() where TMock : class;
 }

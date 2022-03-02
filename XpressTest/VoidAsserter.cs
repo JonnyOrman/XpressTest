@@ -1,6 +1,6 @@
 namespace XpressTest;
 
-public class VoidAsserter<TSut> : IAsserter<System.Action<IArrangement>>
+public class VoidAsserter<TSut> : IVoidAsserter<TSut, System.Action<IArrangement>>
     where TSut : class
 {
     private readonly ISutComposer<TSut> _sutComposer;
@@ -24,5 +24,10 @@ public class VoidAsserter<TSut> : IAsserter<System.Action<IArrangement>>
             _sutComposer,
             sutTester
             );
+    }
+
+    public IVoidMockVerifier<TSut, System.Action<IArrangement>, TMock> Then<TMock>()
+    {
+        throw new NotImplementedException();
     }
 }

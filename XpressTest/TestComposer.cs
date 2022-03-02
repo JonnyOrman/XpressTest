@@ -51,7 +51,7 @@ public class TestComposer<TSut> : ITestComposer<TSut>
         );
     }
 
-    public IAsserter<System.Action<IAssertion<TSut, TResult>>, TResult> ComposeMockAsserter<TResult, TDependency>(
+    public IResultAsserter<TSut, TResult> ComposeMockAsserter<TResult, TDependency>(
         Mock<TDependency> dependency,
         Func<IAction<TSut>, TResult> func,
         IArrangement arrangement
@@ -65,7 +65,7 @@ public class TestComposer<TSut> : ITestComposer<TSut>
         );
     }
 
-    public IAsserter<System.Action<IArrangement>> ComposeMockAsserter<TDependency>(
+    public IVoidAsserter<TSut, System.Action<IArrangement>> ComposeMockAsserter<TDependency>(
         Mock<TDependency> dependency,
         System.Action<IAction<TSut>> func,
         IArrangement arrangement
@@ -79,7 +79,7 @@ public class TestComposer<TSut> : ITestComposer<TSut>
         );
     }
 
-    public IAsserter<System.Action<IAssertion<TSut, TResult>>, TResult> ComposeAsserter<TResult, TDependency>(
+    public IResultAsserter<TSut, TResult> ComposeAsserter<TResult, TDependency>(
         TDependency dependency,
         Func<IAction<TSut>, TResult> func,
         IArrangement arrangement
@@ -92,7 +92,7 @@ public class TestComposer<TSut> : ITestComposer<TSut>
         );
     }
 
-    public IAsserter<System.Action<IArrangement>> ComposeAsserter<TDependency>(
+    public IVoidAsserter<TSut, System.Action<IArrangement>> ComposeAsserter<TDependency>(
         TDependency dependency,
         System.Action<IAction<TSut>> func,
         IArrangement arrangement

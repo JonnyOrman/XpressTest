@@ -3,22 +3,20 @@
 public class SutComposer<TSut> : ISutComposer<TSut>
     where TSut : class
 {
-    private readonly IArrangement _arrangement;
-
     public SutComposer(IArrangement arrangement)
     {
-        _arrangement = arrangement;
+        Arrangement = arrangement;
     }
 
     public TSut Compose()
     {
         object sut = null;
 
-        if (_arrangement.Dependencies.Any())
+        if (Arrangement.Dependencies.Any())
         {
             var parameters = new List<object>();
 
-            foreach (var dependency in _arrangement.Dependencies.GetAll())
+            foreach (var dependency in Arrangement.Dependencies.GetAll())
             {
                 parameters.Add(dependency.Object);
             }
@@ -34,4 +32,6 @@ public class SutComposer<TSut> : ISutComposer<TSut>
 
         return typedSut;
     }
+
+    public IArrangement Arrangement { get; }
 }
