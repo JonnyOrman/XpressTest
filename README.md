@@ -43,6 +43,7 @@ public void CreateEntity() =>
 
 Mocks can be set up and verified:
 ```cs
+[Fact]
 public void ProcessValidParameters() =>
     GivenA<ParametersProcessor>
         .AndGiven(new EntityParameters(string.Empty))
