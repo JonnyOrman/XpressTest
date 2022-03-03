@@ -64,7 +64,7 @@ public void ProcessValidParameters() =>
 
 Install by running the following:
 ```
-dotnet add package XpressTest --version 1.0.0-alpha.9
+dotnet add package XpressTest --version 1.0.0-alpha.10
 ```
 
 Examples of usage can be seen in the `XpressTest.Examples` project in this repository.
