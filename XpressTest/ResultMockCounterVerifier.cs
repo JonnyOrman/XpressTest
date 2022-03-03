@@ -1,5 +1,5 @@
-using System.Linq.Expressions;
 using Moq;
+using System.Linq.Expressions;
 
 namespace XpressTest;
 
@@ -11,7 +11,6 @@ public class ResultMockCounterVerifier<TSut, TResult, TMock, TMockResult> : IRes
     private readonly Mock<TMock> _mock;
     private readonly Expression<Func<TMock, TMockResult>> _func;
     private readonly ISutComposer<TSut> _sutComposer;
-    private readonly ISutTesterComposer<TSut, System.Action<IAssertion<TSut, TResult>>> _sutTesterComposer;
     private readonly IResultPropertyTargeter<TResult> _resultPropertyTargeter;
     
     public ResultMockCounterVerifier(
@@ -19,7 +18,6 @@ public class ResultMockCounterVerifier<TSut, TResult, TMock, TMockResult> : IRes
         Mock<TMock> mock,
         Expression<Func<TMock, TMockResult>> func,
         ISutComposer<TSut> sutComposer,
-        ISutTesterComposer<TSut, System.Action<IAssertion<TSut, TResult>>> sutTesterComposer,
         IResultPropertyTargeter<TResult> resultPropertyTargeter
         )
     {
@@ -27,7 +25,6 @@ public class ResultMockCounterVerifier<TSut, TResult, TMock, TMockResult> : IRes
         _mock = mock;
         _func = func;
         _sutComposer = sutComposer;
-        _sutTesterComposer = sutTesterComposer;
         _resultPropertyTargeter = resultPropertyTargeter;
     }
     
@@ -38,7 +35,6 @@ public class ResultMockCounterVerifier<TSut, TResult, TMock, TMockResult> : IRes
         return new ResultAsserter<TSut, TResult>(
             _result,
             _sutComposer,
-            _sutTesterComposer,
             _resultPropertyTargeter
         );
     }
@@ -50,7 +46,6 @@ public class ResultMockCounterVerifier<TSut, TResult, TMock, TMockResult> : IRes
         return new ResultAsserter<TSut, TResult>(
             _result,
             _sutComposer,
-            _sutTesterComposer,
             _resultPropertyTargeter
         );
     }

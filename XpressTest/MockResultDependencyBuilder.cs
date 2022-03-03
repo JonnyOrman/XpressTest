@@ -39,4 +39,14 @@ public class MockResultDependencyBuilder<TSut, TDependency, TResult> : IMockResu
 
         return _mockDependencyBuilder;
     }
+
+    public IMockDependencyBuilder<TSut, TDependency> AndReturns<TReturn>()
+        where TReturn : class, TResult
+    {
+        var result = _arrangement.GetMockObject<TReturn>();
+        
+        _dependencyMock.Setup(_func).Returns(result);
+
+        return _mockDependencyBuilder;
+    }
 }

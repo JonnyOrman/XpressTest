@@ -1,17 +1,19 @@
-﻿namespace XpressTest;
+using Moq;
+
+namespace XpressTest;
 
 public static class MockObjectTestInitialiser<TSut, TObject>
     where TSut : class
     where TObject : class
 {
-    public static IMockObjectBuilder<TSut, TObject> Initialise(string mockName)
+    public static IMockObjectBuilder<TSut, TObject> Initialise()
     {
-        var namedMock = NamedMockInitialiser<TObject>.Initialise(mockName);
+        var mock = new Mock<TObject>();
         
         var testComposer = TestComposerInitialiser<TSut>.Initialise();
-
+        
         return new MockObjectBuilder<TSut, TObject>(
-            namedMock,
+            mock,
             testComposer
         );
     }

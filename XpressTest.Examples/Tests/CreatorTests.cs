@@ -33,8 +33,7 @@ public class CreatorTests
             {
                 Assert.Equal(1, assertion.Result.Id);
                 Assert.Equal("EntityName", assertion.Result.Name);
-            })
-            .Test();
+            });
 
     [Fact]
     public void CreateEntity_Example4()
@@ -42,7 +41,7 @@ public class CreatorTests
         var parameters = new EntityParameters("EntityName");
 
         var entity = new Entity(1, "EntityName");
-
+        
         GivenA<Creator>
             .WhenIt().Create(parameters)
             .ThenTheResultShouldBeEquivalentTo(entity);

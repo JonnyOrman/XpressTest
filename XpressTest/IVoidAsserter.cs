@@ -1,8 +1,9 @@
 namespace XpressTest;
 
-public interface IVoidAsserter<TSut, TAssertion>
+public interface IVoidAsserter<TSut>
 {
-    ITester Then(TAssertion assertion);
-
-    IVoidMockVerifier<TSut, TAssertion, TMock> Then<TMock>();
+    IVoidMockVerifier<TSut, TMock> Then<TMock>()
+        where TMock : class;
+    
+    void Then(System.Action<IAssertion<TSut>> assertion);
 }

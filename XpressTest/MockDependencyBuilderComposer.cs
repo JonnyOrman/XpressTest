@@ -12,6 +12,7 @@ public class MockDependencyBuilderComposer<TSut> : IMockDependencyBuilderCompose
         ITestComposer<TSut> testComposer
         )
         where TCurrentDependency : class
+        where TNewDependency : class
     {
         if (currentMockDependency != null)
         {
@@ -37,6 +38,8 @@ public class MockDependencyBuilderComposer<TSut> : IMockDependencyBuilderCompose
     {
         if (currentMockDependency != null)
         {
+            testComposer.Arrangement.MockObjects.Add(currentMockDependency);
+            
             var dependency = new MockDependency<TCurrentDependency>(currentMockDependency);
 
             testComposer.Arrangement.Dependencies.Add(dependency);

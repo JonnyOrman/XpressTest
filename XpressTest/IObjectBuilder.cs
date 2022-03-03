@@ -2,7 +2,8 @@ namespace XpressTest;
 
 public interface IObjectBuilder<TSut> : IDependencyBuilder<TSut>
 {
-    IObjectBuilder<TSut> AndGivenA<TNewObject>();
+    IMockObjectBuilder<TSut, TNewObject> AndGivenA<TNewObject>()
+        where TNewObject : class;
 
     IObjectBuilder<TSut> AndGiven<TNewObject>();
     

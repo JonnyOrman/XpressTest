@@ -7,7 +7,8 @@ public interface IDependencyBuilderComposer<TSut>
         TNewDependency dependency,
         string name,
         ITestComposer<TSut> testComposer
-        );
+        )
+        where TNewDependency : class;
 
     IMockDependencyBuilder<TSut, TNewDependency> Compose<TCurrentDependency, TNewDependency>(
         TCurrentDependency currentDependency,

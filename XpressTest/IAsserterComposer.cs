@@ -8,9 +8,10 @@ public interface IAsserterComposer<TSut>
         IArrangement arrangement
         );
 
-    IVoidAsserter<TSut, System.Action<IArrangement>> Compose<TDependency>(
+    IVoidAsserter<TSut> Compose<TDependency>(
         IDependency dependency,
         System.Action<IAction<TSut>> action,
         IArrangement arrangement
-        );
+        )
+        where TDependency : class;
 }

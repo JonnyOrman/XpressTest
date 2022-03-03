@@ -6,7 +6,13 @@ public static class GivenA<TSut>
     public static IMockObjectBuilder<TSut, TObject> AndGivenA<TObject>(string name)
         where TObject : class
     {
-        return MockObjectTestInitialiser<TSut, TObject>.Initialise(name);
+        return NamedMockObjectTestInitialiser<TSut, TObject>.Initialise(name);
+    }
+    
+    public static IMockObjectBuilder<TSut, TObject> AndGivenA<TObject>()
+        where TObject : class
+    {
+        return MockObjectTestInitialiser<TSut, TObject>.Initialise();
     }
 
     public static IObjectBuilder<TSut> AndGiven<TObject>(TObject obj, string name)
@@ -26,6 +32,7 @@ public static class GivenA<TSut>
     }
     
     public static IDependencyBuilder<TSut> With<TDependency>(TDependency dependency)
+        where TDependency : class
     {
         return DependencyTestInitialiser<TSut>.Initialise(dependency);
     }

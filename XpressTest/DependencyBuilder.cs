@@ -3,6 +3,7 @@ namespace XpressTest;
 public class DependencyBuilder<TSut, TDependency> :
     IDependencyBuilder<TSut>
     where TSut : class
+    where TDependency : class
 {
     private readonly TDependency _dependency;
     
@@ -19,6 +20,7 @@ public class DependencyBuilder<TSut, TDependency> :
     
     
     public IDependencyBuilder<TSut> With<TNewDependency>(TNewDependency newDependency, string name)
+        where TNewDependency : class
     {
         return _testComposer.ComposeDependencyBuilder(
             _dependency,
@@ -43,7 +45,7 @@ public class DependencyBuilder<TSut, TDependency> :
         );
     }
 
-    public IVoidAsserter<TSut, System.Action<IArrangement>> WhenIt(System.Action<IAction<TSut>> func)
+    public IVoidAsserter<TSut> WhenIt(System.Action<IAction<TSut>> func)
     {
         return _testComposer.ComposeAsserter(
             _dependency,

@@ -11,6 +11,7 @@ public class DependencyBuilderComposer<TSut> : IDependencyBuilderComposer<TSut>
         string name,
         ITestComposer<TSut> testComposer
         )
+    where TNewDependency : class
     {
         if (currentDependency != null)
         {

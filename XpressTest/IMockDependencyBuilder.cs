@@ -7,4 +7,8 @@ public interface IMockDependencyBuilder<TSut, TDependency> : IDependencyBuilder<
     IMockResultDependencyBuilder<TSut, TDependency, TResult> ThatDoes<TResult>(
         Func<IArrangement, Expression<Func<TDependency, TResult>>> func
     );
+    
+    IMockResultDependencyBuilder<TSut, TDependency, TResult> ThatDoes<TResult>(
+        Expression<Func<TDependency, TResult>> expression
+    );
 }

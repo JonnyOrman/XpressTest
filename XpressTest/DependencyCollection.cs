@@ -49,6 +49,6 @@ public class DependencyCollection : IDependencyCollection
             }
         }
 
-        throw new Exception($"No mock of type {typeof(T).Name} registered");
+        throw new Exception($"No dependency of type {typeof(T).Name} registered");
     }
 }

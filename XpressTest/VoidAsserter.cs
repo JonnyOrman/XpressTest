@@ -1,33 +1,42 @@
 namespace XpressTest;
 
-public class VoidAsserter<TSut> : IVoidAsserter<TSut, System.Action<IArrangement>>
+public class VoidAsserter<TSut> : IVoidAsserter<TSut>
     where TSut : class
 {
     private readonly ISutComposer<TSut> _sutComposer;
 
-    private readonly ISutTesterComposer<TSut, System.Action<IAssertion<TSut>>> _sutTesterComposer;
-
     public VoidAsserter(
-        ISutComposer<TSut> sutComposer,
-        ISutTesterComposer<TSut, System.Action<IAssertion<TSut>>> sutTesterComposer
+        ISutComposer<TSut> sutComposer
         )
     {
         _sutComposer = sutComposer;
-        _sutTesterComposer = sutTesterComposer;
     }
     
-    public ITester Then(System.Action<IArrangement> assertion)
+    public IVoidMockVerifier<TSut, TMock> Then<TMock>()
+        where TMock : class
     {
-        var sutTester = _sutTesterComposer.Compose(assertion);
-
-        return new Tester<TSut>(
-            _sutComposer,
-            sutTester
-            );
+        var mock = _sutComposer.Arrangement.GetMock<TMock>();
+        
+        return new VoidMockVerifier<TSut, TMock>(
+            mock,
+            _sutComposer
+        );
     }
 
-    public IVoidMockVerifier<TSut, System.Action<IArrangement>, TMock> Then<TMock>()
+    public void Then(System.Action<IAssertion<TSut>> action)
     {
-        throw new NotImplementedException();
+        var sutComposer = new SutComposer<TSut>(
+            _sutComposer.Arrangement
+        );
+        
+        var sut = sutComposer.Compose();
+
+        var sutAction = new Action<TSut>(sut, _sutComposer.Arrangement);
+        
+        var assertion = new VoidAssertion<TSut>(
+            sutAction
+            );
+
+        action.Invoke(assertion);
     }
 }

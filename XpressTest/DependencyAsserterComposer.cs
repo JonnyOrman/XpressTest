@@ -26,11 +26,12 @@ public class DependencyAsserterComposer<TSut> : IDependencyAsserterComposer<TSut
             );
     }
 
-    public IVoidAsserter<TSut, System.Action<IArrangement>> Compose<TDependency>(
+    public IVoidAsserter<TSut> Compose<TDependency>(
         TDependency dependencyValue,
         System.Action<IAction<TSut>> func,
         IArrangement arrangement
         )
+    where TDependency : class
     {
         var dependency = new Dependency<TDependency>(dependencyValue);
 

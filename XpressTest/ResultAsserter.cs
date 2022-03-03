@@ -7,30 +7,34 @@ public class ResultAsserter<TSut, TResult> : IResultAsserter<TSut, TResult>
 {
     private readonly TResult _result;
     private readonly ISutComposer<TSut> _sutComposer;
-    private readonly ISutTesterComposer<TSut, System.Action<IAssertion<TSut, TResult>>> _sutTesterComposer;
     private readonly IResultPropertyTargeter<TResult> _resultPropertyTargeter;
 
     public ResultAsserter(
         TResult result,
         ISutComposer<TSut> sutComposer,
-        ISutTesterComposer<TSut, System.Action<IAssertion<TSut, TResult>>> sutTesterComposer,
         IResultPropertyTargeter<TResult> resultPropertyTargeter
         )
     {
         _result = result;
         _sutComposer = sutComposer;
-        _sutTesterComposer = sutTesterComposer;
         _resultPropertyTargeter = resultPropertyTargeter;
     }
     
-    public ITester Then(System.Action<IAssertion<TSut, TResult>> assertion)
+    public void Then(System.Action<IAssertion<TSut, TResult>> action)
     {
-        var sutTester = _sutTesterComposer.Compose(assertion);
+        var sutComposer = new SutComposer<TSut>(
+            _sutComposer.Arrangement
+        );
+        
+        var sut = sutComposer.Compose();
 
-        return new Tester<TSut>(
-            _sutComposer,
-            sutTester
-            );
+        var sutAction = new Action<TSut>(sut, _sutComposer.Arrangement);
+        
+        var assertion = new Assertion<TSut, TResult>(
+            _result,
+            sutAction);
+
+        action.Invoke(assertion);
     }
 
     public IResultMockVerifier<TSut, TResult, TMock> Then<TMock>()
@@ -42,7 +46,6 @@ public class ResultAsserter<TSut, TResult> : IResultAsserter<TSut, TResult>
             _result,
             mock,
             _sutComposer,
-            _sutTesterComposer,
             _resultPropertyTargeter
             );
     }
@@ -67,10 +70,5 @@ public class ResultAsserter<TSut, TResult> : IResultAsserter<TSut, TResult>
         var expectedResult = func.Invoke(_sutComposer.Arrangement);
         
         _result.ThenTheResultShouldBe(expectedResult);
-    }
-
-    public void ThenTheResultShouldBeB(Func<IArrangement, TResult> func)
-    {
-        throw new NotImplementedException();
     }
 }

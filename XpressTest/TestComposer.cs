@@ -9,7 +9,6 @@ public class TestComposer<TSut> : ITestComposer<TSut>
     private readonly IDependencyAsserterComposer<TSut> _dependencyAsserterComposer;
     private readonly IDependencyBuilderComposer<TSut> _dependencyBuilderComposer;
     private readonly IMockDependencyBuilderComposer<TSut> _mockDependencyBuilderComposer;
-    private readonly IArrangement _arrangement;
 
     public TestComposer(
         IMockDependencyAsserterComposer<TSut> mockDependencyAsserterComposer,
@@ -23,7 +22,7 @@ public class TestComposer<TSut> : ITestComposer<TSut>
         _dependencyAsserterComposer = dependencyAsserterComposer;
         _dependencyBuilderComposer = dependencyBuilderComposer;
         _mockDependencyBuilderComposer = mockDependencyBuilderComposer;
-        _arrangement = arrangement;
+        Arrangement = arrangement;
     }
 
     public IDependencyBuilder<TSut> ComposeDependencyBuilder<TDependency, TNewDependency>(
@@ -31,6 +30,7 @@ public class TestComposer<TSut> : ITestComposer<TSut>
         TNewDependency newDependency,
         string name
         )
+        where TNewDependency : class
     {
         return _dependencyBuilderComposer.Compose(
             dependency,
@@ -65,7 +65,7 @@ public class TestComposer<TSut> : ITestComposer<TSut>
         );
     }
 
-    public IVoidAsserter<TSut, System.Action<IArrangement>> ComposeMockAsserter<TDependency>(
+    public IVoidAsserter<TSut> ComposeMockAsserter<TDependency>(
         Mock<TDependency> dependency,
         System.Action<IAction<TSut>> func,
         IArrangement arrangement
@@ -92,11 +92,12 @@ public class TestComposer<TSut> : ITestComposer<TSut>
         );
     }
 
-    public IVoidAsserter<TSut, System.Action<IArrangement>> ComposeAsserter<TDependency>(
+    public IVoidAsserter<TSut> ComposeAsserter<TDependency>(
         TDependency dependency,
         System.Action<IAction<TSut>> func,
         IArrangement arrangement
         )
+    where TDependency : class
     {
         return _dependencyAsserterComposer.Compose(
             dependency,
@@ -128,7 +129,7 @@ public class TestComposer<TSut> : ITestComposer<TSut>
             mock.Name
         );
 
-        _arrangement.Add(mockObject);
+        Arrangement.Add(mockObject);
 
         var newMock = new Mock<TNewDependency>();
         
@@ -138,11 +139,27 @@ public class TestComposer<TSut> : ITestComposer<TSut>
         );
     }
 
+    public IMockDependencyBuilder<TSut, TNewDependency> StartNewMockDependencyBuilder<TNewDependency, TObject>(Mock<TObject> mock)
+        where TNewDependency : class
+        where TObject : class
+    {
+        Arrangement.Add(mock);
+        
+        var dependencyMock = new Mock<TNewDependency>();
+
+        var builder = new MockDependencyBuilder<TSut, TNewDependency>(
+            dependencyMock,
+            this
+        );
+
+        return builder;
+    }
+
     public IMockDependencyBuilder<TSut, TNewDependency> StartNewMockDependencyBuilder<TNewDependency, TObject>(
         INamedObject<TObject> namedObject
         ) where TNewDependency : class
     {
-        _arrangement.Add(namedObject);
+        Arrangement.Add(namedObject);
 
         var dependencyMock = new Mock<TNewDependency>();
 
@@ -156,7 +173,7 @@ public class TestComposer<TSut> : ITestComposer<TSut>
 
     public IMockDependencyBuilder<TSut, TNewDependency> StartNewMockDependencyBuilder<TNewDependency, TObject>(TObject obj) where TNewDependency : class
     {
-        _arrangement.Add(obj);
+        Arrangement.Add(obj);
 
         var dependencyMock = new Mock<TNewDependency>();
 
@@ -171,7 +188,7 @@ public class TestComposer<TSut> : ITestComposer<TSut>
     public IObjectBuilder<TSut> StartNewNamedObjectBuilder<TNewDependency, TObject>(INamedObject<TObject> oldNamedObject,
         INamedObject<TNewDependency> newNamedObject)
     {
-        _arrangement.Add(oldNamedObject);
+        Arrangement.Add(oldNamedObject);
 
         var builder = new NamedObjectBuilder<TSut, TNewDependency>(
             newNamedObject,
@@ -183,7 +200,7 @@ public class TestComposer<TSut> : ITestComposer<TSut>
     
     public IObjectBuilder<TSut> StartNewObjectBuilder<TOldObject, TNewObject>(TOldObject oldObject, TNewObject newObject)
     {
-        _arrangement.Add(oldObject);
+        Arrangement.Add(oldObject);
 
         var builder = new ObjectBuilder<TSut, TNewObject>(
             newObject,
@@ -193,5 +210,19 @@ public class TestComposer<TSut> : ITestComposer<TSut>
         return builder;
     }
 
-    public IArrangement Arrangement => _arrangement;
+    public IArrangement Arrangement { get; }
+    
+    public IMockObjectBuilder<TSut, TNewObject> StartNewMockObjectBuilder<TNewObject, TObject>(Mock<TObject> mock)
+        where TNewObject : class
+        where TObject : class
+    {
+        Arrangement.Add(mock);
+        
+        var newMock = new Mock<TNewObject>();
+        
+        return new MockObjectBuilder<TSut, TNewObject>(
+            newMock,
+            this
+            );
+    }
 }

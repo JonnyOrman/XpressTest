@@ -10,7 +10,8 @@ public interface IMockDependencyBuilderComposer<TSut>
         string name,
         ITestComposer<TSut> testComposer
         )
-        where TCurrentDependency : class;
+        where TCurrentDependency : class
+        where TNewDependency : class;
 
     IMockDependencyBuilder<TSut, TNewDependency> Compose<TCurrentDependency, TNewDependency>(
         Mock<TCurrentDependency> currentDependency,

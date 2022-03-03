@@ -7,14 +7,12 @@ public class Action<TSut> : Arrangement, IAction<TSut>
         IArrangement arrangement
         ) :base(
         arrangement.Objects,
+        arrangement.MockObjects,
         arrangement.Dependencies
         )
     {
         Sut = sut;
-        Arrangement = arrangement;
     }
 
     public TSut Sut { get; }
-    
-    public IArrangement Arrangement { get; }
 }

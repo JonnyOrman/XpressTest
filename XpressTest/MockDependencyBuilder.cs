@@ -22,6 +22,7 @@ public class MockDependencyBuilder<TSut, TDependency> :
     }
 
     public IDependencyBuilder<TSut> With<TNewDependency>(TNewDependency newDependency)
+        where TNewDependency : class
     {
         return _testComposer.ComposeDependencyBuilder(
             _dependencyMock,
@@ -31,6 +32,7 @@ public class MockDependencyBuilder<TSut, TDependency> :
     }
 
     public IDependencyBuilder<TSut> With<TNewDependency>(TNewDependency newDependency, string name)
+        where TNewDependency : class
     {
         throw new NotImplementedException();
     }
@@ -51,7 +53,7 @@ public class MockDependencyBuilder<TSut, TDependency> :
             );
     }
     
-    public IVoidAsserter<TSut, System.Action<IArrangement>> WhenIt(System.Action<IAction<TSut>> func)
+    public IVoidAsserter<TSut> WhenIt(System.Action<IAction<TSut>> func)
     {
         return _testComposer.ComposeMockAsserter(
             _dependencyMock,
@@ -70,5 +72,15 @@ public class MockDependencyBuilder<TSut, TDependency> :
             this,
             _testComposer.Arrangement
             );
+    }
+
+    public IMockResultDependencyBuilder<TSut, TDependency, TResult> ThatDoes<TResult>(Expression<Func<TDependency, TResult>> expression)
+    {
+        return new MockResultDependencyBuilder<TSut, TDependency, TResult>(
+            expression,
+            _dependencyMock,
+            this,
+            _testComposer.Arrangement
+        );
     }
 }

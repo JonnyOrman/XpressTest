@@ -7,8 +7,9 @@ public interface IDependencyAsserterComposer<TSut>
         Func<IAction<TSut>, TResult> func,
         IArrangement arrangement);
 
-    IVoidAsserter<TSut, System.Action<IArrangement>> Compose<TDependency>(
+    IVoidAsserter<TSut> Compose<TDependency>(
         TDependency dependencyValue,
         System.Action<IAction<TSut>> func,
-        IArrangement arrangement);
+        IArrangement arrangement)
+        where TDependency : class;
 }

@@ -19,6 +19,8 @@ public class MockDependencyAsserterComposer<TSut> : IMockDependencyAsserterCompo
         IArrangement arrangement
         ) where TDependency : class
     {
+        arrangement.MockObjects.Add(dependencyMock);
+        
         var dependency = new MockDependency<TDependency>(dependencyMock);
 
         return _asserterComposer.Compose<TResult, TDependency>(
@@ -28,7 +30,7 @@ public class MockDependencyAsserterComposer<TSut> : IMockDependencyAsserterCompo
         );
     }
 
-    public IVoidAsserter<TSut, System.Action<IArrangement>> Compose<TDependency>(
+    public IVoidAsserter<TSut> Compose<TDependency>(
         Mock<TDependency> dependencyMock,
         System.Action<IAction<TSut>> func,
         IArrangement arrangement

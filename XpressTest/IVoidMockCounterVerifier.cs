@@ -1,6 +1,8 @@
 namespace XpressTest;
 
-public interface IVoidMockCounterVerifier<TSut, TAssertion>
+public interface IVoidMockCounterVerifier<TSut>
 {
-    IVoidAsserter<TSut, TAssertion> Once();
+    IVoidAsserter<TSut> Once();
+
+    IVoidAsserter<TSut> Never();
 }

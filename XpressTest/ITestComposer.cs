@@ -8,7 +8,8 @@ public interface ITestComposer<TSut>
         TDependency dependency,
         TNewDependency newDependency,
         string name
-    );
+    )
+        where TNewDependency : class;
 
     IMockDependencyBuilder<TSut, TNewDependency> ComposeDependencyBuilder<TDependency, TNewDependency>(
         TDependency dependency
@@ -22,7 +23,7 @@ public interface ITestComposer<TSut>
         )
             where TDependency : class;
 
-    IVoidAsserter<TSut, System.Action<IArrangement>> ComposeMockAsserter<TDependency>(
+    IVoidAsserter<TSut> ComposeMockAsserter<TDependency>(
         Mock<TDependency> dependency,
         System.Action<IAction<TSut>> func,
         IArrangement arrangement
@@ -35,11 +36,12 @@ public interface ITestComposer<TSut>
         IArrangement arrangement
     );
 
-    IVoidAsserter<TSut, System.Action<IArrangement>> ComposeAsserter<TDependency>(
+    IVoidAsserter<TSut> ComposeAsserter<TDependency>(
         TDependency dependency,
         System.Action<IAction<TSut>> func,
         IArrangement arrangement
-    );
+    )
+        where TDependency : class;
 
     IMockDependencyBuilder<TSut, TNewDependency> ComposeMockDependencyBuilder<TDependency, TNewDependency>(
         Mock<TDependency> mock
@@ -52,7 +54,14 @@ public interface ITestComposer<TSut>
         )
             where TNewDependency : class
             where TObject : class;
-
+    
+    
+    IMockDependencyBuilder<TSut, TNewDependency> StartNewMockDependencyBuilder<TNewDependency, TObject>(
+        Mock<TObject> mock
+    )
+        where TNewDependency : class
+        where TObject : class;
+    
     IMockDependencyBuilder<TSut, TNewDependency> StartNewMockDependencyBuilder<TNewDependency, TObject>(
         INamedObject<TObject> namedObject
         )
@@ -74,4 +83,8 @@ public interface ITestComposer<TSut>
     );
 
     IArrangement Arrangement { get; }
+    
+    IMockObjectBuilder<TSut, TNewObject> StartNewMockObjectBuilder<TNewObject, TObject>(Mock<TObject> mock)
+        where TNewObject : class
+        where TObject : class;
 }

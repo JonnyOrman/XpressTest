@@ -15,7 +15,8 @@ public class NamedObjectBuilder<TSut, TObject> : IObjectBuilder<TSut>
         _testComposer = testComposer;
     }
 
-    public IObjectBuilder<TSut> AndGivenA<TNewObject>()
+    public IMockObjectBuilder<TSut, TNewObject> AndGivenA<TNewObject>()
+        where TNewObject : class
     {
         throw new NotImplementedException();
     }
@@ -53,16 +54,6 @@ public class NamedObjectBuilder<TSut, TObject> : IObjectBuilder<TSut>
             _testComposer.Arrangement
         );
 
-        var actionExecutor = new ResultActionExecutor<TSut, TResult>(
-            func
-            );
-
-        var sutTesterComposer = new SutTesterComposer<TSut, IAssertion<TSut, TResult>>(
-            actionExecutor,
-            _testComposer.Arrangement
-        );
-
-
         var sut = sutComposer.Compose();
 
         var action = new Action<TSut>(
@@ -81,14 +72,13 @@ public class NamedObjectBuilder<TSut, TObject> : IObjectBuilder<TSut>
         var builder = new ResultAsserter<TSut, TResult>(
             result,
             sutComposer,
-            sutTesterComposer,
             resultPropertyTargeter
         );
 
         return builder;
     }
     
-    public IVoidAsserter<TSut, System.Action<IArrangement>> WhenIt(System.Action<IAction<TSut>> func)
+    public IVoidAsserter<TSut> WhenIt(System.Action<IAction<TSut>> func)
     {
         throw new NotImplementedException();
     }
@@ -99,6 +89,7 @@ public class NamedObjectBuilder<TSut, TObject> : IObjectBuilder<TSut>
     }
 
     public IDependencyBuilder<TSut> With<TNewDependency>(TNewDependency newDependency, string name)
+    where TNewDependency : class
     {
         throw new NotImplementedException();
     }

@@ -14,15 +14,6 @@ public class AsserterComposer<TSut> : IAsserterComposer<TSut>
             arrangement
         );
 
-        var actionExecutor = new ResultActionExecutor<TSut, TResult>(
-            func
-        );
-
-        var sutTesterComposer = new SutTesterComposer<TSut, IAssertion<TSut, TResult>>(
-            actionExecutor,
-            arrangement
-        );
-
         var sut = sutComposer.Compose();
 
         var action = new Action<TSut>(
@@ -40,37 +31,41 @@ public class AsserterComposer<TSut> : IAsserterComposer<TSut>
         var builder = new ResultAsserter<TSut, TResult>(
             result,
             sutComposer,
-            sutTesterComposer,
             resultPropertyTargeter
         );
 
         return builder;
     }
 
-    public IVoidAsserter<TSut, System.Action<IArrangement>> Compose<TDependency>(
+    public IVoidAsserter<TSut> Compose<TDependency>(
         IDependency dependency,
         System.Action<IAction<TSut>> action,
         IArrangement arrangement
         )
+    where TDependency : class
     {
+        if (dependency is MockDependency<TDependency> mockDependency)
+        {
+            arrangement.MockObjects.Add(mockDependency.Mock);
+        }
+        
         arrangement.Dependencies.Add(dependency);
 
         var sutComposer = new SutComposer<TSut>(
             arrangement
         );
 
-        var actionExecutor = new VoidActionExecutor<TSut>(
-            action
-            );
-
-        var sutTesterComposer = new SutTesterComposer<TSut, IAssertion<TSut>>(
-            actionExecutor,
+        var sut = sutComposer.Compose();
+        
+        var sutAction = new Action<TSut>(
+            sut,
             arrangement
         );
+        
+        action.Invoke(sutAction);
 
         var builder = new VoidAsserter<TSut>(
-            sutComposer,
-            sutTesterComposer
+            sutComposer
         );
 
         return builder;

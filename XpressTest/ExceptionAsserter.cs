@@ -12,6 +12,8 @@ public class ExceptionAsserter : IExceptionAsserter
     public void Assert<TException>()
         where TException : Exception
     {
+        var exceptionThrown = false;
+        
         try
         {
             _action.Invoke();
@@ -22,6 +24,15 @@ public class ExceptionAsserter : IExceptionAsserter
             {
                 throw exception;
             }
+            else
+            {
+                exceptionThrown = true;
+            }
+        }
+
+        if (!exceptionThrown)
+        {
+            throw new Exception("Expected exception not thrown");
         }
     }
 }

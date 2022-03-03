@@ -17,9 +17,19 @@ public class Assertion<TSut, TResult> : IAssertion<TSut, TResult>
     
     public IAction<TSut> Action { get; }
 
+    public void Add<T>(Mock<T> mock) where T : class => MockObjects.Add(mock);
+
     public Mock<T> GetMock<T>() where T : class => Dependencies.GetMock<T>();
+    
+    public T GetMockObject<T>()
+        where T : class
+    {
+        throw new NotImplementedException();
+    }
 
     public IObjectCollection Objects => Action.Objects;
+
+    public IMockObjectCollection MockObjects => Action.MockObjects;
 
     public IDependencyCollection Dependencies => Action.Dependencies;
 

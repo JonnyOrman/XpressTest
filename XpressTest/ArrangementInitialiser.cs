@@ -6,10 +6,13 @@ public static class ArrangementInitialiser
     {
         var objectCollection = new ObjectCollection();
 
+        var mockObjectCollection = new MockObjectCollection();
+
         var dependencyCollection = new DependencyCollection();
 
         return new Arrangement(
             objectCollection,
+            mockObjectCollection,
             dependencyCollection
         );
     }

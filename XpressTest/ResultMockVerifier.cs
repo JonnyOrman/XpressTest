@@ -10,21 +10,18 @@ public class ResultMockVerifier<TSut, TSutResult, TMock> : IResultMockVerifier<T
     private readonly TSutResult _result;
     private readonly Mock<TMock> _mock;
     private readonly ISutComposer<TSut> _sutComposer;
-    private readonly ISutTesterComposer<TSut, System.Action<IAssertion<TSut, TSutResult>>> _sutTesterComposer;
     private readonly IResultPropertyTargeter<TSutResult> _resultPropertyTargeter;
 
     public ResultMockVerifier(
         TSutResult result,
         Mock<TMock> mock,
         ISutComposer<TSut> sutComposer,
-        ISutTesterComposer<TSut, System.Action<IAssertion<TSut, TSutResult>>> sutTesterComposer,
         IResultPropertyTargeter<TSutResult> resultPropertyTargeter
         )
     {
         _result = result;
         _mock = mock;
         _sutComposer = sutComposer;
-        _sutTesterComposer = sutTesterComposer;
         _resultPropertyTargeter = resultPropertyTargeter;
     }
     
@@ -35,7 +32,6 @@ public class ResultMockVerifier<TSut, TSutResult, TMock> : IResultMockVerifier<T
             _mock,
             func,
             _sutComposer,
-            _sutTesterComposer,
             _resultPropertyTargeter
             );
     }
@@ -47,7 +43,6 @@ public class ResultMockVerifier<TSut, TSutResult, TMock> : IResultMockVerifier<T
             _mock,
             func,
             _sutComposer,
-            _sutTesterComposer,
             _resultPropertyTargeter
         );
     }

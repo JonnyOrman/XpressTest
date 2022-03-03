@@ -6,6 +6,8 @@ public interface IArrangement
 {
     IObjectCollection Objects { get; }
     
+    IMockObjectCollection MockObjects { get; }
+    
     IDependencyCollection Dependencies { get; }
 
     T GetObject<T>();
@@ -16,5 +18,11 @@ public interface IArrangement
 
     void Add<T>(INamedObject<T> namedObject);
     
+    void Add<T>(Mock<T> mock)
+        where T : class;
+    
     Mock<TMock> GetMock<TMock>() where TMock : class;
+
+    T GetMockObject<T>()
+        where T : class;
 }
