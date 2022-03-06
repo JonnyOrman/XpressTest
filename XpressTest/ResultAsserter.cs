@@ -6,29 +6,29 @@ public class ResultAsserter<TSut, TResult> : IResultAsserter<TSut, TResult>
     where TSut : class
 {
     private readonly TResult _result;
-    private readonly ISutComposer<TSut> _sutComposer;
+    private readonly IArrangement _arrangement;
     private readonly IResultPropertyTargeter<TResult> _resultPropertyTargeter;
+    private readonly IResultMockVerifierCreator<TSut, TResult> _resultMockVerifierCreator;
+    private readonly TSut _sut;
 
     public ResultAsserter(
         TResult result,
-        ISutComposer<TSut> sutComposer,
-        IResultPropertyTargeter<TResult> resultPropertyTargeter
+        IArrangement arrangement,
+        IResultPropertyTargeter<TResult> resultPropertyTargeter,
+        IResultMockVerifierCreator<TSut, TResult> resultMockVerifierCreator,
+        TSut sut
         )
     {
         _result = result;
-        _sutComposer = sutComposer;
+        _arrangement = arrangement;
         _resultPropertyTargeter = resultPropertyTargeter;
+        _resultMockVerifierCreator = resultMockVerifierCreator;
+        _sut = sut;
     }
     
     public void Then(System.Action<IAssertion<TSut, TResult>> action)
     {
-        var sutComposer = new SutComposer<TSut>(
-            _sutComposer.Arrangement
-        );
-        
-        var sut = sutComposer.Compose();
-
-        var sutAction = new Action<TSut>(sut, _sutComposer.Arrangement);
+        var sutAction = new Action<TSut>(_sut, _arrangement);
         
         var assertion = new Assertion<TSut, TResult>(
             _result,
@@ -40,13 +40,8 @@ public class ResultAsserter<TSut, TResult> : IResultAsserter<TSut, TResult>
     public IResultMockVerifier<TSut, TResult, TMock> Then<TMock>()
         where TMock : class
     {
-        var mock = _sutComposer.Arrangement.GetMock<TMock>();
-        
-        return new ResultMockVerifier<TSut, TResult, TMock>(
-            _result,
-            mock,
-            _sutComposer,
-            _resultPropertyTargeter
+        return _resultMockVerifierCreator.Create<TMock>(
+            this
             );
     }
 
@@ -67,7 +62,7 @@ public class ResultAsserter<TSut, TResult> : IResultAsserter<TSut, TResult>
 
     public void ThenTheResultShouldBe(Func<IArrangement, TResult> func)
     {
-        var expectedResult = func.Invoke(_sutComposer.Arrangement);
+        var expectedResult = func.Invoke(_arrangement);
         
         _result.ThenTheResultShouldBe(expectedResult);
     }

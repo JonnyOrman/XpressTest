@@ -5,45 +5,27 @@ public class ObjectBuilder<TSut, TObject> : IObjectBuilder<TSut>
 {
     private readonly TObject _obj;
     private readonly ITestComposer<TSut> _testComposer;
+    private readonly IResultAsserterComposer<TSut> _resultAsserterComposer;
 
     public ObjectBuilder(
         TObject obj,
-        ITestComposer<TSut> testComposer
+        ITestComposer<TSut> testComposer,
+        IResultAsserterComposer<TSut> resultAsserterComposer
         )
     {
         _obj = obj;
         _testComposer = testComposer;
+        _resultAsserterComposer = resultAsserterComposer;
     }
     
     public IResultAsserter<TSut, TResult> WhenIt<TResult>(Func<IAction<TSut>, TResult> func)
     {
         _testComposer.Arrangement.Add(_obj);
 
-        var sutComposer = new SutComposer<TSut>(
-            _testComposer.Arrangement
-        );
-
-        var sut = sutComposer.Compose();
-
-        var action = new Action<TSut>(
-            sut,
-            _testComposer.Arrangement
-        );
-
-        var result = func.Invoke(action);
-
-        var resultPropertyTargeter = new ResultPropertyTargeter<TResult>(
-            result,
+        return _resultAsserterComposer.Compose(
+            func,
             _testComposer.Arrangement
             );
-
-        var builder = new ResultAsserter<TSut, TResult>(
-            result,
-            sutComposer,
-            resultPropertyTargeter
-        );
-
-        return builder;
     }
 
     public IVoidAsserter<TSut> WhenIt(System.Action<IAction<TSut>> func)

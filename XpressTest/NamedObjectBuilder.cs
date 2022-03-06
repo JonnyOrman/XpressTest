@@ -5,14 +5,17 @@ public class NamedObjectBuilder<TSut, TObject> : IObjectBuilder<TSut>
 {
     private readonly INamedObject<TObject> _namedObject;
     private readonly ITestComposer<TSut> _testComposer;
+    private readonly IResultAsserterComposer<TSut> _resultAsserterComposer;
 
     public NamedObjectBuilder(
         INamedObject<TObject> namedObject,
-        ITestComposer<TSut> testComposer
+        ITestComposer<TSut> testComposer,
+        IResultAsserterComposer<TSut> resultAsserterComposer
         )
     {
         _namedObject = namedObject;
         _testComposer = testComposer;
+        _resultAsserterComposer = resultAsserterComposer;
     }
 
     public IMockObjectBuilder<TSut, TNewObject> AndGivenA<TNewObject>()
@@ -50,32 +53,10 @@ public class NamedObjectBuilder<TSut, TObject> : IObjectBuilder<TSut>
     {
         _testComposer.Arrangement.Add(_namedObject);
 
-        var sutComposer = new SutComposer<TSut>(
-            _testComposer.Arrangement
-        );
-
-        var sut = sutComposer.Compose();
-
-        var action = new Action<TSut>(
-            sut,
-            _testComposer.Arrangement
-        );
-
-        var result = func.Invoke(action);
-
-        var resultPropertyTargeter = new ResultPropertyTargeter<TResult>(
-            result,
+        return _resultAsserterComposer.Compose(
+            func,
             _testComposer.Arrangement
             );
-
-
-        var builder = new ResultAsserter<TSut, TResult>(
-            result,
-            sutComposer,
-            resultPropertyTargeter
-        );
-
-        return builder;
     }
     
     public IVoidAsserter<TSut> WhenIt(System.Action<IAction<TSut>> func)

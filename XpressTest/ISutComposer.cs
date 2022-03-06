@@ -2,7 +2,7 @@
 
 public interface ISutComposer<TSut>
 {
-    TSut Compose();
-    
-    IArrangement Arrangement { get; }
+    TSut Compose(
+        IArrangement arrangement
+        );
 }

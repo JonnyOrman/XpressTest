@@ -1,8 +1,22 @@
 ﻿namespace XpressTest;
 
-public class AsserterComposer<TSut> : IAsserterComposer<TSut>
+public class AsserterComposer<TSut>
+    :
+        IAsserterComposer<TSut>
     where TSut : class
 {
+    private readonly IResultAsserterComposer<TSut> _resultAsserterComposer;
+    private readonly IVoidAsserterComposer<TSut> _voidAsserterComposer;
+
+    public AsserterComposer(
+        IResultAsserterComposer<TSut> resultAsserterComposer,
+        IVoidAsserterComposer<TSut> voidAsserterComposer
+        )
+    {
+        _resultAsserterComposer = resultAsserterComposer;
+        _voidAsserterComposer = voidAsserterComposer;
+    }
+    
     public IResultAsserter<TSut, TResult> Compose<TResult, TDependency>(
         IDependency dependency,
         Func<IAction<TSut>, TResult> func, 
@@ -10,31 +24,10 @@ public class AsserterComposer<TSut> : IAsserterComposer<TSut>
     {
         arrangement.Dependencies.Add(dependency);
         
-        var sutComposer = new SutComposer<TSut>(
-            arrangement
-        );
-
-        var sut = sutComposer.Compose();
-
-        var action = new Action<TSut>(
-            sut,
-            arrangement
-        );
-
-        var result = func.Invoke(action);
-
-        var resultPropertyTargeter = new ResultPropertyTargeter<TResult>(
-            result,
+        return _resultAsserterComposer.Compose(
+            func,
             arrangement
             );
-
-        var builder = new ResultAsserter<TSut, TResult>(
-            result,
-            sutComposer,
-            resultPropertyTargeter
-        );
-
-        return builder;
     }
 
     public IVoidAsserter<TSut> Compose<TDependency>(
@@ -51,23 +44,9 @@ public class AsserterComposer<TSut> : IAsserterComposer<TSut>
         
         arrangement.Dependencies.Add(dependency);
 
-        var sutComposer = new SutComposer<TSut>(
+        return _voidAsserterComposer.Compose(
+            action,
             arrangement
         );
-
-        var sut = sutComposer.Compose();
-        
-        var sutAction = new Action<TSut>(
-            sut,
-            arrangement
-        );
-        
-        action.Invoke(sutAction);
-
-        var builder = new VoidAsserter<TSut>(
-            sutComposer
-        );
-
-        return builder;
     }
 }

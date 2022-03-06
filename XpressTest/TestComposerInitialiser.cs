@@ -5,7 +5,14 @@ public static class TestComposerInitialiser<TSut>
 {
     public static ITestComposer<TSut> Initialise()
     {
-        var asserterComposer = new AsserterComposer<TSut>();
+        var resultAsserterComposer = ResultAsserterComposerInitialiser<TSut>.Initialise();
+
+        var voidAsserterComposer = VoidAsserterComposerInitialiser<TSut>.Initialise();
+        
+        var asserterComposer = new AsserterComposer<TSut>(
+            resultAsserterComposer,
+            voidAsserterComposer
+            );
 
         var mockDependencyAsserterComposer = new MockDependencyAsserterComposer<TSut>(
             asserterComposer
@@ -26,7 +33,8 @@ public static class TestComposerInitialiser<TSut>
             dependencyAsserterComposer,
             dependencyBuilderComposer,
             mockDependencyBuilderComposer,
-            arrangement
+            arrangement,
+            resultAsserterComposer
         );
     }
 }

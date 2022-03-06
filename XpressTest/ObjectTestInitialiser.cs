@@ -7,9 +7,12 @@ public static class ObjectTestInitialiser<TSut, TObject>
     {
         var testComposer = TestComposerInitialiser<TSut>.Initialise();
 
+        var resultAsserterComposer = ResultAsserterComposerInitialiser<TSut>.Initialise();
+        
         return new ObjectBuilder<TSut, TObject>(
             obj,
-            testComposer
+            testComposer,
+            resultAsserterComposer
         );
     }
 }

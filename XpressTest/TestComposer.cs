@@ -9,19 +9,22 @@ public class TestComposer<TSut> : ITestComposer<TSut>
     private readonly IDependencyAsserterComposer<TSut> _dependencyAsserterComposer;
     private readonly IDependencyBuilderComposer<TSut> _dependencyBuilderComposer;
     private readonly IMockDependencyBuilderComposer<TSut> _mockDependencyBuilderComposer;
+    private readonly IResultAsserterComposer<TSut> _resultAsserterComposer;
 
     public TestComposer(
         IMockDependencyAsserterComposer<TSut> mockDependencyAsserterComposer,
         IDependencyAsserterComposer<TSut> dependencyAsserterComposer,
         IDependencyBuilderComposer<TSut> dependencyBuilderComposer,
         IMockDependencyBuilderComposer<TSut> mockDependencyBuilderComposer,
-        IArrangement arrangement
+        IArrangement arrangement,
+        IResultAsserterComposer<TSut> resultAsserterComposer
         )
     {
         _mockDependencyAsserterComposer = mockDependencyAsserterComposer;
         _dependencyAsserterComposer = dependencyAsserterComposer;
         _dependencyBuilderComposer = dependencyBuilderComposer;
         _mockDependencyBuilderComposer = mockDependencyBuilderComposer;
+        _resultAsserterComposer = resultAsserterComposer;
         Arrangement = arrangement;
     }
 
@@ -192,7 +195,8 @@ public class TestComposer<TSut> : ITestComposer<TSut>
 
         var builder = new NamedObjectBuilder<TSut, TNewDependency>(
             newNamedObject,
-            this
+            this,
+            _resultAsserterComposer
         );
 
         return builder;
@@ -204,7 +208,8 @@ public class TestComposer<TSut> : ITestComposer<TSut>
 
         var builder = new ObjectBuilder<TSut, TNewObject>(
             newObject,
-            this
+            this,
+            _resultAsserterComposer
         );
 
         return builder;

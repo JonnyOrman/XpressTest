@@ -1,49 +1,41 @@
-using Moq;
 using System.Linq.Expressions;
 
 namespace XpressTest;
 
-public class ResultMockVerifier<TSut, TSutResult, TMock> : IResultMockVerifier<TSut, TSutResult, TMock>
+public class ResultMockVerifier<TSut, TSutResult, TMock>
+    :
+        IResultMockVerifier<TSut, TSutResult, TMock>
     where TSut : class
     where TMock : class
 {
-    private readonly TSutResult _result;
-    private readonly Mock<TMock> _mock;
-    private readonly ISutComposer<TSut> _sutComposer;
-    private readonly IResultPropertyTargeter<TSutResult> _resultPropertyTargeter;
+    private readonly IMockCounterVerifierCreator<TMock, IResultAsserter<TSut, TSutResult>> _mockCounterVerifierCreator;
+    private readonly IResultAsserter<TSut, TSutResult> _asserter;
 
     public ResultMockVerifier(
-        TSutResult result,
-        Mock<TMock> mock,
-        ISutComposer<TSut> sutComposer,
-        IResultPropertyTargeter<TSutResult> resultPropertyTargeter
+        IMockCounterVerifierCreator<TMock, IResultAsserter<TSut, TSutResult>> mockCounterVerifierCreator,
+        IResultAsserter<TSut, TSutResult> asserter
         )
     {
-        _result = result;
-        _mock = mock;
-        _sutComposer = sutComposer;
-        _resultPropertyTargeter = resultPropertyTargeter;
+        _mockCounterVerifierCreator = mockCounterVerifierCreator;
+        _asserter = asserter;
     }
     
-    public IResultMockCounterVerifier<TSut, TSutResult> Should<TResult>(Func<IArrangement, Expression<Func<TMock, TResult>>> func)
+    public IMockCounterVerifier<IResultAsserter<TSut, TSutResult>> Should<TMockResult>(
+        Func<IArrangement, Expression<Func<TMock, TMockResult>>> func
+        )
     {
-        return new ArrangementResultMockCounterVerifier<TSut, TSutResult, TMock, TResult>(
-            _result,
-            _mock,
+        return _mockCounterVerifierCreator.Create(
             func,
-            _sutComposer,
-            _resultPropertyTargeter
+            _asserter
             );
     }
 
-    public IResultMockCounterVerifier<TSut, TSutResult> Should<TResult>(Expression<Func<TMock, TResult>> func)
+    public IMockCounterVerifier<IResultAsserter<TSut, TSutResult>> Should<TMockResult>(
+        Expression<Func<TMock, TMockResult>> expression
+        )
     {
-        return new ResultMockCounterVerifier<TSut, TSutResult, TMock, TResult>(
-            _result,
-            _mock,
-            func,
-            _sutComposer,
-            _resultPropertyTargeter
+        return _mockCounterVerifierCreator.Create(
+            expression
         );
     }
 }

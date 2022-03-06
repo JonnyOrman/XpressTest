@@ -3,35 +3,32 @@ namespace XpressTest;
 public class VoidAsserter<TSut> : IVoidAsserter<TSut>
     where TSut : class
 {
-    private readonly ISutComposer<TSut> _sutComposer;
+    private readonly IArrangement _arrangement;
+    private readonly IVoidMockVerifierCreator<TSut> _voidMockVerifierCreator;
+    private readonly TSut _sut;
 
     public VoidAsserter(
-        ISutComposer<TSut> sutComposer
+        IArrangement arrangement,
+        IVoidMockVerifierCreator<TSut> voidMockVerifierCreator,
+        TSut sut
         )
     {
-        _sutComposer = sutComposer;
+        _arrangement = arrangement;
+        _voidMockVerifierCreator = voidMockVerifierCreator;
+        _sut = sut;
     }
     
     public IVoidMockVerifier<TSut, TMock> Then<TMock>()
         where TMock : class
     {
-        var mock = _sutComposer.Arrangement.GetMock<TMock>();
-        
-        return new VoidMockVerifier<TSut, TMock>(
-            mock,
-            _sutComposer
-        );
+        return _voidMockVerifierCreator.Create<TMock>(
+            this
+            );
     }
 
     public void Then(System.Action<IAssertion<TSut>> action)
     {
-        var sutComposer = new SutComposer<TSut>(
-            _sutComposer.Arrangement
-        );
-        
-        var sut = sutComposer.Compose();
-
-        var sutAction = new Action<TSut>(sut, _sutComposer.Arrangement);
+        var sutAction = new Action<TSut>(_sut, _arrangement);
         
         var assertion = new VoidAssertion<TSut>(
             sutAction

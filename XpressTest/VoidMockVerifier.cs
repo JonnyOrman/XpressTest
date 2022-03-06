@@ -1,44 +1,48 @@
-using Moq;
 using System.Linq.Expressions;
 
 namespace XpressTest;
 
-public class VoidMockVerifier<TSut, TMock> : IVoidMockVerifier<TSut, TMock>
+public class VoidMockVerifier<TSut, TMock>
+    :
+        IVoidMockVerifier<TSut, TMock>
     where TSut : class
     where TMock : class
 {
-    private readonly Mock<TMock> _mock;
-    private readonly ISutComposer<TSut> _sutComposer;
+    private readonly IMockCounterVerifierCreator<TMock, IVoidAsserter<TSut>> _mockCounterVerifierCreator;
+    private readonly IVoidAsserter<TSut> _asserter;
 
     public VoidMockVerifier(
-        Mock<TMock> mock,
-        ISutComposer<TSut> sutComposer
+        IMockCounterVerifierCreator<TMock, IVoidAsserter<TSut>> mockCounterVerifierCreator,
+        IVoidAsserter<TSut> asserter
         )
     {
-        _mock = mock;
-        _sutComposer = sutComposer;
+        _mockCounterVerifierCreator = mockCounterVerifierCreator;
+        _asserter = asserter;
     }
     
-    public IVoidMockCounterVerifier<TSut> Should<TResult>(Func<IArrangement, Expression<Func<TMock, TResult>>> func)
+    public IMockCounterVerifier<IVoidAsserter<TSut>> Should<TResult>(
+        Func<IArrangement, Expression<Func<TMock, TResult>>> func
+        )
     {
         throw new NotImplementedException();
     }
 
-    public IVoidMockCounterVerifier<TSut> Should<TResult>(Expression<Func<TMock, TResult>> func)
+    public IMockCounterVerifier<IVoidAsserter<TSut>> Should<TMockResult>(
+        Expression<Func<TMock, TMockResult>> expression
+        )
     {
-        return new VoidMockCounterVerifier<TSut, TMock, TResult>(
-            _mock,
-            func,
-            _sutComposer
+        return _mockCounterVerifierCreator.Create(
+            expression
         );
     }
 
-    public IVoidMockCounterVerifier<TSut> Should(Func<IArrangement, Expression<System.Action<TMock>>> func)
+    public IMockCounterVerifier<IVoidAsserter<TSut>> Should(
+        Func<IArrangement, Expression<System.Action<TMock>>> func
+        )
     {
-        return new ArrangementVoidMockCounterVerifier<TSut, TMock>(
-            _mock,
+        return _mockCounterVerifierCreator.Create(
             func,
-            _sutComposer
+            _asserter
         );
     }
 }
