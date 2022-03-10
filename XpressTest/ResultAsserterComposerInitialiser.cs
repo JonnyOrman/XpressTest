@@ -5,7 +5,7 @@ public static class ResultAsserterComposerInitialiser<TSut>
 {
     public static IResultAsserterComposer<TSut> Initialise()
     {
-        var sutComposer = SutComposerInitialiser<TSut>.Initialise();
+        var sutComposer = ArrangementSutComposerInitialiser<TSut>.Initialise();
         
         return new ResultAsserterComposer<TSut>(
             sutComposer

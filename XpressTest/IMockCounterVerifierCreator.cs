@@ -17,4 +17,8 @@ public interface IMockCounterVerifierCreator<TMock, TAsserter>
         Func<IArrangement, Expression<System.Action<TMock>>> func,
         TAsserter asserter
     );
+    
+    IMockCounterVerifier<TAsserter> Create(
+        Expression<System.Action<TMock>> expression
+    );
 }

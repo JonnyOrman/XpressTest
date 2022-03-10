@@ -2,7 +2,7 @@ using Moq;
 
 namespace XpressTest;
 
-public class Assertion<TSut, TResult> : IAssertion<TSut, TResult>
+public class Assertion<TSut, TResult> : IAssertion<TResult>
 {
     public Assertion(
         TResult result,
@@ -27,13 +27,25 @@ public class Assertion<TSut, TResult> : IAssertion<TSut, TResult>
         throw new NotImplementedException();
     }
 
+    public void AddDependency<TDependency>(TDependency dependency)
+    {
+        var dependencyObject = new Dependency<TDependency>(dependency);
+        
+        Dependencies.Add(dependencyObject);
+    }
+
+    public void AddDependency<TDependency>(TDependency dependency, string name)
+    {
+        throw new NotImplementedException();
+    }
+
     public IObjectCollection Objects => Action.Objects;
 
     public IMockObjectCollection MockObjects => Action.MockObjects;
 
     public IDependencyCollection Dependencies => Action.Dependencies;
 
-    public T GetObject<T>() => Objects.Get<T>();
+    public T GetThe<T>() => Objects.Get<T>();
 
     public T GetObject<T>(string name) => Objects.Get<T>(name);
 

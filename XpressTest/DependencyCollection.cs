@@ -5,10 +5,12 @@ namespace XpressTest;
 public class DependencyCollection : IDependencyCollection
 {
     private readonly IDictionary<string, IDependency> _dictionary;
+    private readonly ICollection<IDependency> _collection;
 
     public DependencyCollection()
     {
         _dictionary = new Dictionary<string, IDependency>();
+        _collection = new List<IDependency>();
     }
     
     public T Get<T>(string name)
@@ -24,17 +26,24 @@ public class DependencyCollection : IDependencyCollection
 
     public void Add(IDependency dependency)
     {
+        _collection.Add(dependency);
+    }
+    
+    public void Add(INamedDependency dependency)
+    {
         _dictionary[dependency.Name] = dependency;
+        
+        _collection.Add(dependency);
     }
 
     public bool Any()
     {
-        return _dictionary.Count > 0;
+        return _collection.Any();
     }
 
     public IEnumerable<IDependency> GetAll()
     {
-        return _dictionary.Values;
+        return _collection;
     }
 
     public int Size => _dictionary.Count;

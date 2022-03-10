@@ -21,7 +21,7 @@ public class Arrangement : IArrangement
     
     public IDependencyCollection Dependencies { get; }
 
-    public T GetObject<T>() => Objects.Get<T>();
+    public T GetThe<T>() => Objects.Get<T>();
 
     public T GetObject<T>(string name) => Objects.Get<T>(name);
 
@@ -34,4 +34,21 @@ public class Arrangement : IArrangement
     public Mock<TMock> GetMock<TMock>() where TMock : class => MockObjects.Get<TMock>();
 
     public T GetMockObject<T>() where T : class => GetMock<T>().Object;
+    
+    public void AddDependency<TDependency>(TDependency dependency)
+    {
+        var dependencyObject = new Dependency<TDependency>(dependency);
+        
+        Dependencies.Add(dependencyObject);
+    }
+    
+    public void AddDependency<TDependency>(TDependency dependency, string name)
+    {
+        var dependencyObject = new NamedDependency<TDependency>(
+            dependency,
+            name
+            );
+        
+        Dependencies.Add(dependencyObject);
+    }
 }

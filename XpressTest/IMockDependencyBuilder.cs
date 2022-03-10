@@ -11,4 +11,6 @@ public interface IMockDependencyBuilder<TSut, TDependency> : IDependencyBuilder<
     IMockResultDependencyBuilder<TSut, TDependency, TResult> ThatDoes<TResult>(
         Expression<Func<TDependency, TResult>> expression
     );
+
+    IObjectBuilder<TSut> WithNamedObject<TObject>(string objectName);
 }

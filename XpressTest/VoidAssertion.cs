@@ -2,7 +2,7 @@
 
 namespace XpressTest;
 
-public class VoidAssertion<TSut> : IAssertion<TSut>
+public class VoidAssertion<TSut> : IAssertion
 {
     public VoidAssertion(
         IAction<TSut> action
@@ -17,7 +17,7 @@ public class VoidAssertion<TSut> : IAssertion<TSut>
 
     public IDependencyCollection Dependencies => Action.Dependencies;
 
-    public T GetObject<T>() => Objects.Get<T>();
+    public T GetThe<T>() => Objects.Get<T>();
 
     public T GetObject<T>(string name) => Objects.Get<T>(name);
 
@@ -32,4 +32,16 @@ public class VoidAssertion<TSut> : IAssertion<TSut>
     public Mock<T> GetMock<T>() where T : class => MockObjects.Get<T>();
 
     public T GetMockObject<T>() where T : class => MockObjects.Get<T>().Object;
+    
+    public void AddDependency<TDependency>(TDependency dependency)
+    {
+        var dependencyObject = new Dependency<TDependency>(dependency);
+        
+        Dependencies.Add(dependencyObject);
+    }
+
+    public void AddDependency<TDependency>(TDependency dependency, string name)
+    {
+        throw new NotImplementedException();
+    }
 }

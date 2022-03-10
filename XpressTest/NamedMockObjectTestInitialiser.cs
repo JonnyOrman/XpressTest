@@ -10,9 +10,14 @@ public static class NamedMockObjectTestInitialiser<TSut, TObject>
         
         var testComposer = TestComposerInitialiser<TSut>.Initialise();
 
+        var namedMockObjectSetter = new NamedMockObjectSetter<TObject>(
+            testComposer.Arrangement
+            );
+        
         return new NamedMockObjectBuilder<TSut, TObject>(
             namedMock,
-            testComposer
+            testComposer,
+            namedMockObjectSetter
         );
     }
 }

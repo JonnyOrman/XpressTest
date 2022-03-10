@@ -17,10 +17,29 @@ public class ResultPropertyTargeter<TResult> : IResultPropertyTargeter<TResult>
         Func<TResult, TProperty> targetFunc
         )
     {
-        return new ResultPropertyAsserter<TResult, TProperty>(
+        var resultPropertyValueComparer = new ResultPropertyValueComparer<TResult, TProperty>(
             _result,
-            targetFunc,
-            _arrangement
+            targetFunc
+            );
+        
+        var resultPropertyValueAsserter = new ResultPropertyValueAsserter<TResult, TProperty>(
+            resultPropertyValueComparer,
+            this
+        );
+
+        var resultPropertyNullComparer = new ResultPropertyNullComparer<TResult, TProperty>(
+            _result,
+            targetFunc
+            );
+        
+        var resultPropertyNullAsserter = new ResultPropertyNullAsserter<TResult>(
+            resultPropertyNullComparer,
+            this
+            );
+        
+        return new ResultPropertyAsserter<TResult, TProperty>(
+            resultPropertyValueAsserter,
+            resultPropertyNullAsserter
             );
     }
     

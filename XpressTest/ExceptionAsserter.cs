@@ -9,7 +9,7 @@ public class ExceptionAsserter : IExceptionAsserter
         _action = action;
     }
 
-    public void Assert<TException>()
+    public void ThenItShouldThrow<TException>()
         where TException : Exception
     {
         var exceptionThrown = false;

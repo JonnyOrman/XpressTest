@@ -14,4 +14,22 @@ public interface IAsserterComposer<TSut>
         IArrangement arrangement
         )
         where TDependency : class;
+    
+    IVoidAsserter<TSut> Compose<TDependency>(
+        IDependency dependency,
+        System.Action<TSut> action,
+        IArrangement arrangement
+    )
+        where TDependency : class;
+    
+    IVoidAsserter<TSut> Compose(
+        System.Action<TSut> action,
+        IArrangement arrangement
+    );
+    
+    IVoidAsserter<TSut> ComposeValue<TDependency>(
+        IDependency dependency,
+        System.Action<TSut> action,
+        IArrangement arrangement
+    );
 }

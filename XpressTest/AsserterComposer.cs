@@ -49,4 +49,49 @@ public class AsserterComposer<TSut>
             arrangement
         );
     }
+
+    public IVoidAsserter<TSut> Compose<TDependency>(
+        IDependency dependency,
+        System.Action<TSut> action,
+        IArrangement arrangement
+        )
+        where TDependency : class
+    {
+        if (dependency is MockDependency<TDependency> mockDependency)
+        {
+            arrangement.MockObjects.Add(mockDependency.Mock);
+        }
+        
+        arrangement.Dependencies.Add(dependency);
+
+        return _voidAsserterComposer.Compose(
+            action,
+            arrangement
+        );
+    }
+
+    public IVoidAsserter<TSut> Compose(
+        System.Action<TSut> action,
+        IArrangement arrangement
+        )
+    {
+        return _voidAsserterComposer.Compose(
+            action,
+            arrangement
+        );
+    }
+
+    public IVoidAsserter<TSut> ComposeValue<TDependency>(
+        IDependency dependency,
+        System.Action<TSut> action,
+        IArrangement arrangement
+        )
+    {
+        arrangement.Dependencies.Add(dependency);
+
+        return _voidAsserterComposer.Compose(
+            action,
+            arrangement
+        );
+    }
 }

@@ -2,34 +2,49 @@ using System.Linq.Expressions;
 
 namespace XpressTest;
 
-public class NamedMockObjectBuilder<TSut, TObject> : IMockObjectBuilder<TSut, TObject>
+public class NamedMockObjectBuilder<TSut, TObject>
+    :
+        IMockObjectBuilder<TSut, TObject>
     where TSut : class
     where TObject : class
 {
     private readonly INamedMock<TObject> _namedMock;
     
     private readonly ITestComposer<TSut> _testComposer;
+    private readonly INamedMockObjectSetter<TObject> _namedMockObjectSetter;
 
     public NamedMockObjectBuilder(
         INamedMock<TObject> namedMock,
-        ITestComposer<TSut> testComposer
+        ITestComposer<TSut> testComposer,
+        INamedMockObjectSetter<TObject> namedMockObjectSetter
         )
     {
         _namedMock = namedMock;
         _testComposer = testComposer;
+        _namedMockObjectSetter = namedMockObjectSetter;
     }
 
     public IResultAsserter<TSut, TResult> WhenIt<TResult>(Func<IAction<TSut>, TResult> func)
     {
         throw new NotImplementedException();
     }
-    
+
+    public IVoidAsserter<TSut> WhenIt(System.Action<TSut> action)
+    {
+        throw new NotImplementedException();
+    }
+
     public IVoidAsserter<TSut> WhenIt(System.Action<IAction<TSut>> func)
     {
         throw new NotImplementedException();
     }
 
-    public IDependencyBuilder<TSut> With<TNewDependency>(TNewDependency newDependency)
+    public IDependencyBuilder<TSut> With<TNewDependency>()
+    {
+        throw new NotImplementedException();
+    }
+
+    public IValueDependencyBuilder<TSut> With<TNewDependency>(TNewDependency newDependency)
     {
         throw new NotImplementedException();
     }
@@ -40,23 +55,21 @@ public class NamedMockObjectBuilder<TSut, TObject> : IMockObjectBuilder<TSut, TO
         throw new NotImplementedException();
     }
 
-    public IMockDependencyBuilder<TSut, TNewDependency> WithA<TNewDependency>() where TNewDependency : class
+    public IMockDependencyBuilder<TSut, TNewDependency> WithA<TNewDependency>()
+        where TNewDependency : class
     {
-        return _testComposer.StartNewMockDependencyBuilder<TNewDependency, TObject>(_namedMock);
+        _namedMockObjectSetter.Set(_namedMock);
+        
+        return _testComposer.StartNewMockDependencyBuilder<TNewDependency>();
+    }
+
+    public ISutAsserter<TSut> WhenItIsConstructed()
+    {
+        throw new NotImplementedException();
     }
 
     public IMockObjectBuilder<TSut, TNewObject> AndGivenA<TNewObject>()
         where TNewObject : class
-    {
-        throw new NotImplementedException();
-    }
-
-    public IObjectBuilder<TSut> AndGiven<TNewObject>()
-    {
-        throw new NotImplementedException();
-    }
-
-    public IObjectBuilder<TSut> AndGivenA<TNewObject>(string name)
     {
         throw new NotImplementedException();
     }
@@ -67,6 +80,11 @@ public class NamedMockObjectBuilder<TSut, TObject> : IMockObjectBuilder<TSut, TO
     }
 
     public IObjectBuilder<TSut> AndGiven<TNewObject>(TNewObject obj, string name)
+    {
+        throw new NotImplementedException();
+    }
+
+    public IObjectBuilder<TSut> With<TObject1>(string objectName)
     {
         throw new NotImplementedException();
     }

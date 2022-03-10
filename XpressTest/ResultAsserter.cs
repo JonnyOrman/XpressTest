@@ -26,7 +26,7 @@ public class ResultAsserter<TSut, TResult> : IResultAsserter<TSut, TResult>
         _sut = sut;
     }
     
-    public void Then(System.Action<IAssertion<TSut, TResult>> action)
+    public void Then(System.Action<IAssertion<TResult>> action)
     {
         var sutAction = new Action<TSut>(_sut, _arrangement);
         

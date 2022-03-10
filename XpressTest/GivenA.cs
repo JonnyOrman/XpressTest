@@ -37,18 +37,33 @@ public static class GivenA<TSut>
         return DependencyTestInitialiser<TSut>.Initialise(dependency);
     }
     
-    public static ISimpleAsserter WhenIt(System.Action<TSut> action)
+    public static IDependencyBuilder<TSut> With<TDependency>(TDependency dependency, string name)
+        where TDependency : class
     {
-        return VoidActionInitialiser<TSut>.Initialise(action);
+        return NamedDependencyTestInitialiser<TSut>.Initialise(dependency, name);
+    }
+    
+    public static IExceptionAsserter WhenIt(System.Action<TSut> action)
+    {
+        return VoidExceptionAsserterInitialiser<TSut>.Initialise(
+            action
+        );
     }
 
-    public static ISimpleAsserter WhenIt<TResult>(Func<TSut, TResult> func)
+    public static IExceptionAsserter WhenIt<TResult>(Func<TSut, TResult> func)
     {
-        return ResultActionInitialiser<TSut>.Initialise(func);
+        return ResultExceptionAsserterInitialiser<TSut>.Initialise(
+            func
+        );
     }
 
     public static TSut WhenIt()
     {
         return Activator.CreateInstance<TSut>();
+    }
+
+    public static ISutAsserter<TSut> WhenItIsConstructed()
+    {
+        return SutActionInitialiser<TSut>.Initialise();
     }
 }

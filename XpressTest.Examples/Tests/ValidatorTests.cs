@@ -13,6 +13,6 @@ public class ValidatorTests
     public void ValidateParameters(string name, bool expectedResult) =>
         GivenA<Validator>
             .AndGiven(new EntityParameters(name))
-            .WhenIt(action => action.Sut.IsValid(action.GetObject<EntityParameters>()))
+            .WhenIt(action => action.Sut.IsValid(action.GetThe<EntityParameters>()))
             .ThenTheResultShouldBe(expectedResult);
 }

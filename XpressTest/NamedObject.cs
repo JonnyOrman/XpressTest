@@ -12,5 +12,6 @@ public class NamedObject<T> : INamedObject<T>
     }
 
     public T Object { get; }
+    
     public string Name { get; }
 }

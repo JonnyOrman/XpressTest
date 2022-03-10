@@ -4,5 +4,5 @@ public interface IDependency
 {
     object Object { get; }
     
-    string Name { get; }
+    //string Name { get; }
 }

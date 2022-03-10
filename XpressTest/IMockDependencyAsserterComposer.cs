@@ -17,4 +17,11 @@ public interface IMockDependencyAsserterComposer<TSut>
         IArrangement arrangement
         )
         where TDependency : class;
+    
+    IVoidAsserter<TSut> Compose<TDependency>(
+        Mock<TDependency> dependencyMock,
+        System.Action<TSut> func,
+        IArrangement arrangement
+    )
+        where TDependency : class;
 }

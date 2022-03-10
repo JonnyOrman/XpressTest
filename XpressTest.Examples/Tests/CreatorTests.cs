@@ -9,7 +9,7 @@ public class CreatorTests
     public void CreateEntity_Example1() =>
         GivenA<Creator>
             .AndGiven(new EntityParameters("EntityName"))
-            .WhenIt(action => action.Sut.Create(action.GetObject<EntityParameters>()))
+            .WhenIt(action => action.Sut.Create(action.GetThe<EntityParameters>()))
             .ThenTheResult(result => result.Id).ShouldBe(1)
             .ThenTheResult(result => result.Name).ShouldBe("EntityName");
 
@@ -46,4 +46,12 @@ public class CreatorTests
             .WhenIt().Create(parameters)
             .ThenTheResultShouldBeEquivalentTo(entity);
     }
+    
+    [Fact]
+    public void CreateEntity_NullProperty() =>
+        GivenA<Creator>
+            .AndGiven(new EntityParameters(null))
+            .WhenIt(action => action.Sut.Create(action.GetThe<EntityParameters>()))
+            .ThenTheResult(result => result.Id).ShouldBe(1)
+            .ThenTheResult(result => result.Name).ShouldBeNull();
 }

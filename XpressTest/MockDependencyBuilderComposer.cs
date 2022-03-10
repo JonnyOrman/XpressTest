@@ -5,6 +5,26 @@ namespace XpressTest;
 public class MockDependencyBuilderComposer<TSut> : IMockDependencyBuilderComposer<TSut>
     where TSut : class
 {
+    public IMockDependencyBuilder<TSut, TNewDependency> Compose<TCurrentDependency, TNewDependency>(
+        TCurrentDependency currentDependency,
+        string currentDependencyName,
+        ITestComposer<TSut> testComposer
+        )
+        where TNewDependency : class
+    {
+        var dependency = new NamedDependency<TCurrentDependency>(
+            currentDependency,
+            currentDependencyName
+            );
+
+        testComposer.Arrangement.Dependencies.Add(dependency);
+
+        return new MockDependencyBuilder<TSut, TNewDependency>(
+            new Mock<TNewDependency>(),
+            testComposer
+        );
+    }
+
     public IDependencyBuilder<TSut> Compose<TCurrentDependency, TNewDependency>(
         Mock<TCurrentDependency> currentMockDependency,
         TNewDependency newDependency,
@@ -21,12 +41,10 @@ public class MockDependencyBuilderComposer<TSut> : IMockDependencyBuilderCompose
             testComposer.Arrangement.Dependencies.Add(dependency);
         }
 
-        var builder = new DependencyBuilder<TSut, TNewDependency>(
+        return new DependencyBuilder<TSut, TNewDependency>(
             newDependency,
             testComposer
         );
-
-        return builder;
     }
 
     public IMockDependencyBuilder<TSut, TNewDependency> Compose<TCurrentDependency, TNewDependency>(
@@ -45,11 +63,9 @@ public class MockDependencyBuilderComposer<TSut> : IMockDependencyBuilderCompose
             testComposer.Arrangement.Dependencies.Add(dependency);
         }
 
-        var builder = new MockDependencyBuilder<TSut, TNewDependency>(
+        return new MockDependencyBuilder<TSut, TNewDependency>(
             new Mock<TNewDependency>(),
             testComposer
         );
-
-        return builder;
     }
 }

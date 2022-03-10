@@ -22,6 +22,8 @@ public class MockCounterVerifierCreatorComposer<TAsserter>
             mock
         );
         
+        
+        
         var resultMockCallVerifierCreator = new ResultMockCallVerifierCreator<TMock, TAsserter>(
             mockCallCountVerifierCreator,
             asserter
@@ -31,6 +33,8 @@ public class MockCounterVerifierCreatorComposer<TAsserter>
             resultMockCallVerifierCreator
         );
 
+        
+        
         var arrangementResultMockCallVerifierCreator =
             new ArrangementResultMockCallVerifierCreator<TMock, TAsserter>(
                 mockCallCountVerifierCreator,
@@ -42,6 +46,19 @@ public class MockCounterVerifierCreatorComposer<TAsserter>
                 arrangementResultMockCallVerifierCreator
             );
 
+        
+
+        var voidMockCallVerifierCreator = new VoidMockCallVerifierCreator<TMock, TAsserter>(
+            mockCallCountVerifierCreator,
+            asserter
+            );
+        
+        var voidMockCounterVerifierCreator = new VoidMockCounterVerifierCreator<TMock, TAsserter>(
+            voidMockCallVerifierCreator
+            );
+        
+        
+        
         var arrangementVoidMockCallVerifierCreator =
             new ArrangementVoidMockCallVerifierCreator<TMock, TAsserter>(
                 mockCallCountVerifierCreator,
@@ -53,9 +70,12 @@ public class MockCounterVerifierCreatorComposer<TAsserter>
                 arrangementVoidMockCallVerifierCreator
             );
         
+        
+        
         return new MockCounterVerifierCreator<TMock, TAsserter>(
             resultMockCounterVerifierCreator,
             arrangementResultMockCounterVerifierCreator,
+            voidMockCounterVerifierCreator,
             arrangementVoidMockCounterVerifierCreator
         );
     }

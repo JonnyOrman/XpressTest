@@ -5,7 +5,7 @@ public static class VoidAsserterComposerInitialiser<TSut>
 {
     public static IVoidAsserterComposer<TSut> Initialise()
     {
-        var sutComposer = SutComposerInitialiser<TSut>.Initialise();
+        var sutComposer = ArrangementSutComposerInitialiser<TSut>.Initialise();
 
         return new VoidAsserterComposer<TSut>(
             sutComposer

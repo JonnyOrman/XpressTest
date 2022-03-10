@@ -17,9 +17,24 @@ public class DependencyBuilder<TSut, TDependency> :
         _dependency = dependency;
         _testComposer = testComposer;
     }
-    
-    
-    public IDependencyBuilder<TSut> With<TNewDependency>(TNewDependency newDependency, string name)
+
+    public IDependencyBuilder<TSut> With<TNewDependency>()
+    {
+        throw new NotImplementedException();
+    }
+
+    public IValueDependencyBuilder<TSut> With<TNewDependency>(TNewDependency newDependency)
+    {
+        return _testComposer.ComposeDependencyBuilder(
+            _dependency,
+            newDependency
+        );
+    }
+
+    public IDependencyBuilder<TSut> With<TNewDependency>(
+        TNewDependency newDependency,
+        string name
+        )
         where TNewDependency : class
     {
         return _testComposer.ComposeDependencyBuilder(
@@ -31,11 +46,19 @@ public class DependencyBuilder<TSut, TDependency> :
     
     public IMockDependencyBuilder<TSut, TNewDependency> WithA<TNewDependency>() where TNewDependency : class
     {
-        return _testComposer.ComposeDependencyBuilder<TDependency, TNewDependency>(
+        return _testComposer.ComposeMockDependencyBuilder<TDependency, TNewDependency>(
             _dependency
         );
     }
-    
+
+    public ISutAsserter<TSut> WhenItIsConstructed()
+    {
+        return _testComposer.ComposeAsserter(
+            _dependency,
+            _testComposer.Arrangement
+        );
+    }
+
     public IResultAsserter<TSut, TResult> WhenIt<TResult>(Func<IAction<TSut>, TResult> func)
     {
         return _testComposer.ComposeAsserter(
@@ -43,6 +66,11 @@ public class DependencyBuilder<TSut, TDependency> :
             func,
             _testComposer.Arrangement
         );
+    }
+
+    public IVoidAsserter<TSut> WhenIt(System.Action<TSut> action)
+    {
+        throw new NotImplementedException();
     }
 
     public IVoidAsserter<TSut> WhenIt(System.Action<IAction<TSut>> func)

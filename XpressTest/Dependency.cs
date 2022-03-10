@@ -7,18 +7,7 @@ public class Dependency<T> : IDependency
         )
     {
         Object = obj;
-        Name = typeof(T).Name;
     }
     
-    public Dependency(
-        T obj,
-        string name
-        )
-    {
-        Object = obj;
-        Name = name;
-    }
-
     public object Object { get; }
-    public string Name { get; }
 }

@@ -44,4 +44,20 @@ public class MockDependencyAsserterComposer<TSut> : IMockDependencyAsserterCompo
             arrangement
         );
     }
+
+    public IVoidAsserter<TSut> Compose<TDependency>(
+        Mock<TDependency> dependencyMock,
+        System.Action<TSut> func,
+        IArrangement arrangement
+        )
+        where TDependency : class
+    {
+        var dependency = new MockDependency<TDependency>(dependencyMock);
+
+        return _asserterComposer.Compose<TDependency>(
+            dependency,
+            func,
+            arrangement
+        );
+    }
 }

@@ -10,7 +10,7 @@ public interface IArrangement
     
     IDependencyCollection Dependencies { get; }
 
-    T GetObject<T>();
+    T GetThe<T>();
 
     T GetObject<T>(string name);
 
@@ -20,9 +20,14 @@ public interface IArrangement
     
     void Add<T>(Mock<T> mock)
         where T : class;
-    
-    Mock<TMock> GetMock<TMock>() where TMock : class;
+
+    Mock<TMock> GetMock<TMock>()
+        where TMock : class;
 
     T GetMockObject<T>()
         where T : class;
+
+    void AddDependency<TDependency>(TDependency dependency);
+    
+    void AddDependency<TDependency>(TDependency dependency, string name);
 }

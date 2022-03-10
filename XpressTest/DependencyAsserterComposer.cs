@@ -1,6 +1,8 @@
 ﻿namespace XpressTest;
 
-public class DependencyAsserterComposer<TSut> : IDependencyAsserterComposer<TSut>
+public class DependencyAsserterComposer<TSut>
+    :
+        IDependencyAsserterComposer<TSut>
 {
     private readonly IAsserterComposer<TSut> _asserterComposer;
 
@@ -40,5 +42,31 @@ public class DependencyAsserterComposer<TSut> : IDependencyAsserterComposer<TSut
             func,
             arrangement
             );
+    }
+
+    public IVoidAsserter<TSut> Compose<TDependency>(
+        TDependency dependencyValue,
+        System.Action<TSut> action,
+        IArrangement arrangement
+        )
+    {
+        var dependency = new Dependency<TDependency>(dependencyValue);
+
+        return _asserterComposer.ComposeValue<TDependency>(
+            dependency,
+            action,
+            arrangement
+        );
+    }
+
+    public IVoidAsserter<TSut> Compose(
+        System.Action<TSut> action,
+        IArrangement arrangement
+        )
+    {
+        return _asserterComposer.Compose(
+            action,
+            arrangement
+        );
     }
 }

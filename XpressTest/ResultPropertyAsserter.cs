@@ -1,33 +1,27 @@
-﻿using Xunit;
-
-namespace XpressTest;
+﻿namespace XpressTest;
 
 public class ResultPropertyAsserter<TResult, TProperty> : IResultPropertyAsserter<TResult, TProperty>
 {
-    private readonly TResult _result;
-    private readonly Func<TResult, TProperty> _targetFunc;
-    private readonly IArrangement _arrangement;
+    private readonly IResultPropertyValueAsserter<TResult, TProperty> _resultPropertyValueAsserter;
+
+    private readonly IResultPropertyNullAsserter<TResult> _resultPropertyNullAsserter;
 
     public ResultPropertyAsserter(
-        TResult result,
-        Func<TResult, TProperty> targetFunc,
-        IArrangement arrangement
+        IResultPropertyValueAsserter<TResult, TProperty> resultPropertyValueAsserter,
+        IResultPropertyNullAsserter<TResult> resultPropertyNullAsserter
         )
     {
-        _result = result;
-        _targetFunc = targetFunc;
-        _arrangement = arrangement;
+        _resultPropertyValueAsserter = resultPropertyValueAsserter;
+        _resultPropertyNullAsserter = resultPropertyNullAsserter;
     }
 
     public IResultPropertyTargeter<TResult> ShouldBe(TProperty expectedValue)
     {
-        var actualResult = _targetFunc.Invoke(_result);
+        return _resultPropertyValueAsserter.Assert(expectedValue);
+    }
 
-        Assert.Equal(expectedValue, actualResult);
-
-        return new ResultPropertyTargeter<TResult>(
-            _result,
-            _arrangement
-            );
+    public IResultPropertyTargeter<TResult> ShouldBeNull()
+    {
+        return _resultPropertyNullAsserter.Assert();
     }
 }

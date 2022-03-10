@@ -8,11 +8,16 @@ public static class ObjectTestInitialiser<TSut, TObject>
         var testComposer = TestComposerInitialiser<TSut>.Initialise();
 
         var resultAsserterComposer = ResultAsserterComposerInitialiser<TSut>.Initialise();
+
+        var objectSetter = new ObjectSetter<TObject>(
+            testComposer.Arrangement
+            );
         
         return new ObjectBuilder<TSut, TObject>(
             obj,
             testComposer,
-            resultAsserterComposer
+            resultAsserterComposer,
+            objectSetter
         );
     }
 }

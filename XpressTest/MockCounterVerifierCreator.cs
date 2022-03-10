@@ -9,16 +9,19 @@ where TMock : class
 {
     private readonly IResultMockCounterVerifierCreator<TMock, TAsserter> _resultMockCounterVerifierCreator;
     private readonly IArrangementResultMockCounterVerifierCreator<TMock, TAsserter> _arrangementResultMockCounterVerifierCreator;
+    private readonly IVoidMockCounterVerifierCreator<TMock, TAsserter> _voidMockCounterVerifierCreator;
     private readonly IArrangementVoidMockCounterVerifierCreator<TMock, TAsserter> _arrangementVoidMockCounterVerifierCreator;
 
     public MockCounterVerifierCreator(
         IResultMockCounterVerifierCreator<TMock, TAsserter> resultMockCounterVerifierCreator,
         IArrangementResultMockCounterVerifierCreator<TMock, TAsserter> arrangementResultMockCounterVerifierCreator,
+        IVoidMockCounterVerifierCreator<TMock, TAsserter> voidMockCounterVerifierCreator,
         IArrangementVoidMockCounterVerifierCreator<TMock, TAsserter> arrangementVoidMockCounterVerifierCreator
         )
     {
         _resultMockCounterVerifierCreator = resultMockCounterVerifierCreator;
         _arrangementResultMockCounterVerifierCreator = arrangementResultMockCounterVerifierCreator;
+        _voidMockCounterVerifierCreator = voidMockCounterVerifierCreator;
         _arrangementVoidMockCounterVerifierCreator = arrangementVoidMockCounterVerifierCreator;
     }
     
@@ -51,5 +54,14 @@ where TMock : class
             func,
             asserter
             );
+    }
+
+    public IMockCounterVerifier<TAsserter> Create(
+        Expression<System.Action<TMock>> expression
+        )
+    {
+        return _voidMockCounterVerifierCreator.Create(
+            expression
+        );
     }
 }

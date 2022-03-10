@@ -2,6 +2,6 @@
 
 public interface IExceptionAsserter
 {
-    void Assert<TException>()
+    void ThenItShouldThrow<TException>()
         where TException : Exception;
 }

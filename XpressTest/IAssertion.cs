@@ -2,15 +2,13 @@ using Moq;
 
 namespace XpressTest;
 
-public interface IAssertion<TSut, TResult> : IAssertion<TSut>
+public interface IAssertion<TResult> : IAssertion
 {
     TResult Result { get; }
 }
 
-public interface IAssertion<TSut> : IArrangement
+public interface IAssertion : IArrangement
 {
-    IAction<TSut> Action { get; }
-
     Mock<T> GetMock<T>()
         where T : class;
 }

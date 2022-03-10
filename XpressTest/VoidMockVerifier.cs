@@ -45,4 +45,13 @@ public class VoidMockVerifier<TSut, TMock>
             _asserter
         );
     }
+
+    public IMockCounterVerifier<IVoidAsserter<TSut>> Should(
+        Expression<System.Action<TMock>> expression
+        )
+    {
+        return _mockCounterVerifierCreator.Create(
+            expression
+        );
+    }
 }

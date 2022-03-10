@@ -16,11 +16,16 @@ public static class NamedObjectTestInitialiser<TSut, TObject>
         var testComposer = TestComposerInitialiser<TSut>.Initialise();
 
         var resultAsserterComposer = ResultAsserterComposerInitialiser<TSut>.Initialise();
+
+        var namedObjectSetter = new NamedObjectSetter<TObject>(
+            testComposer.Arrangement
+            );
         
         return new NamedObjectBuilder<TSut, TObject>(
             namedObject,
             testComposer,
-            resultAsserterComposer
+            resultAsserterComposer,
+            namedObjectSetter
         );
     }
 }

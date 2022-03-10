@@ -26,7 +26,7 @@ public class VoidAsserter<TSut> : IVoidAsserter<TSut>
             );
     }
 
-    public void Then(System.Action<IAssertion<TSut>> action)
+    public void Then(System.Action<IAssertion> action)
     {
         var sutAction = new Action<TSut>(_sut, _arrangement);
         

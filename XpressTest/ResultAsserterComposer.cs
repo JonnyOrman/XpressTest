@@ -5,10 +5,10 @@ public class ResultAsserterComposer<TSut>
         IResultAsserterComposer<TSut>
     where TSut : class
 {
-    private readonly ISutComposer<TSut> _sutComposer;
+    private readonly IArrangementSutComposer<TSut> _sutComposer;
 
     public ResultAsserterComposer(
-        ISutComposer<TSut> sutComposer
+        IArrangementSutComposer<TSut> sutComposer
         )
     {
         _sutComposer = sutComposer;

@@ -11,10 +11,15 @@ public static class MockObjectTestInitialiser<TSut, TObject>
         var mock = new Mock<TObject>();
         
         var testComposer = TestComposerInitialiser<TSut>.Initialise();
+
+        var mockObjectSetter = new MockObjectSetter<TObject>(
+            testComposer.Arrangement
+            );
         
         return new MockObjectBuilder<TSut, TObject>(
             mock,
-            testComposer
+            testComposer,
+            mockObjectSetter
         );
     }
 }
