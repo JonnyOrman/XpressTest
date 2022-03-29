@@ -2,72 +2,115 @@
 
 public class ObjectBuilder<TSut, TObject>
     :
+        Builder<TObject, IObjectBuilderChainer<TSut>>,
         IObjectBuilder<TSut>
     where TSut : class
 {
-    private readonly TObject _obj;
-    private readonly ITestComposer<TSut> _testComposer;
-    private readonly IResultAsserterComposer<TSut> _resultAsserterComposer;
-    private readonly IObjectSetter<TObject> _objectSetter;
-
     public ObjectBuilder(
         TObject obj,
-        ITestComposer<TSut> testComposer,
-        IResultAsserterComposer<TSut> resultAsserterComposer,
-        IObjectSetter<TObject> objectSetter
+        IObjectSetter<TObject> objectSetter,
+        IObjectBuilderChainer<TSut> objectBuilderChainer
+        )
+    : base(
+        obj,
+        objectSetter,
+        objectBuilderChainer
         )
     {
-        _obj = obj;
-        _testComposer = testComposer;
-        _resultAsserterComposer = resultAsserterComposer;
-        _objectSetter = objectSetter;
+    } 
+
+    public IResultAsserter<TSut, TResult> WhenIt<TResult>(
+        Func<IAction<TSut>, TResult> func
+    )
+    {
+        return Chain(
+            () => _chainer.ComposeResultAsserter(
+                func
+            )
+        );
+    }
+
+    public IResultAsserter<TSut, TResult> WhenIt<TResult>(
+        Func<TSut, TResult> func
+        )
+    {
+        throw new NotImplementedException();
     }
     
-    public IResultAsserter<TSut, TResult> WhenIt<TResult>(Func<IAction<TSut>, TResult> func)
-    {
-        _objectSetter.Set(_obj);
-
-        return _resultAsserterComposer.Compose(
-            func,
-            _testComposer.Arrangement
-            );
-    }
-
-    public IVoidAsserter<TSut> WhenIt(System.Action<TSut> action)
+    public IVoidAsserter<TSut> WhenIt(
+        System.Action<TSut> action
+        )
     {
         throw new NotImplementedException();
     }
 
-    public IVoidAsserter<TSut> WhenIt(System.Action<IAction<TSut>> func)
+    public IVoidAsserter<TSut> WhenIt(
+        System.Action<IAction<TSut>> func
+    )
+    {
+        return Chain(
+            () => _chainer.ComposeVoidAsserter(
+                func
+            )
+        );
+    }
+
+    public IAsyncResultAsserter<TSut, TResult> WhenItAsync<TResult>(
+        Func<IAction<TSut>, Task<TResult>> func
+        )
+    {
+        throw new NotImplementedException();
+    }
+    
+    public IAsyncResultAsserter<TSut, TResult> WhenItAsync<TResult>(Func<TSut, Task<TResult>> func)
     {
         throw new NotImplementedException();
     }
 
-    public IDependencyBuilder<TSut> With<TNewDependency>()
+    public IExistingObjectBuilder<TSut> With<TNewDependency>()
+        where TNewDependency : class
     {
-        _objectSetter.Set(_obj);
-        
-        return _testComposer.ComposeValueDependencyBuilder<TObject, TNewDependency>();
+        return Chain(
+            () => _chainer.ComposeExistingObjectBuilder<TNewDependency>()
+        );
     }
 
-    public IValueDependencyBuilder<TSut> With<TNewDependency>(TNewDependency newDependency)
+    public IValueDependencyBuilder<TSut> With<TNewDependency>(
+        TNewDependency newDependency
+    )
     {
-        throw new NotImplementedException();
+        return Chain(
+            () => _chainer.ComposeValueDependencyBuilder(
+                newDependency
+            )
+        );
     }
 
-    public IDependencyBuilder<TSut> With<TNewDependency>(TNewDependency newDependency, string name)
+    public IDependencyBuilder<TSut> With<TNewDependency>(
+        TNewDependency newDependency,
+        string name
+        )
         where TNewDependency : class
     {
         throw new NotImplementedException();
     }
 
-    public IMockDependencyBuilder<TSut, TNewDependency> WithA<TNewDependency>() where TNewDependency : class
+    public IMockDependencyBuilder<TSut, TNewDependency> WithA<TNewDependency>()
+        where TNewDependency : class
     {
-        _objectSetter.Set(_obj);
-        
-        return _testComposer.StartNewMockDependencyBuilder<TNewDependency>();
+        return Chain(
+            () => _chainer.ComposeMockDependencyBuilder<TNewDependency>()
+        );
     }
 
+    public IMockDependencyBuilder<TSut, TNewDependency> WithA<TNewDependency>(
+        string name
+        )
+        where TNewDependency : class
+    {
+        throw new NotImplementedException();
+    }
+    
     public ISutAsserter<TSut> WhenItIsConstructed()
     {
         throw new NotImplementedException();
@@ -76,31 +119,73 @@ public class ObjectBuilder<TSut, TObject>
     public IMockObjectBuilder<TSut, TNewObject> AndGivenA<TNewObject>()
         where TNewObject : class
     {
-        throw new NotImplementedException();
-    }
-
-    public IObjectBuilder<TSut> AndGiven<TNewObject>(TNewObject obj)
-    {
-        _objectSetter.Set(_obj);
-        
-        return _testComposer.StartNewObjectBuilder(
-            obj
-            );
-    }
-
-    public IObjectBuilder<TSut> AndGiven<TNewObject>(TNewObject obj, string name)
-    {
-        throw new NotImplementedException();
-    }
-
-    public IObjectBuilder<TSut> With<TNamedObject>(string objectName)
-    {
-        _objectSetter.Set(_obj);
-        
-        var namedObject = _testComposer.GetObject<TNamedObject>(objectName);
-        
-        return _testComposer.StartNewObjectBuilder(
-            namedObject
+        return Chain(
+            () => _chainer.ComposeMockObjectBuilder<TNewObject>()
         );
+    }
+
+    public IObjectBuilder<TSut> AndGiven<TNewObject>(
+        TNewObject obj
+    )
+    {
+        return Chain(
+            () => _chainer.ComposeObjectBuilder(
+                obj
+            )
+        );
+    }
+
+    public IObjectBuilder<TSut> AndGiven<TNewObject>(
+        TNewObject obj,
+        string name
+    )
+    {
+        return Chain(
+            () => _chainer.ComposeObjectBuilder(
+                obj,
+                name
+            )
+        );
+    }
+
+    public IObjectBuilder<TSut> AndGiven<TNewObject>(
+        Func<IArrangement, TNewObject> func
+    )
+    {
+        return Chain(
+            () => _chainer.ComposeObjectBuilder(
+                func
+            )
+        );
+    }
+
+    public IObjectBuilder<TSut> AndGiven<TNewObject>(
+        Func<IArrangement, TNewObject> func,
+        string name
+    )
+    {
+        return Chain(
+            () => _chainer.ComposeObjectBuilder(
+                func,
+                name
+            )
+        );
+    }
+
+    public IExistingObjectBuilder<TSut> With<TNamedObject>(string objectName)
+    {
+        return Chain(
+            () => _chainer.ComposeExistingObjectBuilder<TNamedObject>(
+                    objectName
+                )
+        );
+    }
+
+    public IMockDependencyBuilder<TSut, TMock> WithTheMock<TMock>()
+        where TMock : class
+    {
+        return Chain(
+            () => _chainer.ComposeMockDependencyBuilder2<TMock>()
+            );
     }
 }

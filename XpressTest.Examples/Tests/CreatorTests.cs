@@ -12,10 +12,29 @@ public class CreatorTests
             .WhenIt(action => action.Sut.Create(action.GetThe<EntityParameters>()))
             .ThenTheResult(result => result.Id).ShouldBe(1)
             .ThenTheResult(result => result.Name).ShouldBe("EntityName");
-
-
+    
     [Fact]
     public void CreateEntity_Example2() =>
+        GivenA<Creator>
+            .AndGiven("EntityName")
+            .AndGiven(arrangement => new EntityParameters(arrangement.GetThe<string>()))
+            .WhenIt(action => action.Sut.Create(action.GetThe<EntityParameters>()))
+            .ThenTheResult(result => result.Id).ShouldBe(1)
+            .ThenTheResult(result => result.Name).ShouldBe("EntityName");
+
+    [Fact]
+    public void CreateEntity_Example3() =>
+        GivenA<Creator>
+            .AndGiven("EntityName", "EntityNameToUse")
+            .AndGiven("AnotherEntityName", "SomeOtherEntityName")
+            .AndGiven(arrangement => new EntityParameters(arrangement.GetObject<string>("EntityNameToUse")), "ParametersToUse")
+            .AndGiven(arrangement => new EntityParameters(arrangement.GetObject<string>("SomeOtherEntityName")), "SomeOtherParameters")
+            .WhenIt(action => action.Sut.Create(action.GetObject<EntityParameters>("ParametersToUse")))
+            .ThenTheResult(result => result.Id).ShouldBe(1)
+            .ThenTheResult(result => result.Name).ShouldBe(arrangement => arrangement.GetObject<string>("EntityNameToUse"));
+    
+    [Fact]
+    public void CreateEntity_Example4() =>
         GivenA<Creator>
             .AndGiven(new EntityParameters("EntityName"), "ParametersToUse")
             .AndGiven(new EntityParameters("AnotherEntityName"), "SomeOtherParameters")
@@ -24,7 +43,7 @@ public class CreatorTests
             .ThenTheResult(result => result.Name).ShouldBe("EntityName");
 
     [Fact]
-    public void CreateEntity_Example3() =>
+    public void CreateEntity_Example5() =>
         GivenA<Creator>
             .AndGiven(new EntityParameters("EntityName"), "EntityParametersToUse")
             .AndGiven(new EntityParameters("AnotherEntityName"), "SomeOtherEntityParameters")
@@ -36,7 +55,7 @@ public class CreatorTests
             });
 
     [Fact]
-    public void CreateEntity_Example4()
+    public void CreateEntity_Example6()
     {
         var parameters = new EntityParameters("EntityName");
 
@@ -46,6 +65,13 @@ public class CreatorTests
             .WhenIt().Create(parameters)
             .ThenTheResultShouldBeEquivalentTo(entity);
     }
+
+    [Fact]
+    public void CreateEntity_Example7() =>
+        GivenA<Creator>
+            .AndGiven(new EntityParameters("EntityName"))
+            .WhenIt(action => action.Sut.Create(action.GetThe<EntityParameters>()))
+            .ThenTheResultShouldNotBeNull();
     
     [Fact]
     public void CreateEntity_NullProperty() =>

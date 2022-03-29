@@ -20,11 +20,20 @@ public interface IArrangement
     
     void Add<T>(Mock<T> mock)
         where T : class;
+    
+    void Add<T>(INamedMock<T> mock)
+        where T : class;
 
     Mock<TMock> GetMock<TMock>()
         where TMock : class;
 
+    Mock<TMock> GetMock<TMock>(string name)
+        where TMock : class;
+
     T GetMockObject<T>()
+        where T : class;
+    
+    T GetMockObject<T>(string name)
         where T : class;
 
     void AddDependency<TDependency>(TDependency dependency);

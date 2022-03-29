@@ -3,7 +3,9 @@ using System.Linq.Expressions;
 
 namespace XpressTest;
 
-public class MockResultDependencyBuilder<TSut, TDependency, TResult> : IMockResultDependencyBuilder<TSut, TDependency, TResult>
+public class MockResultDependencyBuilder<TSut, TDependency, TResult>
+    :
+        IMockResultDependencyBuilder<TSut, TDependency, TResult>
     where TDependency : class
 {
     private readonly Expression<Func<TDependency, TResult>> _func;
@@ -24,14 +26,18 @@ public class MockResultDependencyBuilder<TSut, TDependency, TResult> : IMockResu
         _arrangement = arrangement;
     }
     
-    public IMockDependencyBuilder<TSut, TDependency> AndReturns(TResult result)
+    public IMockDependencyBuilder<TSut, TDependency> AndReturns(
+        TResult result
+        )
     {
         _dependencyMock.Setup(_func).Returns(result);
 
         return _mockDependencyBuilder;
     }
 
-    public IMockDependencyBuilder<TSut, TDependency> AndReturns(Func<IArrangement, TResult> resultFunc)
+    public IMockDependencyBuilder<TSut, TDependency> AndReturns(
+        Func<IArrangement, TResult> resultFunc
+        )
     {
         var expectedResult = resultFunc.Invoke(_arrangement);
 

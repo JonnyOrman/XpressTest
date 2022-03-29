@@ -3,39 +3,43 @@ using System.Linq.Expressions;
 
 namespace XpressTest;
 
-public class MockDependencyBuilder<TSut, TDependency> :
+public class MockDependencyBuilder<TSut, TDependency>
+    :
+    Builder<Mock<TDependency>, IMockDependencyBuilderChainer<TSut>>,
     IMockDependencyBuilder<TSut, TDependency>
     where TSut : class
     where TDependency : class
 {
-    private readonly Mock<TDependency> _dependencyMock;
-    
-    private readonly ITestComposer<TSut> _testComposer;
+    private readonly IArrangement _arrangement;
 
     public MockDependencyBuilder(
         Mock<TDependency> dependencyMock,
-        ITestComposer<TSut> testComposer
+        IObjectSetter<Mock<TDependency>> mockDependencySetter,
+        IMockDependencyBuilderChainer<TSut> mockDependencyBuilderChainer,
+        IArrangement arrangement
+        )
+        : base(
+            dependencyMock,
+            mockDependencySetter,
+            mockDependencyBuilderChainer
         )
     {
-        _dependencyMock = dependencyMock;
-        _testComposer = testComposer;
+        _arrangement = arrangement;
     }
 
-    public IDependencyBuilder<TSut> With<TNewDependency>()
+    public IExistingObjectBuilder<TSut> With<TNewDependency>()
+        where TNewDependency : class
     {
-        return _testComposer.ComposeDependencyBuilder<TDependency, TNewDependency>(
-            _dependencyMock
-        );
+        return Chain(() => _chainer.ComposeDependencyBuilder<TNewDependency>());
     }
 
     public IValueDependencyBuilder<TSut> With<TNewDependency>(
         TNewDependency newDependency
         )
     {
-        return _testComposer.ComposeValueDependencyBuilder(
-            _dependencyMock,
+        return Chain(() => _chainer.ComposeValueDependencyBuilder<TDependency, TNewDependency>(
             newDependency
-        );
+        ));
     }
 
     public IDependencyBuilder<TSut> With<TNewDependency>(
@@ -44,18 +48,23 @@ public class MockDependencyBuilder<TSut, TDependency> :
         )
         where TNewDependency : class
     {
-        return _testComposer.ComposeDependencyBuilder(
-            _dependencyMock,
+        return Chain(() => _chainer.ComposeDependencyBuilder(
             newDependency,
             name
-        );
+        ));
     }
 
     public IMockDependencyBuilder<TSut, TNewDependency> WithA<TNewDependency>() where TNewDependency : class
     {
-        return _testComposer.ComposeMockDependencyBuilder<TDependency, TNewDependency>(
-            _dependencyMock
-        );
+        return Chain(() => _chainer.ComposeMockDependencyBuilder<TNewDependency>());
+    }
+
+    public IMockDependencyBuilder<TSut, TNewDependency> WithA<TNewDependency>(string name)
+        where TNewDependency : class
+    {
+        return Chain(() => _chainer.ComposeNamedMockDependencyBuilder<TNewDependency>(
+            name
+        ));
     }
 
     public ISutAsserter<TSut> WhenItIsConstructed()
@@ -65,64 +74,114 @@ public class MockDependencyBuilder<TSut, TDependency> :
 
     public IResultAsserter<TSut, TResult> WhenIt<TResult>(Func<IAction<TSut>, TResult> func)
     {
-        return _testComposer.ComposeMockAsserter(
-            _dependencyMock,
-            func,
-            _testComposer.Arrangement
-            );
+        return Chain(() => _chainer.ComposeMockAsserter(
+            func
+        ));
+    }
+
+    public IResultAsserter<TSut, TResult> WhenIt<TResult>(Func<TSut, TResult> func)
+    {
+        return Chain(() => _chainer.ComposeMockAsserter(
+            func
+        ));
     }
 
     public IVoidAsserter<TSut> WhenIt(System.Action<TSut> action)
     {
-        return _testComposer.ComposeMockAsserter(
-            _dependencyMock,
-            action,
-            _testComposer.Arrangement
-        );
+        return Chain(() => _chainer.ComposeMockAsserter(
+            action
+        ));
     }
 
     public IVoidAsserter<TSut> WhenIt(System.Action<IAction<TSut>> func)
     {
-        return _testComposer.ComposeMockAsserter(
-            _dependencyMock,
-            func,
-            _testComposer.Arrangement
-        );
+        return Chain(() => _chainer.ComposeMockAsserter(
+            func
+        ));
     }
-    
-    public IMockResultDependencyBuilder<TSut, TDependency, TResult> ThatDoes<TResult>(Func<IArrangement, Expression<Func<TDependency, TResult>>> func)
+
+    public IAsyncResultAsserter<TSut, TResult> WhenItAsync<TResult>(
+        Func<IAction<TSut>, Task<TResult>> func
+        )
     {
-        var expression = func.Invoke(_testComposer.Arrangement);
+        _objectSetter.Set(_obj);
+        
+        Task<IAsyncResultAsserter<TSut, TResult>> task = Task.Run(async () => await _chainer.ComposeMockAsserter(
+            func
+        ));
+
+        return task.Result;
+    }
+
+    public IAsyncResultAsserter<TSut, TResult> WhenItAsync<TResult>(
+        Func<TSut, Task<TResult>> func
+        )
+    {
+        _objectSetter.Set(_obj);
+        
+        Task<IAsyncResultAsserter<TSut, TResult>> task = Task.Run(async () => await _chainer.ComposeMockAsserter(
+            func
+        ));
+
+        return task.Result;
+    }
+
+    public IMockResultDependencyBuilder<TSut, TDependency, TResult> ThatDoes<TResult>(
+        Func<IArrangement, Expression<Func<TDependency, TResult>>> func
+        )
+    {
+        var expression = func.Invoke(_arrangement);
 
         return new MockResultDependencyBuilder<TSut, TDependency, TResult>(
             expression,
-            _dependencyMock,
+            _obj,
             this,
-            _testComposer.Arrangement
+            _arrangement
             );
     }
 
-    public IMockResultDependencyBuilder<TSut, TDependency, TResult> ThatDoes<TResult>(Expression<Func<TDependency, TResult>> expression)
+    public IMockResultDependencyBuilder<TSut, TDependency, TResult> ThatDoes<TResult>(
+        Expression<Func<TDependency, TResult>> expression
+        )
     {
         return new MockResultDependencyBuilder<TSut, TDependency, TResult>(
             expression,
-            _dependencyMock,
+            _obj,
             this,
-            _testComposer.Arrangement
+            _arrangement
         );
     }
 
-    public IObjectBuilder<TSut> WithNamedObject<TObject>(string objectName)
+    public IMockResultDependencyBuilder<TSut, TDependency, TResult> ThatDoesAsync<TResult>(
+        Func<IArrangement, Expression<Func<TDependency, Task<TResult>>>> func
+        )
     {
-        _testComposer.Arrangement.Add(_dependencyMock);
-        _testComposer.Arrangement.AddDependency(_dependencyMock.Object);
+        var expression = func.Invoke(_arrangement);
         
-        var namedObject = _testComposer.GetObject<TObject>(objectName);
-        
-        _testComposer.Arrangement.AddDependency(namedObject);
-        
-        return _testComposer.StartNewExistingObjectBuilder(
-            _testComposer
+        return new MockAsyncResultDependencyBuilder<TSut, TDependency, TResult>(
+            expression,
+            _obj,
+            this,
+            _arrangement
         );
+    }
+
+    public IMockResultDependencyBuilder<TSut, TDependency, TResult> ThatDoesAsync<TResult>(
+        Expression<Func<TDependency, Task<TResult>>> expression
+        )
+    {
+        return new MockAsyncResultDependencyBuilder<TSut, TDependency, TResult>(
+            expression,
+            _obj,
+            this,
+            _arrangement
+        );
+    }
+
+    public IExistingObjectBuilder<TSut> WithNamedObject<TObject>(string objectName)
+    {
+        return Chain(() => _chainer.StartNewExistingObjectBuilder<TObject>(
+            objectName
+        ));
     }
 }

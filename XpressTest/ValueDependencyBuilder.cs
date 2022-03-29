@@ -2,34 +2,43 @@ namespace XpressTest;
 
 public class ValueDependencyBuilder<TSut, TDependency>
     :
+        Builder<TDependency, IValueDependencyBuilderChainer<TSut>>,
         IValueDependencyBuilder<TSut>
 {
-    private readonly TDependency _dependency;
-    private readonly ITestComposer<TSut> _testComposer;
-
     public ValueDependencyBuilder(
         TDependency dependency,
-        ITestComposer<TSut> testComposer
+        IObjectSetter<TDependency> valueDependencySetter,
+        IValueDependencyBuilderChainer<TSut> valueDependencyBuilderChainer
+        )
+        : base(
+            dependency,
+            valueDependencySetter,
+            valueDependencyBuilderChainer
         )
     {
-        _dependency = dependency;
-        _testComposer = testComposer;
     }
     
     public ISutAsserter<TSut> WhenItIsConstructed()
     {
-        return _testComposer.ComposeAsserter(
-            _dependency,
-            _testComposer.Arrangement
-        );
+        return Chain(() => _chainer.StartSutAsserter());
     }
 
     public IVoidAsserter<TSut> WhenIt(System.Action<TSut> func)
     {
-        return _testComposer.ComposeAsserter(
-            _dependency,
-            func,
-            _testComposer.Arrangement
-        );
+        return Chain(() => _chainer.StartVoidAsserter(
+            func
+        ));
+    }
+
+    public IMockDependencyBuilder<TSut, TMockDependency> WithA<TMockDependency>()
+        where TMockDependency : class
+    {
+        return Chain(() => _chainer.StartMockDependencyBuilder<TMockDependency>());
+    }
+
+    public IMockDependencyBuilder<TSut, TMockDependency> WithA<TMockDependency>(string name)
+        where TMockDependency : class
+    {
+        return Chain(() => _chainer.StartNamedMockDependencyBuilder<TMockDependency>(name));
     }
 }

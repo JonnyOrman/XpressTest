@@ -38,4 +38,23 @@ public class ResultMockVerifier<TSut, TSutResult, TMock>
             expression
         );
     }
+
+    public IMockCounterVerifier<IResultAsserter<TSut, TSutResult>> Should(
+        Func<IArrangement, Expression<System.Action<TMock>>> func
+        )
+    {
+        return _mockCounterVerifierCreator.Create(
+            func,
+            _asserter
+        );
+    }
+
+    public IMockCounterVerifier<IResultAsserter<TSut, TSutResult>> Should(
+        Expression<System.Action<TMock>> expression
+        )
+    {
+        return _mockCounterVerifierCreator.Create(
+            expression
+        );
+    }
 }

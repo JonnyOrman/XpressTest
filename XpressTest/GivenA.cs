@@ -3,10 +3,12 @@
 public static class GivenA<TSut>
     where TSut : class
 {
-    public static IMockObjectBuilder<TSut, TObject> AndGivenA<TObject>(string name)
+    public static INamedMockObjectBuilder<TSut, TObject> AndGivenA<TObject>(string name)
         where TObject : class
     {
-        return NamedMockObjectTestInitialiser<TSut, TObject>.Initialise(name);
+        return NamedMockObjectTestInitialiser<TSut, TObject>.Initialise(
+            name
+            );
     }
     
     public static IMockObjectBuilder<TSut, TObject> AndGivenA<TObject>()
@@ -17,12 +19,17 @@ public static class GivenA<TSut>
 
     public static IObjectBuilder<TSut> AndGiven<TObject>(TObject obj, string name)
     {
-        return NamedObjectTestInitialiser<TSut, TObject>.Initialise(obj, name);
+        return NamedObjectTestInitialiser<TSut, TObject>.Initialise(
+            obj,
+            name
+            );
     }
 
     public static IObjectBuilder<TSut> AndGiven<TObject>(TObject obj)
     {
-        return ObjectTestInitialiser<TSut, TObject>.Initialise(obj);
+        return ObjectTestInitialiser<TSut, TObject>.Initialise(
+            obj
+            );
     }
 
     public static IMockDependencyBuilder<TSut, TDependency> WithA<TDependency>()
@@ -34,13 +41,18 @@ public static class GivenA<TSut>
     public static IDependencyBuilder<TSut> With<TDependency>(TDependency dependency)
         where TDependency : class
     {
-        return DependencyTestInitialiser<TSut>.Initialise(dependency);
+        return DependencyBuilderInitialiser<TSut>.Initialise(
+            dependency
+            );
     }
     
     public static IDependencyBuilder<TSut> With<TDependency>(TDependency dependency, string name)
         where TDependency : class
     {
-        return NamedDependencyTestInitialiser<TSut>.Initialise(dependency, name);
+        return NamedDependencyTestInitialiser<TSut>.Initialise(
+            dependency,
+            name
+            );
     }
     
     public static IExceptionAsserter WhenIt(System.Action<TSut> action)
@@ -50,9 +62,9 @@ public static class GivenA<TSut>
         );
     }
 
-    public static IExceptionAsserter WhenIt<TResult>(Func<TSut, TResult> func)
+    public static ISimpleResultAsserter<TResult> WhenIt<TResult>(Func<TSut, TResult> func)
     {
-        return ResultExceptionAsserterInitialiser<TSut>.Initialise(
+        return SimpleResultAsserterInitialiser<TSut>.Initialise(
             func
         );
     }

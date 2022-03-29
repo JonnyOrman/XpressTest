@@ -3,20 +3,30 @@ namespace XpressTest;
 public class NamedDependencyBuilder<TSut, TDependency>
     : 
         IDependencyBuilder<TSut>
+where TSut : class
 {
+    private readonly IArrangement _arrangement;
     private readonly TDependency _dependency;
     private readonly string _name;
-    private readonly ITestComposer<TSut> _testComposer;
+    private readonly IVoidAsserterCreator<TSut> _voidAsserterCreator;
+    private readonly INamedDependencyBuilderCreator<TSut> _namedDependencyBuilderCreator;
+    private readonly IMockDependencyBuilderCreator<TSut> _mockDependencyBuilderCreator;
 
     public NamedDependencyBuilder(
+        IArrangement arrangement,
         TDependency dependency,
         string name,
-        ITestComposer<TSut> testComposer
+        IVoidAsserterCreator<TSut> voidAsserterCreator,
+        INamedDependencyBuilderCreator<TSut> namedDependencyBuilderCreator,
+        IMockDependencyBuilderCreator<TSut> mockDependencyBuilderCreator
         )
     {
+        _arrangement = arrangement;
         _dependency = dependency;
         _name = name;
-        _testComposer = testComposer;
+        _voidAsserterCreator = voidAsserterCreator;
+        _namedDependencyBuilderCreator = namedDependencyBuilderCreator;
+        _mockDependencyBuilderCreator = mockDependencyBuilderCreator;
     }
     
     public IResultAsserter<TSut, TResult> WhenIt<TResult>(Func<IAction<TSut>, TResult> func)
@@ -24,12 +34,17 @@ public class NamedDependencyBuilder<TSut, TDependency>
         throw new NotImplementedException();
     }
 
+    public IResultAsserter<TSut, TResult> WhenIt<TResult>(Func<TSut, TResult> func)
+    {
+        throw new NotImplementedException();
+    }
+
     public IVoidAsserter<TSut> WhenIt(System.Action<TSut> action)
     {
-        return _testComposer.ComposeAsserter(
-            _dependency,
-            action,
-            _testComposer.Arrangement
+        _arrangement.AddDependency(_dependency);
+        
+        return _voidAsserterCreator.Create(
+            action
         );
     }
 
@@ -38,7 +53,18 @@ public class NamedDependencyBuilder<TSut, TDependency>
         throw new NotImplementedException();
     }
 
-    public IDependencyBuilder<TSut> With<TNewDependency>()
+    public IAsyncResultAsserter<TSut, TResult> WhenItAsync<TResult>(Func<IAction<TSut>, Task<TResult>> func)
+    {
+        throw new NotImplementedException();
+    }
+
+    public IAsyncResultAsserter<TSut, TResult> WhenItAsync<TResult>(Func<TSut, Task<TResult>> func)
+    {
+        throw new NotImplementedException();
+    }
+
+    public IExistingObjectBuilder<TSut> With<TNewDependency>()
+        where TNewDependency : class
     {
         throw new NotImplementedException();
     }
@@ -54,20 +80,33 @@ public class NamedDependencyBuilder<TSut, TDependency>
         )
         where TNewDependency : class
     {
-        return _testComposer.ComposeDependencyBuilder(
-            _dependency,
-            _name,
+        var dependency = new NamedDependency<TDependency>(_dependency, _name);
+
+        _arrangement.Dependencies.Add(dependency);
+
+        return _namedDependencyBuilderCreator.Create(
             newDependency,
             name
-        );
+            );
     }
 
-    public IMockDependencyBuilder<TSut, TNewDependency> WithA<TNewDependency>() where TNewDependency : class
+    public IMockDependencyBuilder<TSut, TNewDependency> WithA<TNewDependency>()
+        where TNewDependency : class
     {
-        return _testComposer.ComposeMockDependencyBuilder<TDependency, TNewDependency>(
+        var dependency = new NamedDependency<TDependency>(
             _dependency,
             _name
         );
+
+        _arrangement.Dependencies.Add(dependency);
+        
+        return _mockDependencyBuilderCreator.Create<TNewDependency>();
+    }
+
+    public IMockDependencyBuilder<TSut, TNewDependency> WithA<TNewDependency>(string name)
+        where TNewDependency : class
+    {
+        throw new NotImplementedException();
     }
 
     public ISutAsserter<TSut> WhenItIsConstructed()

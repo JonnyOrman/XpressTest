@@ -1,3 +1,4 @@
+using Moq;
 using Xunit;
 
 namespace XpressTest;
@@ -26,7 +27,9 @@ public class ResultAsserter<TSut, TResult> : IResultAsserter<TSut, TResult>
         _sut = sut;
     }
     
-    public void Then(System.Action<IAssertion<TResult>> action)
+    public void Then(
+        System.Action<IAssertion<TResult>> action
+        )
     {
         var sutAction = new Action<TSut>(_sut, _arrangement);
         
@@ -40,9 +43,34 @@ public class ResultAsserter<TSut, TResult> : IResultAsserter<TSut, TResult>
     public IResultMockVerifier<TSut, TResult, TMock> Then<TMock>()
         where TMock : class
     {
-        return _resultMockVerifierCreator.Create<TMock>(
+        var mock = _arrangement.GetMock<TMock>();
+        
+        return _resultMockVerifierCreator.Create(
+            mock,
             this
-            );
+        );
+    }
+
+    public IResultMockVerifier<TSut, TResult, TMock> Then<TMock>(string name)
+        where TMock : class
+    {
+        var mock = _arrangement.GetMock<TMock>(name);
+        
+        return _resultMockVerifierCreator.Create(
+            mock,
+            this
+        );
+    }
+
+    public IResultMockVerifier<TSut, TResult, TMock> Then<TMock>(
+        Mock<TMock> mock
+        )
+        where TMock : class
+    {
+        return _resultMockVerifierCreator.Create(
+            mock,
+            this
+        );
     }
 
     public void ThenTheResultShouldBeNull()
@@ -65,5 +93,20 @@ public class ResultAsserter<TSut, TResult> : IResultAsserter<TSut, TResult>
         var expectedResult = func.Invoke(_arrangement);
         
         _result.ThenTheResultShouldBe(expectedResult);
+    }
+
+    public void ThenTheResultShouldBeA<TExpectedType>()
+    {
+        _result.ThenTheResultShouldBeA<TExpectedType>();
+    }
+
+    public void ThenTheResultShouldNotBeNull()
+    {
+        Assert.NotNull(_result);
+    }
+
+    public void ThenItShouldThrow<TException>() where TException : Exception
+    {
+        throw new NotImplementedException();
     }
 }

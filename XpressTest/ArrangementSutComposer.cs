@@ -1,19 +1,26 @@
 ﻿namespace XpressTest;
 
-public class ArrangementSutComposer<TSut> : IArrangementSutComposer<TSut>
+public class ArrangementSutComposer<TSut> : ISutComposer<TSut>
     where TSut : class
 {
-    public TSut Compose(
+    private readonly IArrangement _arrangement;
+
+    public ArrangementSutComposer(
         IArrangement arrangement
         )
     {
+        _arrangement = arrangement;
+    }
+    
+    public TSut Compose()
+    {
         object sut = null;
 
-        if (arrangement.Dependencies.Any())
+        if (_arrangement.Dependencies.Any())
         {
             var parameters = new List<object>();
 
-            foreach (var dependency in arrangement.Dependencies.GetAll())
+            foreach (var dependency in _arrangement.Dependencies.GetAll())
             {
                 parameters.Add(dependency.Object);
             }

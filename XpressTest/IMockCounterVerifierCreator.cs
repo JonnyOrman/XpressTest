@@ -5,12 +5,12 @@ namespace XpressTest;
 public interface IMockCounterVerifierCreator<TMock, TAsserter>
 {
     IMockCounterVerifier<TAsserter> Create<TMockResult>(
-        Expression<Func<TMock, TMockResult>> expression
+        Func<IArrangement, Expression<Func<TMock, TMockResult>>> func,
+        TAsserter asserter
     );
     
     IMockCounterVerifier<TAsserter> Create<TMockResult>(
-        Func<IArrangement, Expression<Func<TMock, TMockResult>>> func,
-        TAsserter asserter
+        Expression<Func<TMock, TMockResult>> expression
     );
     
     IMockCounterVerifier<TAsserter> Create(

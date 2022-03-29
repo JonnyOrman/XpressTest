@@ -27,12 +27,18 @@ public class VoidAssertion<TSut> : IAssertion
 
     public void Add<T>(Mock<T> mock) where T : class => MockObjects.Add(mock);
 
+    public void Add<T>(INamedMock<T> mock) where T : class => MockObjects.Add(mock);
+
     public IAction<TSut> Action { get; }
 
     public Mock<T> GetMock<T>() where T : class => MockObjects.Get<T>();
 
+    public Mock<TMock> GetMock<TMock>(string name) where TMock : class => MockObjects.Get<TMock>(name);
+
     public T GetMockObject<T>() where T : class => MockObjects.Get<T>().Object;
-    
+
+    public T GetMockObject<T>(string name) where T : class => MockObjects.Get<T>(name).Object;
+
     public void AddDependency<TDependency>(TDependency dependency)
     {
         var dependencyObject = new Dependency<TDependency>(dependency);

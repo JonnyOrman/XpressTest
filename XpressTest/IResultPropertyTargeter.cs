@@ -7,4 +7,8 @@ public interface IResultPropertyTargeter<TResult>
     void ThenTheResultShouldBe(TResult expectedResult);
 
     void ThenTheResultShouldBe(Func<IArrangement, TResult> func);
+
+    void ThenTheResultShouldBeA<TExpectedType>();
+
+    void ThenTheResultShouldNotBeNull();
 }

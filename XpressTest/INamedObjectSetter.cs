@@ -1,6 +1,7 @@
 namespace XpressTest;
 
 public interface INamedObjectSetter<TObject>
+    :
+        IObjectSetter<INamedObject<TObject>>
 {
-    void Set(INamedObject<TObject> namedObject);
 }

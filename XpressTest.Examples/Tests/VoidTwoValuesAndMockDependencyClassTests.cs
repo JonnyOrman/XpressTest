@@ -23,10 +23,28 @@ public class VoidTwoValuesAndMockDependencyClassTests
             .With<string>("Parameter2")
             .WithA<IVoidMockTwoValueParameter>()
             .WhenIt(voidValueAndMockDependencyClass => voidValueAndMockDependencyClass.Execute())
-            .Then<IVoidMockTwoValueParameter>().Should(arrangement => voidMock => voidMock.Execute(
+            .Then<IVoidMockTwoValueParameter>()
+                .Should(arrangement => voidMock => voidMock.Execute(
                 arrangement.GetObject<string>("Parameter1"),
-                arrangement.GetObject<string>("Parameter2"))).Once();
+                arrangement.GetObject<string>("Parameter2")))
+                .Once();
     
+    [Fact]
+    public void Constructor1_Example3() =>
+        GivenA<VoidTwoValuesAndMockDependencyClass>
+            .AndGiven("Parameter1Value", "Parameter1")
+            .AndGiven("Parameter2Value", "Parameter2")
+            .AndGivenA<IVoidMockTwoValueParameter>()
+            .With<string>("Parameter1")
+            .With<string>("Parameter2")
+            .WithTheMock<IVoidMockTwoValueParameter>()
+            .WhenIt(voidValueAndMockDependencyClass => voidValueAndMockDependencyClass.Execute())
+            .Then<IVoidMockTwoValueParameter>()
+                .Should(arrangement => voidMock => voidMock.Execute(
+                arrangement.GetObject<string>("Parameter1"),
+                arrangement.GetObject<string>("Parameter2")))
+                .Once();
+
     [Fact]
     public void Constructor2_Example1() =>
         GivenA<VoidTwoValuesAndMockDependencyClass>
@@ -42,6 +60,20 @@ public class VoidTwoValuesAndMockDependencyClassTests
             .AndGiven("Parameter1Value", "Parameter1")
             .AndGiven("Parameter2Value", "Parameter2")
             .WithA<IVoidMockTwoValueParameter>()
+            .WithNamedObject<string>("Parameter1")
+            .With<string>("Parameter2")
+            .WhenIt(voidValueAndMockDependencyClass => voidValueAndMockDependencyClass.Execute())
+            .Then<IVoidMockTwoValueParameter>().Should(arrangement => voidMock => voidMock.Execute(
+                arrangement.GetObject<string>("Parameter1"),
+                arrangement.GetObject<string>("Parameter2"))).Once();
+    
+    [Fact]
+    public void Constructor2_Example3() =>
+        GivenA<VoidTwoValuesAndMockDependencyClass>
+            .AndGivenA<IVoidMockTwoValueParameter>()
+            .AndGiven("Parameter1Value", "Parameter1")
+            .AndGiven("Parameter2Value", "Parameter2")
+            .WithTheMock<IVoidMockTwoValueParameter>()
             .WithNamedObject<string>("Parameter1")
             .With<string>("Parameter2")
             .WhenIt(voidValueAndMockDependencyClass => voidValueAndMockDependencyClass.Execute())

@@ -1,34 +1,36 @@
 namespace XpressTest;
 
-public class DependencyBuilder<TSut, TDependency> :
+public class DependencyBuilder<TSut, TDependency>
+    :
+        Builder<TDependency, IDependencyBuilderChainer<TSut>>,
     IDependencyBuilder<TSut>
     where TSut : class
     where TDependency : class
 {
-    private readonly TDependency _dependency;
-    
-    private readonly ITestComposer<TSut> _testComposer;
-
     public DependencyBuilder(
         TDependency dependency,
-        ITestComposer<TSut> testComposer
+        IObjectSetter<TDependency> setter,
+        IDependencyBuilderChainer<TSut> dependencyBuilderChainer
+            )
+        : base(
+            dependency,
+            setter,
+            dependencyBuilderChainer
             )
     {
-        _dependency = dependency;
-        _testComposer = testComposer;
     }
 
-    public IDependencyBuilder<TSut> With<TNewDependency>()
+    public IExistingObjectBuilder<TSut> With<TNewDependency>()
+        where TNewDependency : class
     {
         throw new NotImplementedException();
     }
 
     public IValueDependencyBuilder<TSut> With<TNewDependency>(TNewDependency newDependency)
     {
-        return _testComposer.ComposeDependencyBuilder(
-            _dependency,
+        return Chain(() => _chainer.ComposeDependencyBuilder(
             newDependency
-        );
+        ));
     }
 
     public IDependencyBuilder<TSut> With<TNewDependency>(
@@ -37,48 +39,63 @@ public class DependencyBuilder<TSut, TDependency> :
         )
         where TNewDependency : class
     {
-        return _testComposer.ComposeDependencyBuilder(
-            _dependency,
-            newDependency,
-            name
-        );
+        throw new NotImplementedException();
+
+        // return Chain(() => _chainer.ComposeDependencyBuilder(
+        //     newDependency,
+        //     name
+        // ));
     }
     
     public IMockDependencyBuilder<TSut, TNewDependency> WithA<TNewDependency>() where TNewDependency : class
     {
-        return _testComposer.ComposeMockDependencyBuilder<TDependency, TNewDependency>(
-            _dependency
-        );
+        return Chain(() => _chainer.ComposeMockDependencyBuilder<TNewDependency>());
     }
 
-    public ISutAsserter<TSut> WhenItIsConstructed()
-    {
-        return _testComposer.ComposeAsserter(
-            _dependency,
-            _testComposer.Arrangement
-        );
-    }
-
-    public IResultAsserter<TSut, TResult> WhenIt<TResult>(Func<IAction<TSut>, TResult> func)
-    {
-        return _testComposer.ComposeAsserter(
-            _dependency,
-            func,
-            _testComposer.Arrangement
-        );
-    }
-
-    public IVoidAsserter<TSut> WhenIt(System.Action<TSut> action)
+    public IMockDependencyBuilder<TSut, TNewDependency> WithA<TNewDependency>(string name)
+        where TNewDependency : class
     {
         throw new NotImplementedException();
     }
 
+    public ISutAsserter<TSut> WhenItIsConstructed()
+    {
+        return Chain(() => _chainer.ComposeAsserter());
+    }
+
+    public IResultAsserter<TSut, TResult> WhenIt<TResult>(Func<IAction<TSut>, TResult> func)
+    {
+        return Chain(() => _chainer.ComposeAsserter(
+            func
+            ));
+    }
+
+    public IResultAsserter<TSut, TResult> WhenIt<TResult>(Func<TSut, TResult> func)
+    {
+        throw new NotImplementedException();
+    }
+
+    public IVoidAsserter<TSut> WhenIt(System.Action<TSut> action)
+    {
+        return Chain(() => _chainer.ComposeAsserter(
+            action
+            ));
+    }
+
     public IVoidAsserter<TSut> WhenIt(System.Action<IAction<TSut>> func)
     {
-        return _testComposer.ComposeAsserter(
-            _dependency,
-            func,
-            _testComposer.Arrangement
+        return _chainer.ComposeAsserter(
+            func
         );
+    }
+
+    public IAsyncResultAsserter<TSut, TResult> WhenItAsync<TResult>(Func<IAction<TSut>, Task<TResult>> func)
+    {
+        throw new NotImplementedException();
+    }
+
+    public IAsyncResultAsserter<TSut, TResult> WhenItAsync<TResult>(Func<TSut, Task<TResult>> func)
+    {
+        throw new NotImplementedException();
     }
 }

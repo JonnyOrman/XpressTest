@@ -20,7 +20,9 @@ public class VoidValueAndMockDependencyClassTests
             .With<string>()
             .WithA<IVoidMockOneValueParameter>()
             .WhenIt(voidValueAndMockDependencyClass => voidValueAndMockDependencyClass.Execute())
-            .Then<IVoidMockOneValueParameter>().Should(arrangement => voidMock => voidMock.Execute(arrangement.GetThe<string>())).Once();
+            .Then<IVoidMockOneValueParameter>()
+                .Should(arrangement => voidMock => voidMock.Execute(arrangement.GetThe<string>()))
+                .Once();
     
     [Fact]
     public void Constructor2_Example1() =>

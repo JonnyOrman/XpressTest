@@ -13,6 +13,15 @@ public class CalculatorTests
             .ThenTheResultShouldBe(6);
 
     [Fact]
+    public void MultiplyNumbers_Example2() =>
+        GivenA<Calculator>
+            .WhenIt(calculator => calculator.Multiply(3, 2))
+            .Then(assertion =>
+            {
+                Assert.Equal(6, assertion.Result);
+            });
+
+    [Fact]
     public void DivideNumbers() =>
         GivenA<Calculator>
             .WhenIt().Divide(6, 3)

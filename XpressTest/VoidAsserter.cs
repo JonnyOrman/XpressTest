@@ -1,3 +1,5 @@
+using Moq;
+
 namespace XpressTest;
 
 public class VoidAsserter<TSut> : IVoidAsserter<TSut>
@@ -26,6 +28,17 @@ public class VoidAsserter<TSut> : IVoidAsserter<TSut>
             );
     }
 
+    public IVoidMockVerifier<TSut, TMock> Then<TMock>(
+        Mock<TMock> mock
+        )
+        where TMock : class
+    {
+        return _voidMockVerifierCreator.Create(
+            mock,
+            this
+        );
+    }
+
     public void Then(System.Action<IAssertion> action)
     {
         var sutAction = new Action<TSut>(_sut, _arrangement);
@@ -35,5 +48,52 @@ public class VoidAsserter<TSut> : IVoidAsserter<TSut>
             );
 
         action.Invoke(assertion);
+    }
+
+    public IVoidAsserter<TSut> ThenWhenIt(System.Action<IAction<TSut>> action)
+    {
+        var sutAction = new Action<TSut>(_sut, _arrangement);
+        
+        action.Invoke(sutAction);
+
+        return this;
+    }
+
+    public IResultAsserter<TSut, TResult> ThenWhenIt<TResult>(Func<TSut, TResult> func)
+    {
+        var action = new Action<TSut>(
+            _sut,
+            _arrangement
+        );
+        
+        var result = func.Invoke(_sut);
+        
+        var resultPropertyTargeter = new ResultPropertyTargeter<TResult>(
+            result,
+            _arrangement
+        );
+        
+        var mockCounterVerifierCreatorComposer =
+            new MockCounterVerifierCreatorComposer<IResultAsserter<TSut, TResult>>(
+                _arrangement
+            );
+        
+        var asyncMockCounterVerifierCreatorComposer =
+            new AsyncMockCounterVerifierCreatorComposer<IAsyncResultAsserter<TSut, TResult>>(
+                _arrangement
+            );
+        
+        var resultMockVerifierCreator = new ResultMockVerifierCreator<TSut, TResult>(
+            mockCounterVerifierCreatorComposer,
+            asyncMockCounterVerifierCreatorComposer
+        );
+        
+        return new ResultAsserter<TSut, TResult>(
+            result,
+            _arrangement,
+            resultPropertyTargeter,
+            resultMockVerifierCreator,
+            _sut
+        );
     }
 }

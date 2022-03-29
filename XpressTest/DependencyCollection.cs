@@ -1,5 +1,3 @@
-using Moq;
-
 namespace XpressTest;
 
 public class DependencyCollection : IDependencyCollection
@@ -13,20 +11,12 @@ public class DependencyCollection : IDependencyCollection
         _collection = new List<IDependency>();
     }
     
-    public T Get<T>(string name)
-        where T : class
-    {
-        if(_dictionary[name] is T dependency)
-        {
-            return dependency;
-        }
-
-        throw new Exception($"Dependency {name} is not of type {typeof(T).Name}");
-    }
-
     public void Add(IDependency dependency)
     {
-        _collection.Add(dependency);
+        if (dependency != null)
+        {
+            _collection.Add(dependency);
+        }
     }
     
     public void Add(INamedDependency dependency)
@@ -44,20 +34,5 @@ public class DependencyCollection : IDependencyCollection
     public IEnumerable<IDependency> GetAll()
     {
         return _collection;
-    }
-
-    public int Size => _dictionary.Count;
-    
-    public Mock<T> GetMock<T>() where T : class
-    {
-        foreach (var dependency in _dictionary)
-        {
-            if (dependency.Value is MockDependency<T> mockDependency)
-            {
-                return mockDependency.Mock;
-            }
-        }
-
-        throw new Exception($"No dependency of type {typeof(T).Name} registered");
     }
 }

@@ -2,85 +2,64 @@ namespace XpressTest;
 
 public class ExistingObjectBuilder<TSut>
     :
-        IObjectBuilder<TSut>
+        IExistingObjectBuilder<TSut>
+where TSut : class
 {
-    private readonly ITestComposer<TSut> _testComposer;
+    private readonly IVoidAsserterCreator<TSut> _voidAsserterCreator;
+    private IMockDependencyBuilderCreator<TSut> _mockDependencyBuilderCreator;
+    private IObjectBuilderCreator<TSut> _objectBuilderCreator;
 
     public ExistingObjectBuilder(
-        
-        ITestComposer<TSut> testComposer
+        IVoidAsserterCreator<TSut> voidAsserterCreator,
+        IMockDependencyBuilderCreator<TSut> mockDependencyBuilderCreator,
+        IObjectBuilderCreator<TSut> objectBuilderCreator
         )
     {
-        _testComposer = testComposer;
+        _voidAsserterCreator = voidAsserterCreator;
+        _mockDependencyBuilderCreator = mockDependencyBuilderCreator;
+        _objectBuilderCreator = objectBuilderCreator;
     }
     
-    public IResultAsserter<TSut, TResult> WhenIt<TResult>(Func<IAction<TSut>, TResult> func)
-    {
-        throw new NotImplementedException();
-    }
-
     public IVoidAsserter<TSut> WhenIt(System.Action<TSut> action)
     {
-        return _testComposer.ComposeAsserter(
-            action,
-            _testComposer.Arrangement
+        return _voidAsserterCreator.Create(
+            action
         );
     }
 
     public IVoidAsserter<TSut> WhenIt(System.Action<IAction<TSut>> func)
     {
-        throw new NotImplementedException();
-    }
-
-    public IDependencyBuilder<TSut> With<TNewDependency>()
-    {
-        throw new NotImplementedException();
-    }
-
-    public IValueDependencyBuilder<TSut> With<TNewDependency>(TNewDependency newDependency)
-    {
-        throw new NotImplementedException();
-    }
-
-    public IDependencyBuilder<TSut> With<TNewDependency>(TNewDependency newDependency, string name) where TNewDependency : class
-    {
-        throw new NotImplementedException();
+        return _voidAsserterCreator.Create(
+            func
+        );
     }
 
     public IMockDependencyBuilder<TSut, TNewDependency> WithA<TNewDependency>()
         where TNewDependency : class
     {
-        return _testComposer.StartNewMockDependencyBuilder<TNewDependency>();
+        return _mockDependencyBuilderCreator.Create<TNewDependency>();
     }
-
-    public ISutAsserter<TSut> WhenItIsConstructed()
+    
+    public IExistingObjectBuilder<TSut> With<TNamedObject>(string objectName)
     {
-        throw new NotImplementedException();
-    }
-
-    public IMockObjectBuilder<TSut, TNewObject> AndGivenA<TNewObject>() where TNewObject : class
-    {
-        throw new NotImplementedException();
-    }
-
-    public IObjectBuilder<TSut> AndGiven<TNewObject>(TNewObject obj)
-    {
-        throw new NotImplementedException();
-    }
-
-    public IObjectBuilder<TSut> AndGiven<TNewObject>(TNewObject obj, string name)
-    {
-        throw new NotImplementedException();
-    }
-
-    public IObjectBuilder<TSut> With<TNamedObject>(string objectName)
-    {
-        var namedObject = _testComposer.GetObject<TNamedObject>(objectName);
-        
-        _testComposer.Arrangement.AddDependency(namedObject);
-        
-        return _testComposer.StartNewExistingObjectBuilder(
-            _testComposer
+        return _objectBuilderCreator.Create<TNamedObject>(
+            objectName
         );
+    }
+
+    public IMockDependencyBuilder<TSut, TMock> WithTheMock<TMock>()
+        where TMock : class
+    {
+        return _mockDependencyBuilderCreator.CreateExisting<TMock>();
+    }
+
+    public void Set(ObjectBuilderCreator<TSut> objectBuilderCreator)
+    {
+        _objectBuilderCreator = objectBuilderCreator;
+    }
+    
+    public void Set(IMockDependencyBuilderCreator<TSut> mockDependencyBuilderCreator)
+    {
+        _mockDependencyBuilderCreator = mockDependencyBuilderCreator;
     }
 }

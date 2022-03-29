@@ -1,4 +1,6 @@
-﻿namespace XpressTest;
+﻿using Xunit;
+
+namespace XpressTest;
 
 public class ResultPropertyTargeter<TResult> : IResultPropertyTargeter<TResult>
 {
@@ -39,7 +41,8 @@ public class ResultPropertyTargeter<TResult> : IResultPropertyTargeter<TResult>
         
         return new ResultPropertyAsserter<TResult, TProperty>(
             resultPropertyValueAsserter,
-            resultPropertyNullAsserter
+            resultPropertyNullAsserter,
+            _arrangement
             );
     }
     
@@ -53,5 +56,15 @@ public class ResultPropertyTargeter<TResult> : IResultPropertyTargeter<TResult>
         var expectedResult = func.Invoke(_arrangement);
         
         _result.ThenTheResultShouldBe(expectedResult);
+    }
+
+    public void ThenTheResultShouldBeA<TExpectedType>()
+    {
+        _result.ThenTheResultShouldBeA<TExpectedType>();
+    }
+
+    public void ThenTheResultShouldNotBeNull()
+    {
+        Assert.NotNull(_result);
     }
 }

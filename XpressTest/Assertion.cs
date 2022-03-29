@@ -19,13 +19,15 @@ public class Assertion<TSut, TResult> : IAssertion<TResult>
 
     public void Add<T>(Mock<T> mock) where T : class => MockObjects.Add(mock);
 
-    public Mock<T> GetMock<T>() where T : class => Dependencies.GetMock<T>();
+    public void Add<T>(INamedMock<T> mock) where T : class => MockObjects.Add(mock);
+
+    public Mock<T> GetMock<T>() where T : class => MockObjects.Get<T>();
     
-    public T GetMockObject<T>()
-        where T : class
-    {
-        throw new NotImplementedException();
-    }
+    public Mock<T> GetMock<T>(string name) where T : class => MockObjects.Get<T>(name);
+    
+    public T GetMockObject<T>() where T : class => GetMock<T>().Object;
+
+    public T GetMockObject<T>(string name) where T : class => GetMock<T>(name).Object;
 
     public void AddDependency<TDependency>(TDependency dependency)
     {
