@@ -21,9 +21,9 @@ public void DivideByZero() =>
 Each test has its own state that allows you to register variables during arrangement. These variables can then be used in the action and assertment:
 ```cs
 [Fact]
-public void CreateEntity_Example1() =>
+public void CreateEntity() =>
     GivenA<Creator>
-        .AndGiven(new EntityParameters("EntityName"))
+            .AndGiven(new EntityParameters("EntityName"))
         .WhenIt(action => action.Sut.Create(action.GetThe<EntityParameters>()))
         .ThenTheResult(result => result.Id).ShouldBe(1)
         .ThenTheResult(result => result.Name).ShouldBe("EntityName");
@@ -32,10 +32,10 @@ public void CreateEntity_Example1() =>
 Variables can be given names to identify them if multiple of the same type are registered:
 ```cs
 [Fact]
-public void CreateEntity_Example2() =>
+public void CreateEntity() =>
     GivenA<Creator>
-        .AndGiven(new EntityParameters("EntityName"), "ParametersToUse")
-        .AndGiven(new EntityParameters("AnotherEntityName"), "SomeOtherParameters")
+            .AndGiven(new EntityParameters("EntityName"), "ParametersToUse")
+            .AndGiven(new EntityParameters("AnotherEntityName"), "SomeOtherParameters")
         .WhenIt(action => action.Sut.Create(action.GetObject<EntityParameters>("ParametersToUse")))
         .ThenTheResult(result => result.Id).ShouldBe(1)
         .ThenTheResult(result => result.Name).ShouldBe("EntityName");
@@ -64,11 +64,11 @@ public void ProcessValidParameters() =>
         .ThenTheResultShouldBe(arrangement => arrangement.GetThe<Entity>());
 ```
 
+See the [XpressTest.Examples](https://github.com/JonnyOrman/XpressTest/tree/main/XpressTest.Examples/Tests) project in this repository for many more examples.
+
 ## Getting started
 
 Install by running the following:
 ```
-dotnet add package XpressTest --version 1.0.0-alpha.11
+dotnet add package XpressTest --version 1.0.0-alpha.12
 ```
-
-Examples of usage can be seen in the `XpressTest.Examples` project in this repository.
