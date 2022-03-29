@@ -1,10 +1,9 @@
 namespace XpressTest;
 
 public interface IAsyncResultPropertyTargeter<TResult>
+:
+    IResultValueAsserter<TResult>,
+    IArrangementResultValueAsserter<TResult>,
+    INullResultAsserter
 {
-    void ThenTheResultShouldBe(TResult expectedResult);
-    
-    void ThenTheResultShouldBe(Func<IArrangement, TResult> func);
-    
-    void ThenTheResultShouldBeNull();
 }

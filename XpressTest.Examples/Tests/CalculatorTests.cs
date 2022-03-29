@@ -16,10 +16,33 @@ public class CalculatorTests
     public void MultiplyNumbers_Example2() =>
         GivenA<Calculator>
             .WhenIt(calculator => calculator.Multiply(3, 2))
+            .ThenTheResultShouldBe(6);
+    
+    [Fact]
+    public void MultiplyNumbers_Example3() =>
+        GivenA<Calculator>
+            .WhenIt(calculator => calculator.Multiply(3, 2))
             .Then(assertion =>
             {
                 Assert.Equal(6, assertion.Result);
             });
+    
+    [Fact]
+    public void MultiplyNumbers_Example4() =>
+        GivenA<Calculator>
+                .AndGiven(3, "Value1")
+                .AndGiven(2, "Value2")
+            .WhenIt<int>(arrangement => calculator => calculator.Multiply(arrangement.GetObject<int>("Value1"), arrangement.GetObject<int>("Value2")))
+            .ThenTheResultShouldBe(6);
+    
+    [Fact]
+    public void MultiplyNumbers_Example5() =>
+        GivenA<Calculator>
+                .AndGiven(3, "Value1")
+                .AndGiven(2, "Value2")
+                .AndGiven(6, "ExpectedResult")
+            .WhenIt<int>(arrangement => calculator => calculator.Multiply(arrangement.GetObject<int>("Value1"), arrangement.GetObject<int>("Value2")))
+            .ThenTheResultShouldBe(arrangement => arrangement.GetObject<int>("ExpectedResult"));
 
     [Fact]
     public void DivideNumbers() =>

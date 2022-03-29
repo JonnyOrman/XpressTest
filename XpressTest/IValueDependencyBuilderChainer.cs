@@ -11,8 +11,10 @@ public interface IValueDependencyBuilderChainer<TSut>
     IMockDependencyBuilder<TSut, TMockDependency> StartMockDependencyBuilder<TMockDependency>()
         where TMockDependency : class;
     
-    IMockDependencyBuilder<TSut, TDependency> StartNamedMockDependencyBuilder<TDependency>(
+    INamedMockDependencyBuilder<TSut, TDependency> StartNamedMockDependencyBuilder<TDependency>(
         string dependencyName
         )
         where TDependency : class;
+
+    IValueDependencyBuilder<TSut> StartValueDependencyBuilder<TDependency>(TDependency dependency);
 }

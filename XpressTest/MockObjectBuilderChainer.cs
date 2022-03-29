@@ -69,7 +69,7 @@ where TSut : class
         );
     }
 
-    public IObjectBuilder<TSut> StartNewNamedObjectBuilder<TNewObject>(
+    public INamedObjectBuilder<TSut> StartNewNamedObjectBuilder<TNewObject>(
         TNewObject newObject,
         string name
         )

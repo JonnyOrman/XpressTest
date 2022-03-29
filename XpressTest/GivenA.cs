@@ -17,7 +17,7 @@ public static class GivenA<TSut>
         return MockObjectTestInitialiser<TSut, TObject>.Initialise();
     }
 
-    public static IObjectBuilder<TSut> AndGiven<TObject>(TObject obj, string name)
+    public static INamedObjectBuilder<TSut> AndGiven<TObject>(TObject obj, string name)
     {
         return NamedObjectTestInitialiser<TSut, TObject>.Initialise(
             obj,
@@ -46,7 +46,14 @@ public static class GivenA<TSut>
             );
     }
     
-    public static IDependencyBuilder<TSut> With<TDependency>(TDependency dependency, string name)
+    public static IValueDependencyBuilder<TSut> WithValue<TValueDependency>(TValueDependency dependency)
+    {
+        return ValueDependencyBuilderInitialiser<TSut>.Initialise(
+            dependency
+        );
+    }
+    
+    public static INamedDependencyBuilder<TSut> With<TDependency>(TDependency dependency, string name)
         where TDependency : class
     {
         return NamedDependencyTestInitialiser<TSut>.Initialise(

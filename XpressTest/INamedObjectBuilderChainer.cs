@@ -8,12 +8,12 @@ public interface INamedObjectBuilderChainer<TSut>
     IMockDependencyBuilder<TSut, TDependency> StartExistingMockDependencyBuilder<TDependency>()
         where TDependency : class;
     
-    IObjectBuilder<TSut> StartNewNamedObjectBuilder<TNewDependency>(
+    INamedObjectBuilder<TSut> StartNewNamedObjectBuilder<TNewDependency>(
         TNewDependency newObject,
         string name
         );
     
-    IObjectBuilder<TSut> StartNewNamedObjectBuilder<TNewDependency>(
+    INamedObjectBuilder<TSut> StartNewNamedObjectBuilder<TNewDependency>(
         Func<IArrangement, TNewDependency> func,
         string name
     );
@@ -35,6 +35,10 @@ public interface INamedObjectBuilderChainer<TSut>
     
     IResultAsserter<TSut, TResult> Compose<TResult>(
         Func<IAction<TSut>, TResult> func
+    );
+    
+    IResultAsserter<TSut, TResult> Compose<TResult>(
+        Func<IArrangement, Func<TSut, TResult>> func
     );
     
     IVoidAsserter<TSut> Compose(

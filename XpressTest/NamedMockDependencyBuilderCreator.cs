@@ -19,7 +19,7 @@ where TSut : class
         _arrangement = arrangement;
     }
     
-    public IMockDependencyBuilder<TSut, TDependency> Create<TDependency>(
+    public INamedMockDependencyBuilder<TSut, TDependency> Create<TDependency>(
         string dependencyName
         )
         where TDependency : class

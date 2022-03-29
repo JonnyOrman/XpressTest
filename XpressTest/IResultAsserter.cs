@@ -4,8 +4,9 @@ namespace XpressTest;
 
 public interface IResultAsserter<TSut, TResult>
     :
-        IExceptionAsserter,
-        IResultPropertyTargeter<TResult>
+        IResultPropertyTargeter<TResult>,
+        INullResultAsserter,
+        INotNullResultAsserter
 {
     void Then(System.Action<IAssertion<TResult>> action);
 
@@ -17,6 +18,4 @@ public interface IResultAsserter<TSut, TResult>
     
     IResultMockVerifier<TSut, TResult, TMock> Then<TMock>(Mock<TMock> mock)
         where TMock : class;
-
-    void ThenTheResultShouldBeNull();
 }

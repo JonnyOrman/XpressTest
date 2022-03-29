@@ -3,7 +3,6 @@
 public class ResultPropertyAsserter<TResult, TProperty> : IResultPropertyAsserter<TResult, TProperty>
 {
     private readonly IResultPropertyValueAsserter<TResult, TProperty> _resultPropertyValueAsserter;
-
     private readonly IResultPropertyNullAsserter<TResult> _resultPropertyNullAsserter;
     private readonly IArrangement _arrangement;
 

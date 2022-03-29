@@ -2,7 +2,7 @@ namespace XpressTest;
 
 public interface IMockDependencyBuilderChainer<TSut>
 {
-    IDependencyBuilder<TSut> ComposeDependencyBuilder<TNewDependency>(
+    INamedDependencyBuilder<TSut> ComposeDependencyBuilder<TNewDependency>(
         TNewDependency newDependency,
         string newDependencyName
     )
@@ -38,7 +38,7 @@ public interface IMockDependencyBuilderChainer<TSut>
     )
         where TObject : class;
 
-    IMockDependencyBuilder<TSut, TNewDependency> ComposeNamedMockDependencyBuilder<TNewDependency>(
+    INamedMockDependencyBuilder<TSut, TNewDependency> ComposeNamedMockDependencyBuilder<TNewDependency>(
         string name
         )
         where TNewDependency : class;

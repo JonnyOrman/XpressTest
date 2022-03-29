@@ -5,7 +5,7 @@ namespace XpressTest;
 public class NamedMockDependencyBuilder<TSut, TDependency>
     :
         Builder<INamedMock<TDependency>, INamedMockDependencyBuilderChainer<TSut>>,
-        IMockDependencyBuilder<TSut, TDependency>
+        INamedMockDependencyBuilder<TSut, TDependency>
 where TDependency : class
 {
     private readonly IArrangement _arrangement;
@@ -33,58 +33,8 @@ where TDependency : class
             func
         ));
     }
-
-    public IResultAsserter<TSut, TResult> WhenIt<TResult>(Func<TSut, TResult> func)
-    {
-        throw new NotImplementedException();
-    }
-
-    public IVoidAsserter<TSut> WhenIt(System.Action<TSut> action)
-    {
-        throw new NotImplementedException();
-    }
-
-    public IVoidAsserter<TSut> WhenIt(System.Action<IAction<TSut>> func)
-    {
-        throw new NotImplementedException();
-    }
-
-    public IAsyncResultAsserter<TSut, TResult> WhenItAsync<TResult>(Func<IAction<TSut>, Task<TResult>> func)
-    {
-        throw new NotImplementedException();
-    }
-
-    public IAsyncResultAsserter<TSut, TResult> WhenItAsync<TResult>(Func<TSut, Task<TResult>> func)
-    {
-        throw new NotImplementedException();
-    }
-
-    public ISutAsserter<TSut> WhenItIsConstructed()
-    {
-        throw new NotImplementedException();
-    }
-
-    public IExistingObjectBuilder<TSut> With<TNewDependency>() where TNewDependency : class
-    {
-        throw new NotImplementedException();
-    }
-
-    public IValueDependencyBuilder<TSut> With<TNewDependency>(TNewDependency newDependency)
-    {
-        throw new NotImplementedException();
-    }
-
-    public IDependencyBuilder<TSut> With<TNewDependency>(TNewDependency newDependency, string name) where TNewDependency : class
-    {
-        throw new NotImplementedException();
-    }
-
-    public IMockDependencyBuilder<TSut, TNewDependency> WithA<TNewDependency>() where TNewDependency : class
-    {
-        throw new NotImplementedException();
-    }
-
-    public IMockDependencyBuilder<TSut, TNewDependency> WithA<TNewDependency>(
+    
+    public INamedMockDependencyBuilder<TSut, TNewDependency> WithA<TNewDependency>(
         string name
         )
         where TNewDependency : class
@@ -94,7 +44,7 @@ where TDependency : class
         ));
     }
 
-    public IMockResultDependencyBuilder<TSut, TDependency, TResult> ThatDoes<TResult>(
+    public INamedMockResultDependencyBuilder<TSut, TDependency, TResult> ThatDoes<TResult>(
         Func<IArrangement, Expression<Func<TDependency, TResult>>> func
         )
     {
@@ -106,25 +56,5 @@ where TDependency : class
             this,
             _arrangement
         );
-    }
-
-    public IMockResultDependencyBuilder<TSut, TDependency, TResult> ThatDoes<TResult>(Expression<Func<TDependency, TResult>> expression)
-    {
-        throw new NotImplementedException();
-    }
-
-    public IMockResultDependencyBuilder<TSut, TDependency, TResult> ThatDoesAsync<TResult>(Func<IArrangement, Expression<Func<TDependency, Task<TResult>>>> func)
-    {
-        throw new NotImplementedException();
-    }
-
-    public IMockResultDependencyBuilder<TSut, TDependency, TResult> ThatDoesAsync<TResult>(Expression<Func<TDependency, Task<TResult>>> expression)
-    {
-        throw new NotImplementedException();
-    }
-
-    public IExistingObjectBuilder<TSut> WithNamedObject<TObject>(string objectName)
-    {
-        throw new NotImplementedException();
     }
 }

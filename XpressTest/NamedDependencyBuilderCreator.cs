@@ -20,7 +20,7 @@ where TSut : class
         _mockDependencyBuilderCreator = mockDependencyBuilderCreator;
     }
     
-    public IDependencyBuilder<TSut> Create<TNewDependency>(
+    public INamedDependencyBuilder<TSut> Create<TNewDependency>(
         TNewDependency newDependency,
         string name
         )

@@ -45,27 +45,8 @@ where TSut : class
         return _sutAsserterCreator.Create();
     }
 
-    public IResultAsserter<TSut, TResult> ComposeAsserter<TResult>(
-        Func<IAction<TSut>, TResult> func
-        )
-    {
-        return _asserterCreator.CreateResultAsserter(
-                func
-            )
-            ;
-    }
-
     public IVoidAsserter<TSut> ComposeAsserter(
         System.Action<TSut> action
-        )
-    {
-        return _asserterCreator.CreateVoidAsserter(
-            action
-        );
-    }
-
-    public IVoidAsserter<TSut> ComposeAsserter(
-        System.Action<IAction<TSut>> action
         )
     {
         return _asserterCreator.CreateVoidAsserter(

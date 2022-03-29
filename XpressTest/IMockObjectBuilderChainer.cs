@@ -20,7 +20,7 @@ public interface IMockObjectBuilderChainer<TSut>
     
     IObjectBuilder<TSut> StartNewObjectBuilder<TNewObject>(Func<IArrangement, TNewObject> func);
     
-    IObjectBuilder<TSut> StartNewNamedObjectBuilder<TNewObject>(
+    INamedObjectBuilder<TSut> StartNewNamedObjectBuilder<TNewObject>(
         TNewObject newObject,
         string name
         );

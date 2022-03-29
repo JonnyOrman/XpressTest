@@ -60,8 +60,6 @@ public static class MockObjectTestInitialiser<TSut, TObject>
         var moqMockDependencyBuilderCreator = new MoqMockDependencyBuilderCreator<TSut>(
             arrangement,
             mockDependencyBuilderChainer,
-            // resultAsserterCreator,
-            // namedMockDependencyBuilderCreator
             namedMockDependencyBuilderChainer
         );
 

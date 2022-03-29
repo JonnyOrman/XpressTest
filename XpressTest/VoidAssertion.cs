@@ -48,6 +48,11 @@ public class VoidAssertion<TSut> : IAssertion
 
     public void AddDependency<TDependency>(TDependency dependency, string name)
     {
-        throw new NotImplementedException();
+        var dependencyObject = new NamedDependency<TDependency>(
+            dependency,
+            name
+        );
+        
+        Dependencies.Add(dependencyObject);
     }
 }

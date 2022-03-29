@@ -2,7 +2,8 @@ namespace XpressTest;
 
 public interface ISimpleResultAsserter<TResult>
     :
-        IExceptionAsserter
+        IExceptionAsserter,
+        IResultValueAsserter<TResult>
 {
     void Then(System.Action<IAssertion<TResult>> assertion);
 }

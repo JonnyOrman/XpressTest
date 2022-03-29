@@ -36,9 +36,14 @@ public class ValueDependencyBuilder<TSut, TDependency>
         return Chain(() => _chainer.StartMockDependencyBuilder<TMockDependency>());
     }
 
-    public IMockDependencyBuilder<TSut, TMockDependency> WithA<TMockDependency>(string name)
+    public INamedMockDependencyBuilder<TSut, TMockDependency> WithA<TMockDependency>(string name)
         where TMockDependency : class
     {
         return Chain(() => _chainer.StartNamedMockDependencyBuilder<TMockDependency>(name));
+    }
+
+    public IValueDependencyBuilder<TSut> With<TNewDependency>(TNewDependency newDependency)
+    {
+        return Chain(() => _chainer.StartValueDependencyBuilder(newDependency));
     }
 }

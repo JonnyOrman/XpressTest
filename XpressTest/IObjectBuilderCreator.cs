@@ -7,7 +7,7 @@ where TSut : class
         TObject obj
         );
     
-    IObjectBuilder<TSut> Create<TObject>(
+    INamedObjectBuilder<TSut> Create<TObject>(
         TObject obj,
         string name
     );
@@ -22,7 +22,7 @@ where TSut : class
         Func<IArrangement, TObject> func
     );
     
-    IObjectBuilder<TSut> Create<TObject>(
+    INamedObjectBuilder<TSut> Create<TObject>(
         Func<IArrangement, TObject> func,
         string name
     );

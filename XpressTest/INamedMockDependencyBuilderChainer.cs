@@ -6,7 +6,7 @@ public interface INamedMockDependencyBuilderChainer<TSut>
         Func<IAction<TSut>, TResult> func
         );
 
-    IMockDependencyBuilder<TSut, TDependency> StartNamedMockDependencyBuilder<TDependency>(
+    INamedMockDependencyBuilder<TSut, TDependency> StartNamedMockDependencyBuilder<TDependency>(
         string name
         )
         where TDependency : class;

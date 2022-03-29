@@ -9,6 +9,8 @@ public interface IValueDependencyBuilder<TSut>
     IMockDependencyBuilder<TSut, TMockDependency> WithA<TMockDependency>()
         where TMockDependency : class;
     
-    IMockDependencyBuilder<TSut, TMockDependency> WithA<TMockDependency>(string name)
+    INamedMockDependencyBuilder<TSut, TMockDependency> WithA<TMockDependency>(string name)
         where TMockDependency : class;
+
+    IValueDependencyBuilder<TSut> With<TNewDependency>(TNewDependency newDependency);
 }

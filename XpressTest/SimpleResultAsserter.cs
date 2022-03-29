@@ -1,28 +1,33 @@
 namespace XpressTest;
 
-public class SimpleResultAsserter<TSut, TResult> : ISimpleResultAsserter<TResult>
+public class SimpleResultAsserter<TSut, TResult>
+    :
+        ISimpleResultAsserter<TResult>
 {
     private readonly TSut _sut;
     private readonly IArrangement _arrangement;
     private readonly Func<TResult> _action;
+    private readonly IExceptionAsserter _exceptionAsserter;
 
     public SimpleResultAsserter(
         TSut sut,
         IArrangement arrangement,
-        Func<TResult> action
+        Func<TResult> action,
+        IExceptionAsserter exceptionAsserter
         )
     {
         _sut = sut;
         _arrangement = arrangement;
         _action = action;
+        _exceptionAsserter = exceptionAsserter;
     }
 
     public void Then(System.Action<IAssertion<TResult>> action)
     {
-        var sutAction = new Action<TSut>(_sut, _arrangement);
-
         var result = _action.Invoke();
         
+        var sutAction = new Action<TSut>(_sut, _arrangement);
+
         var assertion = new Assertion<TSut, TResult>(
             result,
             sutAction);
@@ -30,29 +35,16 @@ public class SimpleResultAsserter<TSut, TResult> : ISimpleResultAsserter<TResult
         action.Invoke(assertion);
     }
 
-    public void ThenItShouldThrow<TException>() where TException : Exception
+    public void ThenTheResultShouldBe(TResult expectedResult)
     {
-        var exceptionThrown = false;
+        var result = _action.Invoke();
         
-        try
-        {
-            _action.Invoke();
-        }
-        catch (Exception exception)
-        {
-            if (exception.GetType() != typeof(TException))
-            {
-                throw exception;
-            }
-            else
-            {
-                exceptionThrown = true;
-            }
-        }
+        result.ThenTheResultShouldBe(expectedResult);
+    }
 
-        if (!exceptionThrown)
-        {
-            throw new Exception("Expected exception not thrown");
-        }
+    public void ThenItShouldThrow<TException>() 
+        where TException : Exception
+    {
+        _exceptionAsserter.ThenItShouldThrow<TException>();
     }
 }

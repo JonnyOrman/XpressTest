@@ -25,7 +25,7 @@ public class NamedMockDependencyBuilderChainer<TSut>
             );
     }
 
-    public IMockDependencyBuilder<TSut, TNewDependency> StartNamedMockDependencyBuilder<TNewDependency>(
+    public INamedMockDependencyBuilder<TSut, TNewDependency> StartNamedMockDependencyBuilder<TNewDependency>(
         string name
         )
         where TNewDependency : class

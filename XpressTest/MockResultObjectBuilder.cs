@@ -51,9 +51,4 @@ where TObject : class
 
         return _mockObjectBuilder;
     }
-
-    // public IMockObjectBuilder<TSut, TObject> AndReturnsThe<TReturn>() where TReturn : TResult
-    // {
-    //     throw new NotImplementedException();
-    // }
 }

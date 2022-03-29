@@ -11,15 +11,7 @@ public interface IDependencyBuilderChainer<TSut>
 
     ISutAsserter<TSut> ComposeAsserter();
     
-    IResultAsserter<TSut, TResult> ComposeAsserter<TResult>(
-        Func<IAction<TSut>, TResult> func
-        );
-    
     IVoidAsserter<TSut> ComposeAsserter(
         System.Action<TSut> action
-    );
-    
-    IVoidAsserter<TSut> ComposeAsserter(
-        System.Action<IAction<TSut>> func
     );
 }

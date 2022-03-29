@@ -3,7 +3,7 @@ namespace XpressTest;
 public class NamedObjectBuilder<TSut, TObject>
     :
         Builder<INamedObject<TObject>, INamedObjectBuilderChainer<TSut>>,
-        IObjectBuilder<TSut>
+        INamedObjectBuilder<TSut>
     where TSut : class
 {
     public NamedObjectBuilder(
@@ -34,7 +34,7 @@ public class NamedObjectBuilder<TSut, TObject>
         ));
     }
 
-    public IObjectBuilder<TSut> AndGiven<TNewObject>(
+    public INamedObjectBuilder<TSut> AndGiven<TNewObject>(
         TNewObject obj,
         string name
         )
@@ -54,7 +54,7 @@ public class NamedObjectBuilder<TSut, TObject>
         ));
     }
 
-    public IObjectBuilder<TSut> AndGiven<TNewObject>(
+    public INamedObjectBuilder<TSut> AndGiven<TNewObject>(
         Func<IArrangement, TNewObject> func,
         string name
         )
@@ -89,18 +89,11 @@ public class NamedObjectBuilder<TSut, TObject>
         ));
     }
 
-    public IResultAsserter<TSut, TResult> WhenIt<TResult>(
-        Func<TSut, TResult> func
-        )
+    public IResultAsserter<TSut, TResult> WhenIt<TResult>(Func<IArrangement, Func<TSut, TResult>> func)
     {
-        throw new NotImplementedException();
-    }
-
-    public IVoidAsserter<TSut> WhenIt(
-        System.Action<TSut> action
-        )
-    {
-        throw new NotImplementedException();
+        return Chain(() => _chainer.Compose(
+            func
+        ));
     }
 
     public IVoidAsserter<TSut> WhenIt(
@@ -112,61 +105,9 @@ public class NamedObjectBuilder<TSut, TObject>
         ));
     }
 
-    public IAsyncResultAsserter<TSut, TResult> WhenItAsync<TResult>(
-        Func<IAction<TSut>, Task<TResult>> func
-        )
-    {
-        throw new NotImplementedException();
-    }
-
-    public IAsyncResultAsserter<TSut, TResult> WhenItAsync<TResult>(
-        Func<TSut, Task<TResult>> func
-        )
-    {
-        throw new NotImplementedException();
-    }
-
-    public IExistingObjectBuilder<TSut> With<TNewDependency>()
-        where TNewDependency : class
-    {
-        throw new NotImplementedException();
-    }
-
-    public IValueDependencyBuilder<TSut> With<TNewDependency>(
-        TNewDependency newDependency
-        )
-    {
-        throw new NotImplementedException();
-    }
-
-    public IDependencyBuilder<TSut> With<TNewDependency>(
-        TNewDependency newDependency,
-        string name
-        )
-    where TNewDependency : class
-    {
-        return Chain(() => _chainer.StartNewNamedObjectBuilder(
-            newDependency,
-            name
-        ));
-    }
-
     public IMockDependencyBuilder<TSut, TNewDependency> WithA<TNewDependency>()
         where TNewDependency : class
     {
         return Chain(() => _chainer.StartNewMockDependencyBuilder<TNewDependency>());
-    }
-
-    public IMockDependencyBuilder<TSut, TNewDependency> WithA<TNewDependency>(
-        string name
-        )
-        where TNewDependency : class
-    {
-        throw new NotImplementedException();
-    }
-
-    public ISutAsserter<TSut> WhenItIsConstructed()
-    {
-        throw new NotImplementedException();
     }
 }

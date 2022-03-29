@@ -42,7 +42,7 @@ public class MockDependencyBuilder<TSut, TDependency>
         ));
     }
 
-    public IDependencyBuilder<TSut> With<TNewDependency>(
+    public INamedDependencyBuilder<TSut> With<TNewDependency>(
         TNewDependency newDependency,
         string name
         )
@@ -59,17 +59,12 @@ public class MockDependencyBuilder<TSut, TDependency>
         return Chain(() => _chainer.ComposeMockDependencyBuilder<TNewDependency>());
     }
 
-    public IMockDependencyBuilder<TSut, TNewDependency> WithA<TNewDependency>(string name)
+    public INamedMockDependencyBuilder<TSut, TNewDependency> WithA<TNewDependency>(string name)
         where TNewDependency : class
     {
         return Chain(() => _chainer.ComposeNamedMockDependencyBuilder<TNewDependency>(
             name
         ));
-    }
-
-    public ISutAsserter<TSut> WhenItIsConstructed()
-    {
-        throw new NotImplementedException();
     }
 
     public IResultAsserter<TSut, TResult> WhenIt<TResult>(Func<IAction<TSut>, TResult> func)
@@ -152,7 +147,7 @@ public class MockDependencyBuilder<TSut, TDependency>
         );
     }
 
-    public IMockResultDependencyBuilder<TSut, TDependency, TResult> ThatDoesAsync<TResult>(
+    public IMockAsyncResultDependencyBuilder<TSut, TDependency, TResult> ThatDoesAsync<TResult>(
         Func<IArrangement, Expression<Func<TDependency, Task<TResult>>>> func
         )
     {
@@ -166,7 +161,7 @@ public class MockDependencyBuilder<TSut, TDependency>
         );
     }
 
-    public IMockResultDependencyBuilder<TSut, TDependency, TResult> ThatDoesAsync<TResult>(
+    public IMockAsyncResultDependencyBuilder<TSut, TDependency, TResult> ThatDoesAsync<TResult>(
         Expression<Func<TDependency, Task<TResult>>> expression
         )
     {

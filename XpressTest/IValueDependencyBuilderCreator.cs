@@ -10,6 +10,4 @@ where TSut : class
     IValueDependencyBuilder<TSut> Create<TDependency>(
         Func<IArrangement, TDependency> dependencyFunc
         );
-
-    void Set(IMockDependencyBuilderCreator<TSut> mockDependencyBuilderCreator);
 }

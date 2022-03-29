@@ -1,13 +1,9 @@
 namespace XpressTest;
 
-public static class NamedDependencyTestInitialiser<TSut>
-    where TSut : class
+public static class ValueDependencyBuilderInitialiser<TSut>
+where TSut : class
 {
-    public static INamedDependencyBuilder<TSut> Initialise<TDependency>(
-        TDependency dependency,
-        string name
-        )
-        where TDependency : class
+    public static IValueDependencyBuilder<TSut> Initialise<TValueDependency>(TValueDependency dependency)
     {
         var arrangement = ArrangementInitialiser.Initialise();
 
@@ -19,7 +15,7 @@ public static class NamedDependencyTestInitialiser<TSut>
             sutComposer,
             arrangement
         );
-
+        
         var voidAsserterCreator = new VoidAsserterCreator<TSut>(
             sutComposer,
             arrangement
@@ -29,38 +25,30 @@ public static class NamedDependencyTestInitialiser<TSut>
             voidAsserterCreator,
             resultAsserterCreator
             );
-        
+
         var namedDependencyBuilderCreator = new NamedDependencyBuilderCreator<TSut>(
             arrangement,
             voidAsserterCreator,
             null
         );
 
+        var namedMockDependencyBuilderChainer = new NamedMockDependencyBuilderChainer<TSut>(
+            resultAsserterCreator,
+            null
+            );
+
+        var namedMockDependencyBuilderCreator = new NamedMockDependencyBuilderCreator<TSut>(
+            namedMockDependencyBuilderChainer,
+            arrangement
+        );
+
+        namedMockDependencyBuilderChainer.Set(namedMockDependencyBuilderCreator);
+
         var sutAsserterCreator = new SutAsserterCreator<TSut>(
             sutComposer,
             arrangement
         );
 
-        var namedMockDependencyBuilderChainer = new NamedMockDependencyBuilderChainer<TSut>(
-            resultAsserterCreator,
-            null
-        );
-        
-        var namedMockDependencyBuilderCreator = new NamedMockDependencyBuilderCreator<TSut>(
-            namedMockDependencyBuilderChainer,
-            arrangement
-        );
-        
-        namedMockDependencyBuilderChainer.Set(namedMockDependencyBuilderCreator);
-
-        var valueDependencyBuilderCreator = new ValueDependencyBuilderCreator<TSut>(
-            arrangement,
-            sutAsserterCreator,
-            voidAsserterCreator,
-            null,
-            namedMockDependencyBuilderCreator
-        );
-        
         var mockObjectBuilderCreator = new MockObjectBuilderCreator<TSut>(
             arrangement,
             sutAsserterCreator,
@@ -74,7 +62,7 @@ public static class NamedDependencyTestInitialiser<TSut>
             voidAsserterCreator,
             resultAsserterCreator,
             null,
-            valueDependencyBuilderCreator,
+            null,
             null,
             mockObjectBuilderCreator
         );
@@ -85,13 +73,13 @@ public static class NamedDependencyTestInitialiser<TSut>
             null,
             mockObjectBuilderCreator,
             null
-        );
+            );
 
         var existingObjectBuilder = new ExistingObjectBuilder<TSut>(
             voidAsserterCreator,
             null,
             null
-        );
+            );
         
         var objectBuilderCreator = new ObjectBuilderCreator<TSut>(
             arrangement,
@@ -99,17 +87,17 @@ public static class NamedDependencyTestInitialiser<TSut>
             namedObjectBuilderChainer,
             existingObjectBuilder
         );
-
-        existingObjectBuilder.Set(objectBuilderCreator);
-        namedObjectBuilderChainer.Set(objectBuilderCreator);
+        
         objectBuilderChainer.Set(objectBuilderCreator);
         mockObjectBuilderCreator.Set(objectBuilderCreator);
+        existingObjectBuilder.Set(objectBuilderCreator);
+        namedObjectBuilderChainer.Set(objectBuilderCreator);
         
         var mockDependencyBuilderChainer = new MockDependencyBuilderChainer<TSut>(
             asserterCreator,
             namedDependencyBuilderCreator,
             objectBuilderCreator,
-            valueDependencyBuilderCreator,
+            null,
             null
         );
         
@@ -118,27 +106,46 @@ public static class NamedDependencyTestInitialiser<TSut>
             mockDependencyBuilderChainer,
             namedMockDependencyBuilderChainer
         );
-        
+
         var mockDependencyBuilderCreator = new MockDependencyBuilderCreator<TSut>(
             arrangement,
             moqMockDependencyBuilderCreator
         );
         
-        mockDependencyBuilderChainer.Set(mockDependencyBuilderCreator);
         namedDependencyBuilderCreator.Set(mockDependencyBuilderCreator);
-        valueDependencyBuilderCreator.Set(mockDependencyBuilderCreator);
-        existingObjectBuilder.Set(mockDependencyBuilderCreator);
-        namedObjectBuilderChainer.Set(mockDependencyBuilderCreator);
+        mockDependencyBuilderChainer.Set(mockDependencyBuilderCreator);
         objectBuilderChainer.Set(mockDependencyBuilderCreator);
+        existingObjectBuilder.Set(mockDependencyBuilderCreator);
         mockObjectBuilderCreator.Set(mockDependencyBuilderCreator);
+        namedObjectBuilderChainer.Set(mockDependencyBuilderCreator);
+        
+        var setter = DependencySetterInitialiser<TValueDependency>.Initialise(
+            arrangement
+            );
 
-        return new NamedDependencyBuilder<TSut, TDependency>(
+        var valueDependencyBuilderCreator = new ValueDependencyBuilderCreator<TSut>(
             arrangement,
-            dependency,
-            name,
+            sutAsserterCreator,
             voidAsserterCreator,
-            namedDependencyBuilderCreator,
-            mockDependencyBuilderCreator
+            mockDependencyBuilderCreator,
+            namedMockDependencyBuilderCreator
+        );
+
+        mockDependencyBuilderChainer.Set(valueDependencyBuilderCreator);
+        objectBuilderChainer.Set(valueDependencyBuilderCreator);
+
+        var dependencyBuilderChainer = new ValueDependencyBuilderChainer<TSut>(
+            sutAsserterCreator,
+            voidAsserterCreator,
+            mockDependencyBuilderCreator,
+            namedMockDependencyBuilderCreator,
+            valueDependencyBuilderCreator
+        );
+        
+        return new ValueDependencyBuilder<TSut, TValueDependency>(
+            dependency,
+            setter,
+            dependencyBuilderChainer
         );
     }
 }

@@ -5,10 +5,8 @@ public static class SutActionInitialiser<TSut>
 {
     public static ISutAsserter<TSut> Initialise()
     {
-        var sutComposer = SutComposerInitialiser<TSut>.Initialise();
+        var sut = Activator.CreateInstance<TSut>();
 
-        var sut = sutComposer.Compose();
-        
         var sutPropertyTargeter = new SutPropertyTargeter<TSut>(
             sut
             );

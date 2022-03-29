@@ -2,7 +2,7 @@ namespace XpressTest;
 
 public class NamedDependencyBuilder<TSut, TDependency>
     : 
-        IDependencyBuilder<TSut>
+        INamedDependencyBuilder<TSut>
 where TSut : class
 {
     private readonly IArrangement _arrangement;
@@ -29,16 +29,6 @@ where TSut : class
         _mockDependencyBuilderCreator = mockDependencyBuilderCreator;
     }
     
-    public IResultAsserter<TSut, TResult> WhenIt<TResult>(Func<IAction<TSut>, TResult> func)
-    {
-        throw new NotImplementedException();
-    }
-
-    public IResultAsserter<TSut, TResult> WhenIt<TResult>(Func<TSut, TResult> func)
-    {
-        throw new NotImplementedException();
-    }
-
     public IVoidAsserter<TSut> WhenIt(System.Action<TSut> action)
     {
         _arrangement.AddDependency(_dependency);
@@ -48,33 +38,7 @@ where TSut : class
         );
     }
 
-    public IVoidAsserter<TSut> WhenIt(System.Action<IAction<TSut>> func)
-    {
-        throw new NotImplementedException();
-    }
-
-    public IAsyncResultAsserter<TSut, TResult> WhenItAsync<TResult>(Func<IAction<TSut>, Task<TResult>> func)
-    {
-        throw new NotImplementedException();
-    }
-
-    public IAsyncResultAsserter<TSut, TResult> WhenItAsync<TResult>(Func<TSut, Task<TResult>> func)
-    {
-        throw new NotImplementedException();
-    }
-
-    public IExistingObjectBuilder<TSut> With<TNewDependency>()
-        where TNewDependency : class
-    {
-        throw new NotImplementedException();
-    }
-
-    public IValueDependencyBuilder<TSut> With<TNewDependency>(TNewDependency newDependency)
-    {
-        throw new NotImplementedException();
-    }
-
-    public IDependencyBuilder<TSut> With<TNewDependency>(
+    public INamedDependencyBuilder<TSut> With<TNewDependency>(
         TNewDependency newDependency,
         string name
         )
@@ -101,16 +65,5 @@ where TSut : class
         _arrangement.Dependencies.Add(dependency);
         
         return _mockDependencyBuilderCreator.Create<TNewDependency>();
-    }
-
-    public IMockDependencyBuilder<TSut, TNewDependency> WithA<TNewDependency>(string name)
-        where TNewDependency : class
-    {
-        throw new NotImplementedException();
-    }
-
-    public ISutAsserter<TSut> WhenItIsConstructed()
-    {
-        throw new NotImplementedException();
     }
 }

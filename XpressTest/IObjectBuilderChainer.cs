@@ -8,8 +8,6 @@ public interface IObjectBuilderChainer<TSut>
     
     IExistingObjectBuilder<TSut> ComposeExistingObjectBuilder<TExistingObject>() where TExistingObject : class;
     
-    IExistingObjectBuilder<TSut> ComposeExistingObjectBuilder<TExistingObject>(string existingObjectName);
-    
     IValueDependencyBuilder<TSut> ComposeValueDependencyBuilder<TDependency>(TDependency dependency);
     
     IMockDependencyBuilder<TSut, TMock> ComposeMockDependencyBuilder<TMock>() where TMock : class;
@@ -20,9 +18,9 @@ public interface IObjectBuilderChainer<TSut>
     
     IObjectBuilder<TSut> ComposeObjectBuilder<TNewObject>(TNewObject newObject);
     
-    IObjectBuilder<TSut> ComposeObjectBuilder<TNewObject>(TNewObject newObject, string newObjectName);
+    INamedObjectBuilder<TSut> ComposeObjectBuilder<TNewObject>(TNewObject newObject, string newObjectName);
     
     IObjectBuilder<TSut> ComposeObjectBuilder<TNewObject>(Func<IArrangement, TNewObject> newObjectFunc);
     
-    IObjectBuilder<TSut> ComposeObjectBuilder<TNewObject>(Func<IArrangement, TNewObject> newObjectFunc, string newObjectName);
+    INamedObjectBuilder<TSut> ComposeObjectBuilder<TNewObject>(Func<IArrangement, TNewObject> newObjectFunc, string newObjectName);
 }

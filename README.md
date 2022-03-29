@@ -70,5 +70,5 @@ See the [XpressTest.Examples](https://github.com/JonnyOrman/XpressTest/tree/main
 
 Install by running the following:
 ```
-dotnet add package XpressTest --version 1.0.0-alpha.12
+dotnet add package XpressTest --version 1.0.0-alpha.13
 ```

@@ -14,8 +14,6 @@ public class Assertion<TSut, TResult> : IAssertion<TResult>
     }
     
     public TResult Result { get; }
-    
-    public IAction<TSut> Action { get; }
 
     public void Add<T>(Mock<T> mock) where T : class => MockObjects.Add(mock);
 
@@ -38,7 +36,12 @@ public class Assertion<TSut, TResult> : IAssertion<TResult>
 
     public void AddDependency<TDependency>(TDependency dependency, string name)
     {
-        throw new NotImplementedException();
+        var dependencyObject = new NamedDependency<TDependency>(
+            dependency,
+            name
+        );
+        
+        Dependencies.Add(dependencyObject);
     }
 
     public IObjectCollection Objects => Action.Objects;
@@ -54,4 +57,6 @@ public class Assertion<TSut, TResult> : IAssertion<TResult>
     public void Add<T>(T obj) => Objects.Add(obj);
 
     public void Add<T>(INamedObject<T> obj) => Objects.Add(obj);
+    
+    private IAction<TSut> Action { get; }
 }

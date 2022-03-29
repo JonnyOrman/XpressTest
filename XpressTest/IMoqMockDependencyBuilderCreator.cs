@@ -10,7 +10,7 @@ where TSut : class
         )
         where TDependency : class;
     
-    IMockDependencyBuilder<TSut, TDependency> Create<TDependency>(
+    INamedMockDependencyBuilder<TSut, TDependency> Create<TDependency>(
         Mock<TDependency> moqMock,
         string name
     )

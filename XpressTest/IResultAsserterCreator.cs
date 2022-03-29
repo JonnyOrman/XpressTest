@@ -10,6 +10,10 @@ public interface IResultAsserterCreator<TSut>
         Func<TSut, TResult> func
     );
     
+    IResultAsserter<TSut, TResult> Create<TResult>(
+        Func<IArrangement, Func<TSut, TResult>> func
+    );
+    
     Task<IAsyncResultAsserter<TSut, TResult>> CreateAsync<TResult>(
         Func<IAction<TSut>, Task<TResult>> func
     );

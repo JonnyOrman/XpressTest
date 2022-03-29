@@ -32,11 +32,12 @@ where TSut : class
             _arrangement
         );
 
-        var valueDependencyBuilderChainer = ValueDependencyBuilderChainerInitialiser<TSut>.Initialise(
+        var valueDependencyBuilderChainer = new ValueDependencyBuilderChainer<TSut>(
             _sutAsserterCreator,
             _voidAsserterCreator,
             _mockDependencyBuilderCreator,
-            _namedMockDependencyBuilderCreator
+            _namedMockDependencyBuilderCreator,
+            this
         );
         
         return new ValueDependencyBuilder<TSut, TDependency>(
@@ -51,23 +52,8 @@ where TSut : class
         )
     {
         var dependency = dependencyFunc.Invoke(_arrangement);
-        
-        var valueDependencySetter = ValueDependencySetterInitialiser<TDependency>.Initialise(
-            _arrangement
-        );
-        
-        var valueDependencyBuilderChainer = ValueDependencyBuilderChainerInitialiser<TSut>.Initialise(
-            _sutAsserterCreator,
-            _voidAsserterCreator,
-            _mockDependencyBuilderCreator,
-            _namedMockDependencyBuilderCreator
-        );
-        
-        return new ValueDependencyBuilder<TSut, TDependency>(
-            dependency,
-            valueDependencySetter,
-            valueDependencyBuilderChainer
-        );
+
+        return Create(dependency);
     }
 
     public void Set(IMockDependencyBuilderCreator<TSut> mockDependencyBuilderCreator)

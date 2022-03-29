@@ -9,18 +9,21 @@ where TSut : class
     private readonly IVoidAsserterCreator<TSut> _voidAsserterCreator;
     private readonly IMockDependencyBuilderCreator<TSut> _mockDependencyBuilderCreator;
     private readonly INamedMockDependencyBuilderCreator<TSut> _namedMockDependencyBuilderCreator;
+    private readonly IValueDependencyBuilderCreator<TSut> _valueDependencyBuilderCreator;
 
     public ValueDependencyBuilderChainer(
         ISutAsserterCreator<TSut> sutAsserterCreator,
         IVoidAsserterCreator<TSut> voidAsserterCreator,
         IMockDependencyBuilderCreator<TSut> mockDependencyBuilderCreator,
-        INamedMockDependencyBuilderCreator<TSut> namedMockDependencyBuilderCreator
+        INamedMockDependencyBuilderCreator<TSut> namedMockDependencyBuilderCreator,
+        IValueDependencyBuilderCreator<TSut> valueDependencyBuilderCreator
         )
     {
         _sutAsserterCreator = sutAsserterCreator;
         _voidAsserterCreator = voidAsserterCreator;
         _mockDependencyBuilderCreator = mockDependencyBuilderCreator;
         _namedMockDependencyBuilderCreator = namedMockDependencyBuilderCreator;
+        _valueDependencyBuilderCreator = valueDependencyBuilderCreator;
     }
     
     public ISutAsserter<TSut> StartSutAsserter()
@@ -43,7 +46,7 @@ where TSut : class
         return _mockDependencyBuilderCreator.Create<TDependency>();
     }
 
-    public IMockDependencyBuilder<TSut, TDependency> StartNamedMockDependencyBuilder<TDependency>(
+    public INamedMockDependencyBuilder<TSut, TDependency> StartNamedMockDependencyBuilder<TDependency>(
         string dependencyName
         )
         where TDependency : class
@@ -51,5 +54,10 @@ where TSut : class
         return _namedMockDependencyBuilderCreator.Create<TDependency>(
             dependencyName
         );
+    }
+
+    public IValueDependencyBuilder<TSut> StartValueDependencyBuilder<TDependency>(TDependency dependency)
+    {
+        return _valueDependencyBuilderCreator.Create(dependency);
     }
 }

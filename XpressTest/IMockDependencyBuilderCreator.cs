@@ -6,7 +6,7 @@ public interface IMockDependencyBuilderCreator<TSut>
     IMockDependencyBuilder<TSut, TDependency> Create<TDependency>()
         where TDependency : class;
     
-    IMockDependencyBuilder<TSut, TDependency> Create<TDependency>(
+    INamedMockDependencyBuilder<TSut, TDependency> Create<TDependency>(
         string name
         )
         where TDependency : class;

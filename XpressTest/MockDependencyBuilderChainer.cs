@@ -26,7 +26,7 @@ where TSut : class
         _mockDependencyBuilderCreator = mockDependencyBuilderCreator;
     }
 
-    public IDependencyBuilder<TSut> ComposeDependencyBuilder<TNewDependency>(
+    public INamedDependencyBuilder<TSut> ComposeDependencyBuilder<TNewDependency>(
         TNewDependency newDependency,
         string newDependencyName
         )
@@ -102,7 +102,7 @@ where TSut : class
         return _valueDependencyBuilderCreator.Create(newDependency);
     }
 
-    public IMockDependencyBuilder<TSut, TNewDependency> ComposeNamedMockDependencyBuilder<TNewDependency>(
+    public INamedMockDependencyBuilder<TSut, TNewDependency> ComposeNamedMockDependencyBuilder<TNewDependency>(
         string name
         )
         where TNewDependency : class

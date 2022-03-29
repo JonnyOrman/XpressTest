@@ -20,13 +20,6 @@ public class VoidMockVerifier<TSut, TMock>
         _asserter = asserter;
     }
     
-    public IMockCounterVerifier<IVoidAsserter<TSut>> Should<TResult>(
-        Func<IArrangement, Expression<Func<TMock, TResult>>> func
-        )
-    {
-        throw new NotImplementedException();
-    }
-
     public IMockCounterVerifier<IVoidAsserter<TSut>> Should<TMockResult>(
         Expression<Func<TMock, TMockResult>> expression
         )

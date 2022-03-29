@@ -104,9 +104,4 @@ public class ResultAsserter<TSut, TResult> : IResultAsserter<TSut, TResult>
     {
         Assert.NotNull(_result);
     }
-
-    public void ThenItShouldThrow<TException>() where TException : Exception
-    {
-        throw new NotImplementedException();
-    }
 }

@@ -51,15 +51,6 @@ where TSut : class
         return _objectBuilderCreator.Create<TExistingObject>();
     }
 
-    public IExistingObjectBuilder<TSut> ComposeExistingObjectBuilder<TExistingObject>(
-        string existingObjectName
-        )
-    {
-        return _objectBuilderCreator.Create<TExistingObject>(
-            existingObjectName
-            );
-    }
-
     public IValueDependencyBuilder<TSut> ComposeValueDependencyBuilder<TDependency>(
         TDependency dependency
         )
@@ -92,7 +83,7 @@ where TSut : class
         );
     }
 
-    public IObjectBuilder<TSut> ComposeObjectBuilder<TNewObject>(TNewObject newObject, string newObjectName)
+    public INamedObjectBuilder<TSut> ComposeObjectBuilder<TNewObject>(TNewObject newObject, string newObjectName)
     {
         return _objectBuilderCreator.Create(
             newObject,
@@ -107,7 +98,7 @@ where TSut : class
         );
     }
 
-    public IObjectBuilder<TSut> ComposeObjectBuilder<TNewObject>(Func<IArrangement, TNewObject> newObjectFunc, string newObjectName)
+    public INamedObjectBuilder<TSut> ComposeObjectBuilder<TNewObject>(Func<IArrangement, TNewObject> newObjectFunc, string newObjectName)
     {
         return _objectBuilderCreator.Create(
             newObjectFunc,

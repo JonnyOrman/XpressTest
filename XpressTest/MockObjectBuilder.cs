@@ -27,47 +27,6 @@ public class MockObjectBuilder<TSut, TObject>
         _arrangement = arrangement;
     }
 
-    public IResultAsserter<TSut, TResult> WhenIt<TResult>(Func<IAction<TSut>, TResult> func)
-    {
-        throw new NotImplementedException();
-    }
-
-    public IResultAsserter<TSut, TResult> WhenIt<TResult>(Func<TSut, TResult> func)
-    {
-        throw new NotImplementedException();
-    }
-
-    public IVoidAsserter<TSut> WhenIt(System.Action<TSut> action)
-    {
-        throw new NotImplementedException();
-    }
-
-    public IVoidAsserter<TSut> WhenIt(System.Action<IAction<TSut>> func)
-    {
-        throw new NotImplementedException();
-    }
-
-    public IAsyncResultAsserter<TSut, TResult> WhenItAsync<TResult>(Func<IAction<TSut>, Task<TResult>> func)
-    {
-        throw new NotImplementedException();
-    }
-
-    public IAsyncResultAsserter<TSut, TResult> WhenItAsync<TResult>(Func<TSut, Task<TResult>> func)
-    {
-        throw new NotImplementedException();
-    }
-
-    public IExistingObjectBuilder<TSut> With<TNewDependency>()
-        where TNewDependency : class
-    {
-        throw new NotImplementedException();
-    }
-
-    public IValueDependencyBuilder<TSut> With<TNewDependency>(TNewDependency newDependency)
-    {
-        throw new NotImplementedException();
-    }
-
     public IValueDependencyBuilder<TSut> With<TNewDependency>(
         Func<IArrangement, TNewDependency> newDependencyFunc
         )
@@ -77,26 +36,9 @@ public class MockObjectBuilder<TSut, TObject>
         ));
     }
 
-    public IDependencyBuilder<TSut> With<TNewDependency>(TNewDependency newDependency, string name)
-        where TNewDependency : class
-    {
-        throw new NotImplementedException();
-    }
-
     public IMockDependencyBuilder<TSut, TNewDependency> WithA<TNewDependency>() where TNewDependency : class
     {
         return Chain(() => _chainer.StartNewMockDependencyBuilder<TNewDependency>());
-    }
-
-    public IMockDependencyBuilder<TSut, TNewDependency> WithA<TNewDependency>(string name)
-        where TNewDependency : class
-    {
-        throw new NotImplementedException();
-    }
-
-    public ISutAsserter<TSut> WhenItIsConstructed()
-    {
-        throw new NotImplementedException();
     }
 
     public IMockObjectBuilder<TSut, TNewObject> AndGivenA<TNewObject>()
@@ -110,7 +52,7 @@ public class MockObjectBuilder<TSut, TObject>
         return Chain(() => _chainer.StartNewObjectBuilder(obj));
     }
 
-    public IObjectBuilder<TSut> AndGiven<TNewObject>(
+    public INamedObjectBuilder<TSut> AndGiven<TNewObject>(
         TNewObject obj,
         string name
     )
@@ -126,11 +68,6 @@ public class MockObjectBuilder<TSut, TObject>
         return Chain(() => _chainer.StartNewObjectBuilder(
             func
         ));
-    }
-
-    public IObjectBuilder<TSut> AndGiven<TNewObject>(Func<IArrangement, TNewObject> func, string name)
-    {
-        throw new NotImplementedException();
     }
 
     public IExistingObjectBuilder<TSut> With<TNamedObject>(string objectName)

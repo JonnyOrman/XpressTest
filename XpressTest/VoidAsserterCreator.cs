@@ -19,36 +19,25 @@ where TSut : class
     
     public IVoidAsserter<TSut> Create(System.Action<TSut> action)
     {
-        var sut = _sutComposer.Compose();
-        
-        action.Invoke(sut);
-        
-        var mockCounterVerifierCreatorComposer = new MockCounterVerifierCreatorComposer<IVoidAsserter<TSut>>(
-            _arrangement
-        );
-        
-        var voidMockVerifierCreator = new VoidMockVerifierCreator<TSut>(
-            mockCounterVerifierCreatorComposer
-        );
-        
-        return new VoidAsserter<TSut>(
-            _arrangement,
-            voidMockVerifierCreator,
-            sut
-        );
+        return CreateVoidAsserter(sut => action.Invoke(sut));
     }
 
     public IVoidAsserter<TSut> Create(System.Action<IAction<TSut>> action)
     {
-        var sut = _sutComposer.Compose();
-        
-        var sutAction = new Action<TSut>(
+        return CreateVoidAsserter(sut => action.Invoke(new Action<TSut>(
             sut,
             _arrangement
-        );
-        
-        action.Invoke(sutAction);
-        
+        )));
+    }
+    
+    private IVoidAsserter<TSut> CreateVoidAsserter(
+        System.Action<TSut> sutAction
+    )
+    {
+        var sut = _sutComposer.Compose();
+
+        sutAction.Invoke(sut);
+
         var mockCounterVerifierCreatorComposer = new MockCounterVerifierCreatorComposer<IVoidAsserter<TSut>>(
             _arrangement
         );

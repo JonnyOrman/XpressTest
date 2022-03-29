@@ -3,7 +3,7 @@
 public static class NamedObjectTestInitialiser<TSut, TObject>
     where TSut : class
 {
-    public static IObjectBuilder<TSut> Initialise(
+    public static INamedObjectBuilder<TSut> Initialise(
         TObject obj,
         string objectName
         )

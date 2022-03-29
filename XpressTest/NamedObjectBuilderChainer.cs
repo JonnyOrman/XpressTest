@@ -38,7 +38,7 @@ where TSut : class
         return _mockDependencyBuilderCreator.CreateExisting<TDependency>();
     }
 
-    public IObjectBuilder<TSut> StartNewNamedObjectBuilder<TNewDependency>(
+    public INamedObjectBuilder<TSut> StartNewNamedObjectBuilder<TNewDependency>(
         TNewDependency newObject,
         string name
         )
@@ -49,7 +49,7 @@ where TSut : class
             );
     }
 
-    public IObjectBuilder<TSut> StartNewNamedObjectBuilder<TNewDependency>(
+    public INamedObjectBuilder<TSut> StartNewNamedObjectBuilder<TNewDependency>(
         Func<IArrangement, TNewDependency> func,
         string name
         )
@@ -96,6 +96,13 @@ where TSut : class
     public IResultAsserter<TSut, TResult> Compose<TResult>(
         Func<IAction<TSut>, TResult> func
         )
+    {
+        return _resultAsserterCreator.Create(
+            func
+        );
+    }
+
+    public IResultAsserter<TSut, TResult> Compose<TResult>(Func<IArrangement, Func<TSut, TResult>> func)
     {
         return _resultAsserterCreator.Create(
             func

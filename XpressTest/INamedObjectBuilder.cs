@@ -1,25 +1,7 @@
 namespace XpressTest;
 
-public interface IObjectBuilder<TSut>
+public interface INamedObjectBuilder<TSut>
 {
-    IResultAsserter<TSut, TResult> WhenIt<TResult>(
-        Func<IAction<TSut>, TResult> func
-    );
-
-    IVoidAsserter<TSut> WhenIt(
-        System.Action<IAction<TSut>> func
-    );
-
-    IExistingObjectBuilder<TSut> With<TNewDependency>()
-        where TNewDependency : class;
-
-    IValueDependencyBuilder<TSut> With<TNewDependency>(
-        TNewDependency newDependency
-    );
-
-    IMockDependencyBuilder<TSut, TNewDependency> WithA<TNewDependency>()
-        where TNewDependency : class;
-
     IMockObjectBuilder<TSut, TNewObject> AndGivenA<TNewObject>()
         where TNewObject : class;
 
@@ -41,6 +23,23 @@ public interface IObjectBuilder<TSut>
         string name
     );
 
+    IExistingObjectBuilder<TSut> With<TNamedObject>(
+        string objectName
+    );
+
     IMockDependencyBuilder<TSut, TMock> WithTheMock<TMock>()
         where TMock : class;
+
+    IResultAsserter<TSut, TResult> WhenIt<TResult>(
+        Func<IAction<TSut>, TResult> func
+    );
+
+    IResultAsserter<TSut, TResult> WhenIt<TResult>(Func<IArrangement, Func<TSut, TResult>> func);
+
+    IVoidAsserter<TSut> WhenIt(
+        System.Action<IAction<TSut>> func
+    );
+
+    IMockDependencyBuilder<TSut, TNewDependency> WithA<TNewDependency>()
+        where TNewDependency : class;
 }

@@ -1,6 +1,4 @@
-﻿using Xunit;
-
-namespace XpressTest;
+﻿namespace XpressTest;
 
 public class ResultPropertyTargeter<TResult> : IResultPropertyTargeter<TResult>
 {
@@ -61,10 +59,5 @@ public class ResultPropertyTargeter<TResult> : IResultPropertyTargeter<TResult>
     public void ThenTheResultShouldBeA<TExpectedType>()
     {
         _result.ThenTheResultShouldBeA<TExpectedType>();
-    }
-
-    public void ThenTheResultShouldNotBeNull()
-    {
-        Assert.NotNull(_result);
     }
 }

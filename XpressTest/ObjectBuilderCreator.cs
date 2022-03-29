@@ -39,7 +39,7 @@ where TSut : class
         );
     }
 
-    public IObjectBuilder<TSut> Create<TObject>(TObject obj, string name)
+    public INamedObjectBuilder<TSut> Create<TObject>(TObject obj, string name)
     {
         var namedObjectSetter = new NamedObjectSetter<TObject>(
             _arrangement
@@ -92,7 +92,7 @@ where TSut : class
         );
     }
 
-    public IObjectBuilder<TSut> Create<TObject>(Func<IArrangement, TObject> func, string name)
+    public INamedObjectBuilder<TSut> Create<TObject>(Func<IArrangement, TObject> func, string name)
     {
         var newObject = func.Invoke(_arrangement);
         

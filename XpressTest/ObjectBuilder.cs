@@ -30,20 +30,6 @@ public class ObjectBuilder<TSut, TObject>
         );
     }
 
-    public IResultAsserter<TSut, TResult> WhenIt<TResult>(
-        Func<TSut, TResult> func
-        )
-    {
-        throw new NotImplementedException();
-    }
-    
-    public IVoidAsserter<TSut> WhenIt(
-        System.Action<TSut> action
-        )
-    {
-        throw new NotImplementedException();
-    }
-
     public IVoidAsserter<TSut> WhenIt(
         System.Action<IAction<TSut>> func
     )
@@ -53,18 +39,6 @@ public class ObjectBuilder<TSut, TObject>
                 func
             )
         );
-    }
-
-    public IAsyncResultAsserter<TSut, TResult> WhenItAsync<TResult>(
-        Func<IAction<TSut>, Task<TResult>> func
-        )
-    {
-        throw new NotImplementedException();
-    }
-    
-    public IAsyncResultAsserter<TSut, TResult> WhenItAsync<TResult>(Func<TSut, Task<TResult>> func)
-    {
-        throw new NotImplementedException();
     }
 
     public IExistingObjectBuilder<TSut> With<TNewDependency>()
@@ -86,34 +60,12 @@ public class ObjectBuilder<TSut, TObject>
         );
     }
 
-    public IDependencyBuilder<TSut> With<TNewDependency>(
-        TNewDependency newDependency,
-        string name
-        )
-        where TNewDependency : class
-    {
-        throw new NotImplementedException();
-    }
-
     public IMockDependencyBuilder<TSut, TNewDependency> WithA<TNewDependency>()
         where TNewDependency : class
     {
         return Chain(
             () => _chainer.ComposeMockDependencyBuilder<TNewDependency>()
         );
-    }
-
-    public IMockDependencyBuilder<TSut, TNewDependency> WithA<TNewDependency>(
-        string name
-        )
-        where TNewDependency : class
-    {
-        throw new NotImplementedException();
-    }
-    
-    public ISutAsserter<TSut> WhenItIsConstructed()
-    {
-        throw new NotImplementedException();
     }
 
     public IMockObjectBuilder<TSut, TNewObject> AndGivenA<TNewObject>()
@@ -135,7 +87,7 @@ public class ObjectBuilder<TSut, TObject>
         );
     }
 
-    public IObjectBuilder<TSut> AndGiven<TNewObject>(
+    public INamedObjectBuilder<TSut> AndGiven<TNewObject>(
         TNewObject obj,
         string name
     )
@@ -159,7 +111,7 @@ public class ObjectBuilder<TSut, TObject>
         );
     }
 
-    public IObjectBuilder<TSut> AndGiven<TNewObject>(
+    public INamedObjectBuilder<TSut> AndGiven<TNewObject>(
         Func<IArrangement, TNewObject> func,
         string name
     )
@@ -169,15 +121,6 @@ public class ObjectBuilder<TSut, TObject>
                 func,
                 name
             )
-        );
-    }
-
-    public IExistingObjectBuilder<TSut> With<TNamedObject>(string objectName)
-    {
-        return Chain(
-            () => _chainer.ComposeExistingObjectBuilder<TNamedObject>(
-                    objectName
-                )
         );
     }
 

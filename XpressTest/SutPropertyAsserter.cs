@@ -21,23 +21,17 @@ public class SutPropertyAsserter<TSut, TProperty>
         _arrangement = arrangement;
     }
 
-    public ISutPropertyTargeter<TSut> ShouldBeNull()
+    public ISutPropertyTargeter<TSut> ShouldBeNull() =>
+        PerformAssertion(actualResult => Assert.Null(actualResult));
+
+    public ISutPropertyTargeter<TSut> ShouldBe(TProperty value) =>
+        PerformAssertion(actualResult => Assert.Equal(value, actualResult));
+
+    private ISutPropertyTargeter<TSut> PerformAssertion(System.Action<TProperty> assertion)
     {
         var actualResult = _targetFunc.Invoke(_sut);
 
-        Assert.Null(actualResult);
-
-        return new SutPropertyTargeter<TSut>(
-            _sut,
-            _arrangement
-        );
-    }
-
-    public ISutPropertyTargeter<TSut> ShouldBe(TProperty value)
-    {
-        var actualResult = _targetFunc.Invoke(_sut);
-
-        Assert.Equal(value, actualResult);
+        assertion.Invoke(actualResult);
 
         return new SutPropertyTargeter<TSut>(
             _sut,

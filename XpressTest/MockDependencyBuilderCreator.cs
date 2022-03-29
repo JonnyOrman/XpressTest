@@ -29,7 +29,7 @@ where TSut : class
             );
     }
 
-    public IMockDependencyBuilder<TSut, TDependency> Create<TDependency>(
+    public INamedMockDependencyBuilder<TSut, TDependency> Create<TDependency>(
         string name
         )
         where TDependency : class

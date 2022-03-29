@@ -5,7 +5,7 @@ namespace XpressTest;
 
 public class MockAsyncResultDependencyBuilder<TSut, TDependency, TResult>
 :
-    IMockResultDependencyBuilder<TSut, TDependency, TResult>
+    IMockAsyncResultDependencyBuilder<TSut, TDependency, TResult>
 where TDependency : class
 {
     private readonly Expression<Func<TDependency, Task<TResult>>> _expression;
@@ -44,11 +44,5 @@ where TDependency : class
         _dependencyMock.Setup(_expression).ReturnsAsync(expectedResult);
 
         return _mockDependencyBuilder;
-    }
-
-    public IMockDependencyBuilder<TSut, TDependency> AndReturns<TReturn>()
-        where TReturn : class, TResult
-    {
-        throw new NotImplementedException();
     }
 }
