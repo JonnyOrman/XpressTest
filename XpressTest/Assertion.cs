@@ -1,12 +1,12 @@
-using Moq;
-
 namespace XpressTest;
 
-public class Assertion<TSut, TResult> : IAssertion<TResult>
+public class Assertion<TSut, TResult>
+    :
+        IResultAssertion<TResult>
 {
     public Assertion(
         TResult result,
-        IAction<TSut> action
+        ISutArrangement<TSut> action
         )
     {
         Result = result;
@@ -15,34 +15,15 @@ public class Assertion<TSut, TResult> : IAssertion<TResult>
     
     public TResult Result { get; }
 
-    public void Add<T>(Mock<T> mock) where T : class => MockObjects.Add(mock);
+    public IMock<T> GetTheMock<T>() where T : class => MockObjects.Get<T>();
 
-    public void Add<T>(INamedMock<T> mock) where T : class => MockObjects.Add(mock);
+    public Moq.Mock<TMock> GetTheMoq<TMock>() where TMock : class => GetTheMock<TMock>().MoqMock;
 
-    public Mock<T> GetMock<T>() where T : class => MockObjects.Get<T>();
+    public IMock<T> GetTheMock<T>(string name) where T : class => MockObjects.Get<T>(name);
     
-    public Mock<T> GetMock<T>(string name) where T : class => MockObjects.Get<T>(name);
-    
-    public T GetMockObject<T>() where T : class => GetMock<T>().Object;
+    public T GetTheMockObject<T>() where T : class => GetTheMock<T>().Object;
 
-    public T GetMockObject<T>(string name) where T : class => GetMock<T>(name).Object;
-
-    public void AddDependency<TDependency>(TDependency dependency)
-    {
-        var dependencyObject = new Dependency<TDependency>(dependency);
-        
-        Dependencies.Add(dependencyObject);
-    }
-
-    public void AddDependency<TDependency>(TDependency dependency, string name)
-    {
-        var dependencyObject = new NamedDependency<TDependency>(
-            dependency,
-            name
-        );
-        
-        Dependencies.Add(dependencyObject);
-    }
+    public T GetTheMockObject<T>(string name) where T : class => GetTheMock<T>(name).Object;
 
     public IObjectCollection Objects => Action.Objects;
 
@@ -52,11 +33,7 @@ public class Assertion<TSut, TResult> : IAssertion<TResult>
 
     public T GetThe<T>() => Objects.Get<T>();
 
-    public T GetObject<T>(string name) => Objects.Get<T>(name);
+    public T GetThe<T>(string name) => Objects.Get<T>(name);
 
-    public void Add<T>(T obj) => Objects.Add(obj);
-
-    public void Add<T>(INamedObject<T> obj) => Objects.Add(obj);
-    
-    private IAction<TSut> Action { get; }
+    private ISutArrangement<TSut> Action { get; }
 }

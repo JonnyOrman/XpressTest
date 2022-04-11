@@ -1,5 +1,3 @@
-using Moq;
-
 namespace XpressTest;
 
 public interface IVoidMockVerifierCreator<TSut>

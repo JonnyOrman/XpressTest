@@ -3,44 +3,127 @@ namespace XpressTest;
 public class DependencyBuilder<TSut, TDependency>
     :
         Builder<TDependency, IDependencyBuilderChainer<TSut>>,
-    IDependencyBuilder<TSut>
+        IDependencyBuilder<TSut>
     where TSut : class
-    where TDependency : class
 {
     public DependencyBuilder(
         TDependency dependency,
-        IObjectSetter<TDependency> setter,
-        IDependencyBuilderChainer<TSut> dependencyBuilderChainer
-            )
+        IArrangementSetter<TDependency> valueDependencySetter,
+        IDependencyBuilderChainer<TSut> valueDependencyBuilderChainer
+    )
         : base(
             dependency,
-            setter,
-            dependencyBuilderChainer
-            )
+            valueDependencySetter,
+            valueDependencyBuilderChainer
+        )
     {
     }
 
-    public IValueDependencyBuilder<TSut> With<TNewDependency>(TNewDependency newDependency)
+    public ISutPropertyTargeter<TSut> WhenItIsConstructed()
     {
-        return Chain(() => _chainer.ComposeDependencyBuilder(
-            newDependency
+        return Chain(() => _chainer.StartSutAsserter());
+    }
+
+    public IVoidAsserter<TSut> WhenIt(Action<TSut> func)
+    {
+        return Chain(() => _chainer.StartVoidAsserter(
+            func
         ));
     }
 
-    public IMockDependencyBuilder<TSut, TNewDependency> WithA<TNewDependency>() where TNewDependency : class
+    public IMockDependencySetupBuilder<TSut, TMockDependency> WithA<TMockDependency>()
+        where TMockDependency : class
     {
-        return Chain(() => _chainer.ComposeMockDependencyBuilder<TNewDependency>());
+        return Chain(() => _chainer.StartMockDependencyBuilder<TMockDependency>());
     }
 
-    public ISutAsserter<TSut> WhenItIsConstructed()
+    public IMockDependencySetupBuilder<TSut, TMockDependency> WithA<TMockDependency>(string name)
+        where TMockDependency : class
     {
-        return Chain(() => _chainer.ComposeAsserter());
+        return Chain(() => _chainer.StartNamedMockDependencyBuilder<TMockDependency>(name));
     }
 
-    public IVoidAsserter<TSut> WhenIt(System.Action<TSut> action)
+    public IDependencyBuilder<TSut> With<TNewDependency>(TNewDependency newDependency)
     {
-        return Chain(() => _chainer.ComposeAsserter(
-            action
-            ));
+        return Chain(() => _chainer.StartValueDependencyBuilder(newDependency));
+    }
+
+    public IMockDependencySetupBuilder<TSut, TMock> WithTheMock<TMock>()
+        where TMock : class
+    {
+        return Chain(() => _chainer.StartExistingMockDependencyBuilder<TMock>());
+    }
+
+    public IDependencyBuilder<TSut> WithThe<TObject>(string name)
+    {
+        return Chain(() => _chainer.StartNewExistingObjectBuilder<TObject>(
+            name
+        ));
+    }
+
+    public IDependencyBuilder<TSut> WithThe<TNewDependency>()
+    {
+        return Chain(() => _chainer.ComposeDependencyBuilder<TNewDependency>());
+    }
+
+    public IDependencyBuilder<TSut> With<TNewDependency>(
+        TNewDependency newDependency,
+        string name
+    )
+    {
+        return Chain(() => _chainer.ComposeDependencyBuilder(
+            newDependency,
+            name
+        ));
+    }
+
+    public IVoidAsserter<TSut> WhenIt(Action<ISutArrangement<TSut>> func)
+    {
+        return Chain(() => _chainer.ComposeMockAsserter(
+            func
+        ));
+    }
+
+    public IResultAsserter<TSut, TResult> WhenIt<TResult>(
+        Func<ISutArrangement<TSut>, TResult> func
+    )
+    {
+        return Chain(() => _chainer.StartResultAsserter(
+            func
+        ));
+    }
+
+    public IResultAsserter<TSut, TResult> WhenIt<TResult>(Func<IReadArrangement, Func<TSut, TResult>> func)
+    {
+        throw new NotImplementedException();
+    }
+
+    public IResultAsserter<TSut, TResult> WhenIt<TResult>(Func<TSut, TResult> func)
+    {
+        return Chain(() => _chainer.ComposeMockAsserter(
+            func
+        ));
+    }
+
+    public IAsyncResultAsserter<TSut, TResult> WhenItAsync<TResult>(Func<ISutArrangement<TSut>, Task<TResult>> func)
+    {
+        _objectSetter.Set(_obj);
+        
+        Task<IAsyncResultAsserter<TSut, TResult>> task = Task.Run(async () => await _chainer.ComposeMockAsserter(
+            func
+        ));
+
+        return task.Result;
+    }
+
+    public IAsyncResultAsserter<TSut, TResult> WhenItAsync<TResult>(Func<TSut, Task<TResult>> func)
+    {
+        _objectSetter.Set(_obj);
+        
+        Task<IAsyncResultAsserter<TSut, TResult>> task = Task.Run(async () => await _chainer.ComposeMockAsserter(
+            func
+        ));
+    
+        return task.Result;
     }
 }

@@ -1,21 +1,15 @@
-using Moq;
-
 namespace XpressTest;
 
-public class MockObjectSetter<TObject> : IMockObjectSetter<TObject>
+public class MockObjectSetter<TObject> :
+    ArrangementSetter<IMock<TObject>>
     where TObject : class
 {
-    private readonly IArrangement _arrangement;
-
     public MockObjectSetter(
         IArrangement arrangement
-        )
+    ) : base(
+        arrangement,
+        (arrangement, mock) => arrangement.Add(mock)
+    )
     {
-        _arrangement = arrangement;
-    }
-    
-    public void Set(Mock<TObject> mock)
-    {
-        _arrangement.Add(mock);
     }
 }

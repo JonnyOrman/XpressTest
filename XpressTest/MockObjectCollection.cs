@@ -1,33 +1,32 @@
-using Moq;
-
 namespace XpressTest;
 
 public class MockObjectCollection : IMockObjectCollection
 {
-    private readonly IDictionary<string, Mock> _dictionary;
-    private readonly ICollection<Mock> _collection;
+    private readonly IDictionary<string, IMock> _dictionary;
+    private readonly ICollection<IMock> _collection;
 
     public MockObjectCollection()
     {
-        _dictionary = new Dictionary<string, Mock>();
-        _collection = new List<Mock>();
+        _dictionary = new Dictionary<string, IMock>();
+        _collection = new List<IMock>();
     }
     
-    public void Add<T>(Mock<T> mock) where T : class
+    public void Add<T>(IMock<T> mock) where T : class
     {
         _collection.Add(mock);
     }
 
     public void Add<T>(INamedMock<T> namedMock) where T : class
     {
-        _dictionary[namedMock.Name] = namedMock.Mock;
+        _collection.Add(namedMock);
+        _dictionary[namedMock.Name] = namedMock;
     }
 
-    public Mock<TMock> Get<TMock>() where TMock : class
+    public IMock<TMock> Get<TMock>() where TMock : class
     {
         foreach (var mock in _collection)
         {
-            if(mock is Mock<TMock> typedMock)
+            if(mock is IMock<TMock> typedMock)
             {
                 return typedMock;
             }
@@ -36,14 +35,14 @@ public class MockObjectCollection : IMockObjectCollection
         throw new Exception($"No mock of type {typeof(TMock).Name} registered");
     }
 
-    public Mock<TMock> Get<TMock>(
+    public IMock<TMock> Get<TMock>(
         string name
         )
         where TMock : class
     {
         var mock = _dictionary[name];
 
-        var castMock = mock as Mock<TMock>;
+        var castMock = mock as IMock<TMock>;
 
         return castMock;
     }

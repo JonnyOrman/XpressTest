@@ -3,7 +3,7 @@ namespace XpressTest;
 public interface IResultAsserterCreator<TSut>
 {
     IResultAsserter<TSut, TResult> Create<TResult>(
-        Func<IAction<TSut>, TResult> func
+        Func<ISutArrangement<TSut>, TResult> func
         );
     
     IResultAsserter<TSut, TResult> Create<TResult>(
@@ -11,11 +11,11 @@ public interface IResultAsserterCreator<TSut>
     );
     
     IResultAsserter<TSut, TResult> Create<TResult>(
-        Func<IArrangement, Func<TSut, TResult>> func
+        Func<IReadArrangement, Func<TSut, TResult>> func
     );
     
     Task<IAsyncResultAsserter<TSut, TResult>> CreateAsync<TResult>(
-        Func<IAction<TSut>, Task<TResult>> func
+        Func<ISutArrangement<TSut>, Task<TResult>> func
     );
     
     Task<IAsyncResultAsserter<TSut, TResult>> CreateAsync<TResult>(

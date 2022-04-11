@@ -16,7 +16,7 @@ public class VoidMockCounterVerifierCreator<TMock, TAsserter>
     }
     
     public IMockCounterVerifier<TAsserter> Create(
-        Expression<System.Action<TMock>> expression
+        Expression<Action<TMock>> expression
         )
     {
         var mockCallVerifier = _voidMockCallVerifierCreator.Create(

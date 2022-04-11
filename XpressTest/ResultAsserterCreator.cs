@@ -18,9 +18,9 @@ public class ResultAsserterCreator<TSut>
     }
 
     public IResultAsserter<TSut, TResult> Create<TResult>(
-        Func<IAction<TSut>, TResult> func
+        Func<ISutArrangement<TSut>, TResult> func
     ) =>
-        CreateResultAsserter(sut => func.Invoke(new Action<TSut>(
+        CreateResultAsserter(sut => func.Invoke(new SutArrangement<TSut>(
             sut,
             _arrangement
         )));
@@ -31,14 +31,14 @@ public class ResultAsserterCreator<TSut>
         CreateResultAsserter(sut => func.Invoke(sut));
 
     public IResultAsserter<TSut, TResult> Create<TResult>(
-        Func<IArrangement, Func<TSut, TResult>> func
+        Func<IReadArrangement, Func<TSut, TResult>> func
     ) =>
         CreateResultAsserter(sut => func.Invoke(_arrangement).Invoke(sut));
 
     public async Task<IAsyncResultAsserter<TSut, TResult>> CreateAsync<TResult>(
-        Func<IAction<TSut>, Task<TResult>> func
+        Func<ISutArrangement<TSut>, Task<TResult>> func
     ) =>
-        await CreateAsyncResultAsserter(async sut => await func.Invoke(new Action<TSut>(
+        await CreateAsyncResultAsserter(async sut => await func.Invoke(new SutArrangement<TSut>(
             sut,
             _arrangement
         )));
@@ -54,9 +54,14 @@ public class ResultAsserterCreator<TSut>
 
         var result = resultFunc.Invoke(sut);
 
-        var resultPropertyTargeter = new ResultPropertyTargeter<TResult>(
-            result,
+        var sutArrangement = new SutArrangement<TSut>(
+            sut,
             _arrangement
+        );
+
+        var resultPropertyTargeter = new ResultPropertyTargeter<TSut, TResult>(
+            result,
+            sutArrangement
         );
 
         var mockCounterVerifierCreatorComposer =
@@ -76,10 +81,9 @@ public class ResultAsserterCreator<TSut>
 
         return new ResultAsserter<TSut, TResult>(
             result,
-            _arrangement,
+            sutArrangement,
             resultPropertyTargeter,
-            resultMockVerifierCreator,
-            sut
+            resultMockVerifierCreator
         );
     }
 
@@ -90,6 +94,11 @@ public class ResultAsserterCreator<TSut>
         var sut = _sutComposer.Compose();
 
         var result = await resultFunc.Invoke(sut);
+
+        var sutArrangement = new SutArrangement<TSut>(
+            sut,
+            _arrangement
+        );
 
         var mockCounterVerifierCreatorComposer =
             new MockCounterVerifierCreatorComposer<IResultAsserter<TSut, TResult>>(
@@ -108,9 +117,8 @@ public class ResultAsserterCreator<TSut>
 
         return new AsyncResultAsserter<TSut, TResult>(
             result,
-            _arrangement,
-            resultMockVerifierCreator,
-            sut
+            sutArrangement,
+            resultMockVerifierCreator
         );
     }
 }

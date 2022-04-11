@@ -1,6 +1,6 @@
 namespace XpressTest;
 
-public class SutAsserter<TSut> : ISutAsserter<TSut>
+public class SutAsserter<TSut> : ISutPropertyTargeter<TSut>
 {
     private readonly ISutPropertyTargeter<TSut> _sutPropertyTargeter;
 

@@ -1,18 +1,15 @@
 namespace XpressTest;
 
-public class ObjectSetter<TObject> : IObjectSetter<TObject>
+public class ObjectSetter<TObject>
+    :
+        ArrangementSetter<TObject>
 {
-    private readonly IArrangement _arrangement;
-
     public ObjectSetter(
         IArrangement arrangement
-        )
+    ) : base(
+        arrangement,
+        (arrangement, obj) => arrangement.Add(obj)
+    )
     {
-        _arrangement = arrangement;
-    }
-    
-    public void Set(TObject obj)
-    {
-        _arrangement.Add(obj);
     }
 }

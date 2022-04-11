@@ -1,6 +1,6 @@
 namespace XpressTest;
 
-public interface IResultPropertyNullAsserter<TResult>
+public interface IResultPropertyNullAsserter<TSut, TResult>
 {
-    IResultPropertyTargeter<TResult> Assert();
+    IResultPropertyTargeter<TSut, TResult> Assert();
 }

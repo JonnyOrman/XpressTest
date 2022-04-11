@@ -8,12 +8,12 @@ public class SutPropertyAsserter<TSut, TProperty>
 {
     private readonly TSut _sut;
     private readonly Func<TSut, TProperty> _targetFunc;
-    private readonly IArrangement _arrangement;
+    private readonly ISutArrangement<TSut> _arrangement;
 
     public SutPropertyAsserter(
         TSut sut,
         Func<TSut, TProperty> targetFunc,
-        IArrangement arrangement
+        ISutArrangement<TSut> arrangement
         )
     {
         _sut = sut;
@@ -27,7 +27,21 @@ public class SutPropertyAsserter<TSut, TProperty>
     public ISutPropertyTargeter<TSut> ShouldBe(TProperty value) =>
         PerformAssertion(actualResult => Assert.Equal(value, actualResult));
 
-    private ISutPropertyTargeter<TSut> PerformAssertion(System.Action<TProperty> assertion)
+    public ISutPropertyTargeter<TSut> ShouldBe(Func<ISutArrangement<TSut>, TProperty> func)
+    {
+        var expectedResult = func.Invoke(_arrangement);
+        
+        var actualResult = _targetFunc.Invoke(_sut);
+
+        Assert.Equal(expectedResult, actualResult);
+
+        return new SutPropertyTargeter<TSut>(
+            _sut,
+            _arrangement
+        );
+    }
+
+    private ISutPropertyTargeter<TSut> PerformAssertion(Action<TProperty> assertion)
     {
         var actualResult = _targetFunc.Invoke(_sut);
 

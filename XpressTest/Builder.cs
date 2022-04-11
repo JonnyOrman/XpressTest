@@ -3,12 +3,12 @@ namespace XpressTest;
 public class Builder<TObject, TChainer>
 {
     protected readonly TObject _obj;
-    protected readonly IObjectSetter<TObject> _objectSetter;
+    protected readonly IArrangementSetter<TObject> _objectSetter;
     protected readonly TChainer _chainer;
 
     public Builder(
         TObject obj,
-        IObjectSetter<TObject> objectSetter,
+        IArrangementSetter<TObject> objectSetter,
         TChainer chainer
         )
     {

@@ -1,15 +1,9 @@
 ﻿namespace XpressTest;
 
-public interface IMockResultDependencyBuilder<TSut, TDependency, TResult>
+public interface IMockResultDependencyBuilder<TSut, TResult>
+:
+    IReturnsMockDependencyResultBuilder<TSut, TResult>,
+    IReturnsArrangementResultBuilder<TSut, TResult>,
+    IReturnsMockBuilder<TResult, IDependencyBuilder<TSut>>
 {
-    IMockDependencyBuilder<TSut, TDependency> AndReturns(
-        TResult expectedResult
-        );
-
-    IMockDependencyBuilder<TSut, TDependency> AndReturns(
-        Func<IArrangement, TResult> expectedResultFunc
-        );
-
-    IMockDependencyBuilder<TSut, TDependency> AndReturns<TReturn>()
-        where TReturn : class, TResult;
 }

@@ -17,7 +17,7 @@ public class ArrangementResultMockCounterVerifierCreator<TMock, TAsserter>
     }
     
     public IMockCounterVerifier<TAsserter> Create<TMockResult>(
-        Func<IArrangement, Expression<Func<TMock, TMockResult>>> func,
+        Func<IReadArrangement, Expression<Func<TMock, TMockResult>>> func,
         TAsserter asserter
         )
     {

@@ -24,7 +24,7 @@ Each test has its own state that allows you to register variables during arrange
 public void CreateEntity() =>
     GivenA<Creator>
             .AndGiven(new EntityParameters("EntityName"))
-        .WhenIt(action => action.Sut.Create(action.GetThe<EntityParameters>()))
+        .WhenIt(arrangement => arrangement.Sut.Create(arrangement.GetThe<EntityParameters>()))
         .ThenTheResult(result => result.Id).ShouldBe(1)
         .ThenTheResult(result => result.Name).ShouldBe("EntityName");
 ```
@@ -36,7 +36,7 @@ public void CreateEntity() =>
     GivenA<Creator>
             .AndGiven(new EntityParameters("EntityName"), "ParametersToUse")
             .AndGiven(new EntityParameters("AnotherEntityName"), "SomeOtherParameters")
-        .WhenIt(action => action.Sut.Create(action.GetObject<EntityParameters>("ParametersToUse")))
+        .WhenIt(arrangement => arrangement.Sut.Create(arrangement.GetThe<EntityParameters>("ParametersToUse")))
         .ThenTheResult(result => result.Id).ShouldBe(1)
         .ThenTheResult(result => result.Name).ShouldBe("EntityName");
 ```
@@ -54,11 +54,11 @@ public void ProcessValidParameters() =>
         .WithA<ICreator>()
             .ThatDoes<Entity>(arrangement => creator => creator.Create(arrangement.GetThe<EntityParameters>()))
             .AndReturns(arrangement => arrangement.GetThe<Entity>())
-        .WhenIt(action => action.Sut.Process(action.GetThe<EntityParameters>()))
-        .Then<IValidator>()
+        .WhenIt(arrangement => arrangement.Sut.Process(arrangement.GetThe<EntityParameters>()))
+        .ThenThe<IValidator>()
             .Should<bool>(arrangement => validator => validator.IsValid(arrangement.GetThe<EntityParameters>()))
             .Once()
-        .Then<ICreator>()
+        .ThenThe<ICreator>()
             .Should<Entity>(arrangement => creator => creator.Create(arrangement.GetThe<EntityParameters>()))
             .Once()
         .ThenTheResultShouldBe(arrangement => arrangement.GetThe<Entity>());
@@ -70,5 +70,5 @@ See the [XpressTest.Examples](https://github.com/JonnyOrman/XpressTest/tree/main
 
 Install by running the following:
 ```
-dotnet add package XpressTest --version 1.0.0-alpha.13
+dotnet add package XpressTest --version 1.0.0-alpha.14
 ```

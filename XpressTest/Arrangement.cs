@@ -1,5 +1,3 @@
-using Moq;
-
 namespace XpressTest;
 
 public class Arrangement : IArrangement
@@ -23,23 +21,25 @@ public class Arrangement : IArrangement
 
     public T GetThe<T>() => Objects.Get<T>();
 
-    public T GetObject<T>(string name) => Objects.Get<T>(name);
+    public T GetThe<T>(string name) => Objects.Get<T>(name);
 
     public void Add<T>(T obj) => Objects.Add(obj);
 
     public void Add<T>(INamedObject<T> namedObject) => Objects.Add(namedObject);
 
-    public void Add<T>(Mock<T> mock) where T : class => MockObjects.Add(mock);
+    public void Add<T>(IMock<T> mock) where T : class => MockObjects.Add(mock);
 
     public void Add<T>(INamedMock<T> mock) where T : class => MockObjects.Add(mock);
 
-    public Mock<TMock> GetMock<TMock>() where TMock : class => MockObjects.Get<TMock>();
-    
-    public Mock<TMock> GetMock<TMock>(string name) where TMock : class => MockObjects.Get<TMock>(name);
+    public IMock<TMock> GetTheMock<TMock>() where TMock : class => MockObjects.Get<TMock>();
 
-    public T GetMockObject<T>() where T : class => GetMock<T>().Object;
+    public Moq.Mock<TMock> GetTheMoq<TMock>() where TMock : class => GetTheMock<TMock>().MoqMock;
 
-    public T GetMockObject<T>(string name) where T : class => GetMock<T>(name).Object;
+    public IMock<TMock> GetTheMock<TMock>(string name) where TMock : class => MockObjects.Get<TMock>(name);
+
+    public T GetTheMockObject<T>() where T : class => GetTheMock<T>().Object;
+
+    public T GetTheMockObject<T>(string name) where T : class => GetTheMock<T>(name).Object;
 
     public void AddDependency<TDependency>(TDependency dependency)
     {

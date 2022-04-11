@@ -1,19 +1,19 @@
 ﻿namespace XpressTest;
 
-public class ResultPropertyTargeter<TResult> : IResultPropertyTargeter<TResult>
+public class ResultPropertyTargeter<TSut, TResult> : IResultPropertyTargeter<TSut, TResult>
 {
     private readonly TResult _result;
-    private readonly IArrangement _arrangement;
+    private readonly ISutArrangement<TSut> _arrangement;
 
     public ResultPropertyTargeter(
         TResult result,
-        IArrangement arrangement)
+        ISutArrangement<TSut> arrangement)
     {
         _result = result;
         _arrangement = arrangement;
     }
 
-    public IResultPropertyAsserter<TResult, TProperty> ThenTheResult<TProperty>(
+    public IResultPropertyAsserter<TSut, TResult, TProperty> ThenTheResult<TProperty>(
         Func<TResult, TProperty> targetFunc
         )
     {
@@ -22,7 +22,7 @@ public class ResultPropertyTargeter<TResult> : IResultPropertyTargeter<TResult>
             targetFunc
             );
         
-        var resultPropertyValueAsserter = new ResultPropertyValueAsserter<TResult, TProperty>(
+        var resultPropertyValueAsserter = new ResultPropertyValueAsserter<TSut, TResult, TProperty>(
             resultPropertyValueComparer,
             this
         );
@@ -32,12 +32,12 @@ public class ResultPropertyTargeter<TResult> : IResultPropertyTargeter<TResult>
             targetFunc
             );
         
-        var resultPropertyNullAsserter = new ResultPropertyNullAsserter<TResult>(
+        var resultPropertyNullAsserter = new ResultPropertyNullAsserter<TSut, TResult>(
             resultPropertyNullComparer,
             this
             );
         
-        return new ResultPropertyAsserter<TResult, TProperty>(
+        return new ResultPropertyAsserter<TSut, TResult, TProperty>(
             resultPropertyValueAsserter,
             resultPropertyNullAsserter,
             _arrangement
@@ -49,7 +49,7 @@ public class ResultPropertyTargeter<TResult> : IResultPropertyTargeter<TResult>
         _result.ThenTheResultShouldBe(expectedResult);
     }
 
-    public void ThenTheResultShouldBe(Func<IArrangement, TResult> func)
+    public void ThenTheResultShouldBe(Func<ISutArrangement<TSut>, TResult> func)
     {
         var expectedResult = func.Invoke(_arrangement);
         

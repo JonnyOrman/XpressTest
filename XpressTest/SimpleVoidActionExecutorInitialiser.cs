@@ -2,7 +2,7 @@
 
 public static class SimpleVoidActionExecutorInitialiser<TSut>
 {
-    public static ISimpleVoidActionExecutor Initialise(System.Action<TSut> action)
+    public static ISimpleVoidActionExecutor Initialise(Action<TSut> action)
     {
         var sut = Activator.CreateInstance<TSut>();
 

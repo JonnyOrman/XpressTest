@@ -3,7 +3,7 @@ namespace XpressTest;
 public class SutPropertyTargeter<TSut> : ISutPropertyTargeter<TSut>
 {
     private readonly TSut _sut;
-    private readonly IArrangement _arrangement;
+    private readonly ISutArrangement<TSut> _arrangement;
 
     public SutPropertyTargeter(
         TSut sut
@@ -14,7 +14,7 @@ public class SutPropertyTargeter<TSut> : ISutPropertyTargeter<TSut>
     
     public SutPropertyTargeter(
         TSut sut,
-        IArrangement arrangement
+        ISutArrangement<TSut> arrangement
         ) : this(sut)
     {
         _arrangement = arrangement;

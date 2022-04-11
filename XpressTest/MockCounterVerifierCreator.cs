@@ -35,7 +35,7 @@ where TMock : class
     }
 
     public IMockCounterVerifier<TAsserter> Create<TMockResult>(
-        Func<IArrangement, Expression<Func<TMock, TMockResult>>> func,
+        Func<IReadArrangement, Expression<Func<TMock, TMockResult>>> func,
         TAsserter asserter
         )
     {
@@ -46,7 +46,7 @@ where TMock : class
     }
 
     public IMockCounterVerifier<TAsserter> Create(
-        Func<IArrangement, Expression<System.Action<TMock>>> func,
+        Func<IReadArrangement, Expression<Action<TMock>>> func,
         TAsserter asserter
         )
     {
@@ -57,7 +57,7 @@ where TMock : class
     }
 
     public IMockCounterVerifier<TAsserter> Create(
-        Expression<System.Action<TMock>> expression
+        Expression<Action<TMock>> expression
         )
     {
         return _voidMockCounterVerifierCreator.Create(

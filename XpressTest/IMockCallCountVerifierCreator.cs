@@ -10,6 +10,6 @@ public interface IMockCallCountVerifierCreator<TMock>
         );
     
     IMockCallCountVerifier Create(
-        Expression<System.Action<TMock>> expression
+        Expression<Action<TMock>> expression
     );
 }

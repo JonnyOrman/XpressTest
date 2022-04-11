@@ -2,7 +2,7 @@ namespace XpressTest;
 
 public static class DependencySetterInitialiser<TDependency>
 {
-    public static IObjectSetter<TDependency> Initialise(
+    public static IArrangementSetter<TDependency> Initialise(
         IArrangement arrangement
         )
     {

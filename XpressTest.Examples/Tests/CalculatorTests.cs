@@ -32,7 +32,9 @@ public class CalculatorTests
         GivenA<Calculator>
                 .AndGiven(3, "Value1")
                 .AndGiven(2, "Value2")
-            .WhenIt<int>(arrangement => calculator => calculator.Multiply(arrangement.GetObject<int>("Value1"), arrangement.GetObject<int>("Value2")))
+            .WhenIt<int>(arrangement => calculator => calculator.Multiply(
+                    arrangement.GetThe<int>("Value1"),
+                    arrangement.GetThe<int>("Value2")))
             .ThenTheResultShouldBe(6);
     
     [Fact]
@@ -41,8 +43,10 @@ public class CalculatorTests
                 .AndGiven(3, "Value1")
                 .AndGiven(2, "Value2")
                 .AndGiven(6, "ExpectedResult")
-            .WhenIt<int>(arrangement => calculator => calculator.Multiply(arrangement.GetObject<int>("Value1"), arrangement.GetObject<int>("Value2")))
-            .ThenTheResultShouldBe(arrangement => arrangement.GetObject<int>("ExpectedResult"));
+            .WhenIt<int>(arrangement => calculator => calculator.Multiply(
+                    arrangement.GetThe<int>("Value1"),
+                    arrangement.GetThe<int>("Value2")))
+            .ThenTheResultShouldBe(arrangement => arrangement.GetThe<int>("ExpectedResult"));
 
     [Fact]
     public void DivideNumbers() =>

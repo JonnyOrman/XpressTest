@@ -1,23 +1,23 @@
 namespace XpressTest;
 
-public class ResultPropertyValueAsserter<TResult, TProperty>
+public class ResultPropertyValueAsserter<TSut, TResult, TProperty>
 :
-    IResultPropertyValueAsserter<TResult, TProperty>
+    IResultPropertyValueAsserter<TSut, TResult, TProperty>
 {
     private readonly IResultPropertyValueComparer<TProperty> _resultPropertyValueComparer;
 
-    private readonly IResultPropertyTargeter<TResult> _resultPropertyTargeter;
+    private readonly IResultPropertyTargeter<TSut, TResult> _resultPropertyTargeter;
     
     public ResultPropertyValueAsserter(
         IResultPropertyValueComparer<TProperty> resultPropertyValueComparer,
-        IResultPropertyTargeter<TResult>  resultPropertyTargeter
+        IResultPropertyTargeter<TSut, TResult>  resultPropertyTargeter
         )
     {
         _resultPropertyValueComparer = resultPropertyValueComparer;
         _resultPropertyTargeter = resultPropertyTargeter;
     }
     
-    public IResultPropertyTargeter<TResult> Assert(TProperty expectedValue)
+    public IResultPropertyTargeter<TSut, TResult> Assert(TProperty expectedValue)
     {
         _resultPropertyValueComparer.Compare(expectedValue);
 

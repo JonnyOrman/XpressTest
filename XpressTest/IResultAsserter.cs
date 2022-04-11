@@ -1,21 +1,18 @@
-using Moq;
-
 namespace XpressTest;
 
 public interface IResultAsserter<TSut, TResult>
     :
-        IResultPropertyTargeter<TResult>,
+        IResultPropertyTargeter<TSut, TResult>,
         INullResultAsserter,
-        INotNullResultAsserter
+        INotNullResultAsserter,
+        IThenResultActionAsserter<TResult>
 {
-    void Then(System.Action<IAssertion<TResult>> action);
-
-    IResultMockVerifier<TSut, TResult, TMock> Then<TMock>()
+    IResultMockVerifier<TSut, TResult, TMock> ThenThe<TMock>()
         where TMock : class;
     
-    IResultMockVerifier<TSut, TResult, TMock> Then<TMock>(string name)
+    IResultMockVerifier<TSut, TResult, TMock> ThenThe<TMock>(string name)
         where TMock : class;
     
-    IResultMockVerifier<TSut, TResult, TMock> Then<TMock>(Mock<TMock> mock)
+    IResultMockVerifier<TSut, TResult, TMock> Then<TMock>(Moq.Mock<TMock> mock)
         where TMock : class;
 }

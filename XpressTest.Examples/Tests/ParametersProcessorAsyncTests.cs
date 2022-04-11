@@ -17,11 +17,11 @@ public class ParametersProcessorAsyncTests
             .WithA<ICreatorAsync>()
                 .ThatDoesAsync<Entity>(arrangement => creator => creator.CreateAsync(arrangement.GetThe<EntityParameters>()))
                 .AndReturns(arrangement => arrangement.GetThe<Entity>())
-            .WhenItAsync(action => action.Sut.Process(action.GetThe<EntityParameters>()))
-            .ThenAsync<IValidator>()
+            .WhenItAsync(arrangement => arrangement.Sut.Process(arrangement.GetThe<EntityParameters>()))
+            .ThenTheAsync<IValidator>()
                 .Should(arrangement => validator => validator.IsValid(arrangement.GetThe<EntityParameters>()))
                 .Once()
-            .ThenAsync<ICreatorAsync>()
+            .ThenTheAsync<ICreatorAsync>()
                 .Should(arrangement => creator => creator.CreateAsync(arrangement.GetThe<EntityParameters>()))
                 .Once()
             .ThenTheResultShouldBe(arrangement => arrangement.GetThe<Entity>());
@@ -41,10 +41,10 @@ public class ParametersProcessorAsyncTests
                 .ThatDoesAsync(creator => creator.CreateAsync(entityParameters))
                 .AndReturns(entity)
             .WhenItAsync(sut => sut.Process(entityParameters))
-            .ThenAsync<IValidator>()
+            .ThenTheAsync<IValidator>()
                 .Should(validator => validator.IsValid(entityParameters))
                 .Once()
-            .ThenAsync<ICreatorAsync>()
+            .ThenTheAsync<ICreatorAsync>()
                 .Should(creator => creator.CreateAsync(entityParameters))
                 .Once()
             .ThenTheResultShouldBe(entity);
@@ -67,8 +67,8 @@ public class ParametersProcessorAsyncTests
             .WhenItAsync(sut => sut.Process(entityParameters))
             .ThenAsync(assertion =>
             {
-                assertion.GetMock<IValidator>().Verify(validator => validator.IsValid(entityParameters), Times.Once);
-                assertion.GetMock<ICreatorAsync>().Verify(creator => creator.CreateAsync(entityParameters), Times.Once);
+                assertion.GetTheMoq<IValidator>().Verify(validator => validator.IsValid(entityParameters), Times.Once);
+                assertion.GetTheMoq<ICreatorAsync>().Verify(creator => creator.CreateAsync(entityParameters), Times.Once);
                 Assert.Equal(entity, assertion.Result);
             });
     }
@@ -81,11 +81,11 @@ public class ParametersProcessorAsyncTests
                 .ThatDoes<bool>(arrangement => validator => validator.IsValid(arrangement.GetThe<EntityParameters>()))
                 .AndReturns(false)
             .WithA<ICreatorAsync>()
-            .WhenItAsync(action => action.Sut.Process(action.GetThe<EntityParameters>()))
-            .ThenAsync<IValidator>()
+            .WhenItAsync(arrangement => arrangement.Sut.Process(arrangement.GetThe<EntityParameters>()))
+            .ThenTheAsync<IValidator>()
                 .Should<bool>(arrangement => validator => validator.IsValid(arrangement.GetThe<EntityParameters>()))
                 .Once()
-            .ThenAsync<ICreatorAsync>()
+            .ThenTheAsync<ICreatorAsync>()
                 .Should(creator => creator.CreateAsync(It.IsAny<EntityParameters>()))
                 .Never()
             .ThenTheResultShouldBeNull();
@@ -102,10 +102,10 @@ public class ParametersProcessorAsyncTests
                 .AndReturns(false)
             .WithA<ICreatorAsync>()
             .WhenItAsync(sut => sut.Process(entityParameters))
-            .ThenAsync<IValidator>()
+            .ThenTheAsync<IValidator>()
                 .Should(validator => validator.IsValid(entityParameters))
                 .Once()
-            .ThenAsync<ICreatorAsync>()
+            .ThenTheAsync<ICreatorAsync>()
                 .Should(creator => creator.CreateAsync(It.IsAny<EntityParameters>()))
                 .Never()
             .ThenTheResultShouldBeNull();
@@ -125,8 +125,8 @@ public class ParametersProcessorAsyncTests
             .WhenItAsync(sut => sut.Process(entityParameters))
             .ThenAsync(assertion =>
             {
-                assertion.GetMock<IValidator>().Verify(validator => validator.IsValid(entityParameters), Times.Once);
-                assertion.GetMock<ICreatorAsync>().Verify(creator => creator.CreateAsync(It.IsAny<EntityParameters>()), Times.Never);
+                assertion.GetTheMoq<IValidator>().Verify(validator => validator.IsValid(entityParameters), Times.Once);
+                assertion.GetTheMoq<ICreatorAsync>().Verify(creator => creator.CreateAsync(It.IsAny<EntityParameters>()), Times.Never);
                 Assert.Null(assertion.Result);
             });
     }

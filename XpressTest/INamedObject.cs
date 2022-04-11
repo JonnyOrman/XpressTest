@@ -1,8 +1,8 @@
 ﻿namespace XpressTest;
 
 public interface INamedObject<T>
+:
+    IObject<T>
 {
-    T Object { get; }
-
     string Name { get; }
 }

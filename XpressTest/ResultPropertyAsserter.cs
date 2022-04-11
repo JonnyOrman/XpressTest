@@ -1,15 +1,15 @@
 ﻿namespace XpressTest;
 
-public class ResultPropertyAsserter<TResult, TProperty> : IResultPropertyAsserter<TResult, TProperty>
+public class ResultPropertyAsserter<TSut, TResult, TProperty> : IResultPropertyAsserter<TSut, TResult, TProperty>
 {
-    private readonly IResultPropertyValueAsserter<TResult, TProperty> _resultPropertyValueAsserter;
-    private readonly IResultPropertyNullAsserter<TResult> _resultPropertyNullAsserter;
-    private readonly IArrangement _arrangement;
+    private readonly IResultPropertyValueAsserter<TSut, TResult, TProperty> _resultPropertyValueAsserter;
+    private readonly IResultPropertyNullAsserter<TSut, TResult> _resultPropertyNullAsserter;
+    private readonly ISutArrangement<TSut> _arrangement;
 
     public ResultPropertyAsserter(
-        IResultPropertyValueAsserter<TResult, TProperty> resultPropertyValueAsserter,
-        IResultPropertyNullAsserter<TResult> resultPropertyNullAsserter,
-        IArrangement arrangement
+        IResultPropertyValueAsserter<TSut, TResult, TProperty> resultPropertyValueAsserter,
+        IResultPropertyNullAsserter<TSut, TResult> resultPropertyNullAsserter,
+        ISutArrangement<TSut> arrangement
         )
     {
         _resultPropertyValueAsserter = resultPropertyValueAsserter;
@@ -17,19 +17,19 @@ public class ResultPropertyAsserter<TResult, TProperty> : IResultPropertyAsserte
         _arrangement = arrangement;
     }
 
-    public IResultPropertyTargeter<TResult> ShouldBe(TProperty expectedValue)
+    public IResultPropertyTargeter<TSut, TResult> ShouldBe(TProperty expectedValue)
     {
         return _resultPropertyValueAsserter.Assert(expectedValue);
     }
 
-    public IResultPropertyTargeter<TResult> ShouldBe(Func<IArrangement, TProperty> expectedValueFunc)
+    public IResultPropertyTargeter<TSut, TResult> ShouldBe(Func<IReadArrangement, TProperty> expectedValueFunc)
     {
         var expectedValue = expectedValueFunc.Invoke(_arrangement);
         
         return _resultPropertyValueAsserter.Assert(expectedValue);
     }
 
-    public IResultPropertyTargeter<TResult> ShouldBeNull()
+    public IResultPropertyTargeter<TSut, TResult> ShouldBeNull()
     {
         return _resultPropertyNullAsserter.Assert();
     }

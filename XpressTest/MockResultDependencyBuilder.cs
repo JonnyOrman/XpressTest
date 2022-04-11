@@ -1,22 +1,21 @@
-﻿using Moq;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 
 namespace XpressTest;
 
 public class MockResultDependencyBuilder<TSut, TDependency, TResult>
     :
-        IMockResultDependencyBuilder<TSut, TDependency, TResult>
+        IMockResultDependencyBuilder<TSut, TResult>
     where TDependency : class
 {
     private readonly Expression<Func<TDependency, TResult>> _func;
-    private readonly Mock<TDependency> _dependencyMock;
-    private readonly IMockDependencyBuilder<TSut, TDependency> _mockDependencyBuilder;
+    private readonly IMock<TDependency> _dependencyMock;
+    private readonly IDependencyBuilder<TSut> _mockDependencyBuilder;
     private readonly IArrangement _arrangement;
     
     public MockResultDependencyBuilder(
         Expression<Func<TDependency, TResult>> func,
-        Mock<TDependency> dependencyMock,
-        IMockDependencyBuilder<TSut, TDependency> mockDependencyBuilder,
+        IMock<TDependency> dependencyMock,
+        IDependencyBuilder<TSut> mockDependencyBuilder,
         IArrangement arrangement
         )
     {
@@ -26,32 +25,32 @@ public class MockResultDependencyBuilder<TSut, TDependency, TResult>
         _arrangement = arrangement;
     }
     
-    public IMockDependencyBuilder<TSut, TDependency> AndReturns(
+    public IDependencyBuilder<TSut> AndReturns(
         TResult result
         )
     {
-        _dependencyMock.Setup(_func).Returns(result);
+        _dependencyMock.MoqMock.Setup(_func).Returns(result);
 
         return _mockDependencyBuilder;
     }
 
-    public IMockDependencyBuilder<TSut, TDependency> AndReturns(
-        Func<IArrangement, TResult> resultFunc
+    public IDependencyBuilder<TSut> AndReturns(
+        Func<IReadArrangement, TResult> resultFunc
         )
     {
         var expectedResult = resultFunc.Invoke(_arrangement);
 
-        _dependencyMock.Setup(_func).Returns(expectedResult);
+        _dependencyMock.MoqMock.Setup(_func).Returns(expectedResult);
 
         return _mockDependencyBuilder;
     }
 
-    public IMockDependencyBuilder<TSut, TDependency> AndReturns<TReturn>()
+    public IDependencyBuilder<TSut> AndReturnsTheMock<TReturn>()
         where TReturn : class, TResult
     {
-        var result = _arrangement.GetMockObject<TReturn>();
+        var result = _arrangement.GetTheMockObject<TReturn>();
         
-        _dependencyMock.Setup(_func).Returns(result);
+        _dependencyMock.MoqMock.Setup(_func).Returns(result);
 
         return _mockDependencyBuilder;
     }

@@ -5,18 +5,18 @@ namespace XpressTest;
 
 public class MockAsyncResultDependencyBuilder<TSut, TDependency, TResult>
 :
-    IMockAsyncResultDependencyBuilder<TSut, TDependency, TResult>
+    IMockAsyncResultDependencyBuilder<TSut, TResult>
 where TDependency : class
 {
     private readonly Expression<Func<TDependency, Task<TResult>>> _expression;
-    private readonly Mock<TDependency> _dependencyMock;
-    private readonly IMockDependencyBuilder<TSut, TDependency> _mockDependencyBuilder;
+    private readonly IMock<TDependency> _dependencyMock;
+    private readonly IDependencyBuilder<TSut> _mockDependencyBuilder;
     private readonly IArrangement _arrangement;
 
     public MockAsyncResultDependencyBuilder(
         Expression<Func<TDependency, Task<TResult>>> expression,
-        Mock<TDependency> dependencyMock,
-        IMockDependencyBuilder<TSut, TDependency> mockDependencyBuilder,
+        IMock<TDependency> dependencyMock,
+        IDependencyBuilder<TSut> mockDependencyBuilder,
         IArrangement arrangement
         )
     {
@@ -26,23 +26,23 @@ where TDependency : class
         _arrangement = arrangement;
     }
     
-    public IMockDependencyBuilder<TSut, TDependency> AndReturns(
+    public IDependencyBuilder<TSut> AndReturns(
         TResult expectedResult
         )
     {
-        _dependencyMock.Setup(_expression).ReturnsAsync(expectedResult);
+        _dependencyMock.MoqMock.Setup(_expression).ReturnsAsync(expectedResult);
 
         return _mockDependencyBuilder;
     }
 
-    public IMockDependencyBuilder<TSut, TDependency> AndReturns(
-        Func<IArrangement, TResult> resultFunc
+    public IDependencyBuilder<TSut> AndReturns(
+        Func<IReadArrangement, TResult> resultFunc
         )
     {
         var expectedResult = resultFunc.Invoke(_arrangement);
-
-        _dependencyMock.Setup(_expression).ReturnsAsync(expectedResult);
-
+    
+        _dependencyMock.MoqMock.Setup(_expression).ReturnsAsync(expectedResult);
+    
         return _mockDependencyBuilder;
     }
 }

@@ -1,6 +1,6 @@
 namespace XpressTest;
 
-public interface IResultPropertyValueAsserter<TResult, TProperty>
+public interface IResultPropertyValueAsserter<TSut, TResult, TProperty>
 {
-    IResultPropertyTargeter<TResult> Assert(TProperty expectedValue);
+    IResultPropertyTargeter<TSut, TResult> Assert(TProperty expectedValue);
 }

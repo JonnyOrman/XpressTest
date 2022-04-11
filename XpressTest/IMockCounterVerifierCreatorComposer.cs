@@ -1,5 +1,3 @@
-using Moq;
-
 namespace XpressTest;
 
 public interface IMockCounterVerifierCreatorComposer<TAsserter>
@@ -10,7 +8,7 @@ public interface IMockCounterVerifierCreatorComposer<TAsserter>
         where TMock : class;
     
     IMockCounterVerifierCreator<TMock, TAsserter> Compose<TMock>(
-        Mock<TMock> mock,
+        IMock<TMock> mock,
         TAsserter asserter
     )
         where TMock : class;

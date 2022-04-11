@@ -1,4 +1,3 @@
-using Moq;
 using Xunit;
 
 namespace XpressTest;
@@ -7,43 +6,38 @@ public class ResultAsserter<TSut, TResult> : IResultAsserter<TSut, TResult>
     where TSut : class
 {
     private readonly TResult _result;
-    private readonly IArrangement _arrangement;
-    private readonly IResultPropertyTargeter<TResult> _resultPropertyTargeter;
+    private readonly ISutArrangement<TSut> _sutArrangement;
+    private readonly IResultPropertyTargeter<TSut, TResult> _resultPropertyTargeter;
     private readonly IResultMockVerifierCreator<TSut, TResult> _resultMockVerifierCreator;
-    private readonly TSut _sut;
 
     public ResultAsserter(
         TResult result,
-        IArrangement arrangement,
-        IResultPropertyTargeter<TResult> resultPropertyTargeter,
-        IResultMockVerifierCreator<TSut, TResult> resultMockVerifierCreator,
-        TSut sut
+        ISutArrangement<TSut> sutArrangement,
+        IResultPropertyTargeter<TSut, TResult> resultPropertyTargeter,
+        IResultMockVerifierCreator<TSut, TResult> resultMockVerifierCreator
         )
     {
         _result = result;
-        _arrangement = arrangement;
+        _sutArrangement = sutArrangement;
         _resultPropertyTargeter = resultPropertyTargeter;
         _resultMockVerifierCreator = resultMockVerifierCreator;
-        _sut = sut;
     }
     
     public void Then(
-        System.Action<IAssertion<TResult>> action
+        Action<IResultAssertion<TResult>> action
         )
     {
-        var sutAction = new Action<TSut>(_sut, _arrangement);
-        
         var assertion = new Assertion<TSut, TResult>(
             _result,
-            sutAction);
+            _sutArrangement);
 
         action.Invoke(assertion);
     }
 
-    public IResultMockVerifier<TSut, TResult, TMock> Then<TMock>()
+    public IResultMockVerifier<TSut, TResult, TMock> ThenThe<TMock>()
         where TMock : class
     {
-        var mock = _arrangement.GetMock<TMock>();
+        var mock = _sutArrangement.GetTheMock<TMock>();
         
         return _resultMockVerifierCreator.Create(
             mock,
@@ -51,10 +45,10 @@ public class ResultAsserter<TSut, TResult> : IResultAsserter<TSut, TResult>
         );
     }
 
-    public IResultMockVerifier<TSut, TResult, TMock> Then<TMock>(string name)
+    public IResultMockVerifier<TSut, TResult, TMock> ThenThe<TMock>(string name)
         where TMock : class
     {
-        var mock = _arrangement.GetMock<TMock>(name);
+        var mock = _sutArrangement.GetTheMock<TMock>(name);
         
         return _resultMockVerifierCreator.Create(
             mock,
@@ -63,10 +57,12 @@ public class ResultAsserter<TSut, TResult> : IResultAsserter<TSut, TResult>
     }
 
     public IResultMockVerifier<TSut, TResult, TMock> Then<TMock>(
-        Mock<TMock> mock
+        Moq.Mock<TMock> moqMock
         )
         where TMock : class
     {
+        var mock = new Mock<TMock>(moqMock);
+        
         return _resultMockVerifierCreator.Create(
             mock,
             this
@@ -78,7 +74,7 @@ public class ResultAsserter<TSut, TResult> : IResultAsserter<TSut, TResult>
         Assert.Null(_result);
     }
 
-    public IResultPropertyAsserter<TResult, TProperty> ThenTheResult<TProperty>(Func<TResult, TProperty> targetFunc)
+    public IResultPropertyAsserter<TSut, TResult, TProperty> ThenTheResult<TProperty>(Func<TResult, TProperty> targetFunc)
     {
         return _resultPropertyTargeter.ThenTheResult(targetFunc);
     }
@@ -88,9 +84,9 @@ public class ResultAsserter<TSut, TResult> : IResultAsserter<TSut, TResult>
         _resultPropertyTargeter.ThenTheResultShouldBe(expectedResult);
     }
 
-    public void ThenTheResultShouldBe(Func<IArrangement, TResult> func)
+    public void ThenTheResultShouldBe(Func<ISutArrangement<TSut>, TResult> func)
     {
-        var expectedResult = func.Invoke(_arrangement);
+        var expectedResult = func.Invoke(_sutArrangement);
         
         _result.ThenTheResultShouldBe(expectedResult);
     }

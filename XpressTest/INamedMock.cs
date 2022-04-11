@@ -1,11 +1,9 @@
-﻿using Moq;
-
-namespace XpressTest;
+﻿namespace XpressTest;
 
 public interface INamedMock<T>
     :
+        IMock<T>,
         INamedObject<T>
     where T : class
 {
-    Mock<T> Mock { get; }
 }

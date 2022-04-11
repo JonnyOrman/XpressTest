@@ -14,17 +14,17 @@ public class AsserterCreator<TSut> : IAsserterCreator<TSut>
         _resultAsserterCreator = resultAsserterCreator;
     }
     
-    public IVoidAsserter<TSut> CreateVoidAsserter(System.Action<TSut> action)
+    public IVoidAsserter<TSut> CreateVoidAsserter(Action<TSut> action)
     {
         return _voidAsserterCreator.Create(action);
     }
 
-    public IVoidAsserter<TSut> CreateVoidAsserter(System.Action<IAction<TSut>> action)
+    public IVoidAsserter<TSut> CreateVoidAsserter(Action<ISutArrangement<TSut>> action)
     {
         return _voidAsserterCreator.Create(action);
     }
 
-    public IResultAsserter<TSut, TResult> CreateResultAsserter<TResult>(Func<IAction<TSut>, TResult> func)
+    public IResultAsserter<TSut, TResult> CreateResultAsserter<TResult>(Func<ISutArrangement<TSut>, TResult> func)
     {
         return _resultAsserterCreator.Create(func);
     }
@@ -34,7 +34,12 @@ public class AsserterCreator<TSut> : IAsserterCreator<TSut>
         return _resultAsserterCreator.Create(func);
     }
 
-    public Task<IAsyncResultAsserter<TSut, TResult>> CreateAsyncResultAsserter<TResult>(Func<IAction<TSut>, Task<TResult>> func)
+    public IResultAsserter<TSut, TResult> CreateResultAsserter<TResult>(Func<IReadArrangement, Func<TSut, TResult>> func)
+    {
+        return _resultAsserterCreator.Create(func);
+    }
+
+    public Task<IAsyncResultAsserter<TSut, TResult>> CreateAsyncResultAsserter<TResult>(Func<ISutArrangement<TSut>, Task<TResult>> func)
     {
         return _resultAsserterCreator.CreateAsync(func);
     }

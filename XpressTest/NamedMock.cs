@@ -1,22 +1,20 @@
-﻿using Moq;
-
-namespace XpressTest;
+﻿namespace XpressTest;
 
 public class NamedMock<T> : INamedMock<T>
     where T : class
 {
-    public Mock<T> Mock { get; }
+    public Moq.Mock<T> MoqMock { get; }
     
-    public T Object => Mock.Object;
+    public T Object => MoqMock.Object;
     
     public string Name { get; }
 
     public NamedMock(
-        Mock<T> mock,
+        Moq.Mock<T> mock,
         string name
         )
     {
-        Mock = mock;
+        MoqMock = mock;
         Name = name;
     }
 }

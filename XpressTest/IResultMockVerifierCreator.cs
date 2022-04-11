@@ -1,5 +1,3 @@
-using Moq;
-
 namespace XpressTest;
 
 public interface IResultMockVerifierCreator<TSut, TSutResult>
@@ -10,13 +8,13 @@ public interface IResultMockVerifierCreator<TSut, TSutResult>
         where TMock : class;
     
     IAsyncResultMockVerifier<TSut, TSutResult, TMock> Create<TMock>(
-        Mock<TMock> mock,
+        IMock<TMock> mock,
         IAsyncResultAsserter<TSut, TSutResult> asserter
     )
         where TMock : class;
     
     IResultMockVerifier<TSut, TSutResult, TMock> Create<TMock>(
-        Mock<TMock> mock,
+        IMock<TMock> mock,
         IResultAsserter<TSut, TSutResult> asserter
     )
         where TMock : class;

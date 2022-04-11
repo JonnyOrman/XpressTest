@@ -1,4 +1,3 @@
-using Moq;
 using Xunit;
 
 namespace XpressTest;
@@ -8,21 +7,18 @@ public class AsyncResultAsserter<TSut, TResult>
     IAsyncResultAsserter<TSut, TResult>
 {
     private readonly TResult _result;
-    private readonly IArrangement _arrangement;
+    private readonly ISutArrangement<TSut> _arrangement;
     private readonly IResultMockVerifierCreator<TSut, TResult> _resultMockVerifierCreator;
-    private readonly TSut _sut;
 
     public AsyncResultAsserter(
         TResult result,
-        IArrangement arrangement,
-        IResultMockVerifierCreator<TSut, TResult> resultMockVerifierCreator,
-        TSut sut
+        ISutArrangement<TSut> arrangement,
+        IResultMockVerifierCreator<TSut, TResult> resultMockVerifierCreator
         )
     {
         _result = result;
         _arrangement = arrangement;
         _resultMockVerifierCreator = resultMockVerifierCreator;
-        _sut = sut;
     }
 
     public void ThenTheResultShouldBe(TResult expectedResult)
@@ -30,7 +26,7 @@ public class AsyncResultAsserter<TSut, TResult>
         _result.ThenTheResultShouldBe(expectedResult);
     }
 
-    public void ThenTheResultShouldBe(Func<IArrangement, TResult> func)
+    public void ThenTheResultShouldBe(Func<ISutArrangement<TSut>, TResult> func)
     {
         var expectedResult = func.Invoke(_arrangement);
         
@@ -42,27 +38,25 @@ public class AsyncResultAsserter<TSut, TResult>
         Assert.Null(_result);
     }
 
-    public IAsyncResultMockVerifier<TSut, TResult, TMock> ThenAsync<TMock>() where TMock : class
+    public IAsyncResultMockVerifier<TSut, TResult, TMock> ThenTheAsync<TMock>() where TMock : class
     {
         return _resultMockVerifierCreator.Create<TMock>(
             this
         );
     }
 
-    public void ThenAsync(System.Action<IAssertion<TResult>> action)
+    public void ThenAsync(Action<IResultAssertion<TResult>> action)
     {
-        var sutAction = new Action<TSut>(_sut, _arrangement);
-        
         var assertion = new Assertion<TSut, TResult>(
             _result,
-            sutAction);
+            _arrangement);
 
         action.Invoke(assertion);
     }
 
-    public IAsyncResultMockVerifier<TSut, TResult, TMock> Then<TMock>() where TMock : class
+    public IAsyncResultMockVerifier<TSut, TResult, TMock> ThenThe<TMock>() where TMock : class
     {
-        var mock = _arrangement.GetMock<TMock>();
+        var mock = _arrangement.GetTheMock<TMock>();
         
         return _resultMockVerifierCreator.Create(
             mock,
@@ -71,10 +65,12 @@ public class AsyncResultAsserter<TSut, TResult>
     }
 
     public IAsyncResultMockVerifier<TSut, TResult, TMock> ThenAsync<TMock>(
-        Mock<TMock> mock
+        Moq.Mock<TMock> moqMock
         )
         where TMock : class
     {
+        var mock = new Mock<TMock>(moqMock);
+        
         return _resultMockVerifierCreator.Create(
             mock,
             this

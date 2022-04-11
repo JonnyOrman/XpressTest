@@ -17,24 +17,29 @@ where TSut : class
         _arrangement = arrangement;
     }
     
-    public IVoidAsserter<TSut> Create(System.Action<TSut> action)
+    public IVoidAsserter<TSut> Create(Action<TSut> action)
     {
         return CreateVoidAsserter(sut => action.Invoke(sut));
     }
 
-    public IVoidAsserter<TSut> Create(System.Action<IAction<TSut>> action)
+    public IVoidAsserter<TSut> Create(Action<ISutArrangement<TSut>> action)
     {
-        return CreateVoidAsserter(sut => action.Invoke(new Action<TSut>(
+        return CreateVoidAsserter(sut => action.Invoke(new SutArrangement<TSut>(
             sut,
             _arrangement
         )));
     }
     
     private IVoidAsserter<TSut> CreateVoidAsserter(
-        System.Action<TSut> sutAction
+        Action<TSut> sutAction
     )
     {
         var sut = _sutComposer.Compose();
+
+        var sutArrangement = new SutArrangement<TSut>(
+            sut,
+            _arrangement
+        );
 
         sutAction.Invoke(sut);
 
@@ -47,7 +52,7 @@ where TSut : class
         );
         
         return new VoidAsserter<TSut>(
-            _arrangement,
+            sutArrangement,
             voidMockVerifierCreator,
             sut
         );

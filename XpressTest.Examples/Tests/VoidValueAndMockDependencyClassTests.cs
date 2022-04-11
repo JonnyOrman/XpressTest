@@ -11,16 +11,18 @@ public class VoidValueAndMockDependencyClassTests
             .With("ParameterValue")
             .WithA<IVoidMockOneValueParameter>()
             .WhenIt(voidValueAndMockDependencyClass => voidValueAndMockDependencyClass.Execute())
-            .Then<IVoidMockOneValueParameter>().Should(voidMock => voidMock.Execute("ParameterValue")).Once();
+            .ThenThe<IVoidMockOneValueParameter>()
+            .Should(voidMock => voidMock.Execute("ParameterValue"))
+            .Once();
     
     [Fact]
     public void Constructor1_Example2() =>
         GivenA<VoidValueAndMockDependencyClass>
             .AndGiven("ParameterValue")
-            .With<string>()
+            .WithThe<string>()
             .WithA<IVoidMockOneValueParameter>()
             .WhenIt(voidValueAndMockDependencyClass => voidValueAndMockDependencyClass.Execute())
-            .Then<IVoidMockOneValueParameter>()
+            .ThenThe<IVoidMockOneValueParameter>()
                 .Should(arrangement => voidMock => voidMock.Execute(arrangement.GetThe<string>()))
                 .Once();
     
@@ -30,14 +32,14 @@ public class VoidValueAndMockDependencyClassTests
             .WithA<IVoidMockOneValueParameter>()
             .With("ParameterValue")
             .WhenIt(voidValueAndMockDependencyClass => voidValueAndMockDependencyClass.Execute())
-            .Then<IVoidMockOneValueParameter>().Should(voidMock => voidMock.Execute("ParameterValue")).Once();
+            .ThenThe<IVoidMockOneValueParameter>().Should(voidMock => voidMock.Execute("ParameterValue")).Once();
     
     [Fact]
     public void Constructor2_Example2() =>
         GivenA<VoidValueAndMockDependencyClass>
             .AndGiven("ParameterValue")
             .WithA<IVoidMockOneValueParameter>()
-            .With<string>()
+            .WithThe<string>()
             .WhenIt(voidValueAndMockDependencyClass => voidValueAndMockDependencyClass.Execute())
-            .Then<IVoidMockOneValueParameter>().Should(arrangement => voidMock => voidMock.Execute(arrangement.GetThe<string>())).Once();
+            .ThenThe<IVoidMockOneValueParameter>().Should(arrangement => voidMock => voidMock.Execute(arrangement.GetThe<string>())).Once();
 }

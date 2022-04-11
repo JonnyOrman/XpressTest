@@ -16,13 +16,18 @@ public class SutAsserterCreator<TSut>
         _arrangement = arrangement;
     }
     
-    public ISutAsserter<TSut> Create()
+    public ISutPropertyTargeter<TSut> Create()
     {
         var sut = _sutComposer.Compose();
+
+        var sutArrangement = new SutArrangement<TSut>(
+            sut,
+            _arrangement
+        );
         
         var sutPropertyTargeter = new SutPropertyTargeter<TSut>(
             sut,
-            _arrangement
+            sutArrangement
         );
         
         return new SutAsserter<TSut>(

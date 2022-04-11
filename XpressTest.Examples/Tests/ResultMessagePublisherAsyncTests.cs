@@ -13,30 +13,30 @@ public class ResultMessagePublisherAsyncTests
                 .AndGivenA<IMessageClientAsync>()
             .WithA<IMessageClientAsyncFactory>()
                 .ThatDoes(messageClientAsyncFactory => messageClientAsyncFactory.Create())
-                .AndReturns<IMessageClientAsync>()
-            .WhenItAsync(action => action.Sut.PublishAsync(action.GetMockObject<IMessage>()))
-            .Then<IMessageClientAsyncFactory>()
+                .AndReturnsTheMock<IMessageClientAsync>()
+            .WhenItAsync(arrangement => arrangement.Sut.PublishAsync(arrangement.GetTheMockObject<IMessage>()))
+            .ThenThe<IMessageClientAsyncFactory>()
                 .Should(messageClientAsyncFactory => messageClientAsyncFactory.Create())
                 .Once()
-            .ThenAsync<IMessageClientAsync>()
-                .Should(arrangement => messageClientAsync => messageClientAsync.PublishAsync(arrangement.GetMockObject<IMessage>()))
+            .ThenTheAsync<IMessageClientAsync>()
+                .Should(arrangement => messageClientAsync => messageClientAsync.PublishAsync(arrangement.GetTheMockObject<IMessage>()))
                 .Once()
             .ThenTheResultShouldBe(true);
     
     [Fact]
     public void PublishesMessage_Example2()
     {
-        var messageMock = new Mock<IMessage>();
+        var messageMock = new Moq.Mock<IMessage>();
 
-        var messageClientAsync = new Mock<IMessageClientAsync>();
+        var messageClientAsync = new Moq.Mock<IMessageClientAsync>();
         
         GivenA<ResultMessagePublisherAsync>
                 .AndGivenA<IMessageClientAsync>()
             .WithA<IMessageClientAsyncFactory>()
                 .ThatDoes(messageClientAsyncFactory => messageClientAsyncFactory.Create())
                 .AndReturns(messageClientAsync.Object)
-            .WhenItAsync(action => action.Sut.PublishAsync(messageMock.Object))
-            .Then<IMessageClientAsyncFactory>()
+            .WhenItAsync(arrangement => arrangement.Sut.PublishAsync(messageMock.Object))
+            .ThenThe<IMessageClientAsyncFactory>()
                 .Should(messageClientAsyncFactory => messageClientAsyncFactory.Create())
                 .Once()
             .ThenAsync(messageClientAsync)

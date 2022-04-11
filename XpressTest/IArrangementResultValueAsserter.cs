@@ -1,6 +1,6 @@
 namespace XpressTest;
 
-public interface IArrangementResultValueAsserter<TResult>
+public interface IArrangementResultValueAsserter<TSut, TResult>
 {
-    void ThenTheResultShouldBe(Func<IArrangement, TResult> func);
+    void ThenTheResultShouldBe(Func<ISutArrangement<TSut>, TResult> func);
 }

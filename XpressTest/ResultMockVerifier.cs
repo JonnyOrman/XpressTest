@@ -21,7 +21,7 @@ public class ResultMockVerifier<TSut, TSutResult, TMock>
     }
     
     public IMockCounterVerifier<IResultAsserter<TSut, TSutResult>> Should<TMockResult>(
-        Func<IArrangement, Expression<Func<TMock, TMockResult>>> func
+        Func<IReadArrangement, Expression<Func<TMock, TMockResult>>> func
         )
     {
         return _mockCounterVerifierCreator.Create(
@@ -40,7 +40,7 @@ public class ResultMockVerifier<TSut, TSutResult, TMock>
     }
 
     public IMockCounterVerifier<IResultAsserter<TSut, TSutResult>> Should(
-        Func<IArrangement, Expression<System.Action<TMock>>> func
+        Func<IReadArrangement, Expression<Action<TMock>>> func
         )
     {
         return _mockCounterVerifierCreator.Create(
@@ -50,7 +50,7 @@ public class ResultMockVerifier<TSut, TSutResult, TMock>
     }
 
     public IMockCounterVerifier<IResultAsserter<TSut, TSutResult>> Should(
-        Expression<System.Action<TMock>> expression
+        Expression<Action<TMock>> expression
         )
     {
         return _mockCounterVerifierCreator.Create(

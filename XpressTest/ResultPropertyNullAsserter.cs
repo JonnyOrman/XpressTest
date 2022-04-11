@@ -1,23 +1,23 @@
 namespace XpressTest;
 
-public class ResultPropertyNullAsserter<TResult>
+public class ResultPropertyNullAsserter<TSut, TResult>
     :
-        IResultPropertyNullAsserter<TResult>
+        IResultPropertyNullAsserter<TSut, TResult>
 {
     private readonly IResultPropertyNullComparer _resultPropertyNullComparer;
 
-    private readonly IResultPropertyTargeter<TResult> _resultPropertyTargeter;
+    private readonly IResultPropertyTargeter<TSut, TResult> _resultPropertyTargeter;
     
     public ResultPropertyNullAsserter(
         IResultPropertyNullComparer resultPropertyNullComparer,
-        IResultPropertyTargeter<TResult>  resultPropertyTargeter
+        IResultPropertyTargeter<TSut, TResult>  resultPropertyTargeter
         )
     {
         _resultPropertyNullComparer = resultPropertyNullComparer;
         _resultPropertyTargeter = resultPropertyTargeter;
     }
     
-    public IResultPropertyTargeter<TResult> Assert()
+    public IResultPropertyTargeter<TSut, TResult> Assert()
     {
         _resultPropertyNullComparer.Compare();
         

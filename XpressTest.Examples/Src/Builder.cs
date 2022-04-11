@@ -3,7 +3,7 @@ using System.Text;
 
 namespace XpressTest.Examples.Src;
 
-public class Builder
+public class Builder : IBuilder
 {
     private readonly ICollection<IBuilderItem> _builderItems;
 
@@ -15,6 +15,13 @@ public class Builder
     public void Add(IBuilderItem builderItem)
     {
         _builderItems.Add(builderItem);
+    }
+    
+    public IBuilder AddAndReturn(IBuilderItem builderItem)
+    {
+        _builderItems.Add(builderItem);
+
+        return this;
     }
 
     public string Build()

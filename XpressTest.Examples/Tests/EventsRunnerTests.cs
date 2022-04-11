@@ -8,33 +8,31 @@ namespace XpressTest.Examples.Tests;
 public class EventsRunnerTests
 {
     [Fact]
-    public void Test_Example1()
-    {
+    public void Test_Example1() => 
         GivenA<EventsRunner>
-            .AndGivenA<IEvent>()
-            .AndGiven(arrangement => new List<IEvent>
-            {
-                arrangement.GetMockObject<IEvent>()
-            })
-            .With<List<IEvent>>()
+                .AndGivenA<IEvent>()
+                .AndGiven(arrangement => new List<IEvent>
+                {
+                    arrangement.GetTheMockObject<IEvent>()
+                })
+            .WithThe<List<IEvent>>()
             .WhenIt(sut => sut.Run())
             .Then(assertion =>
             {
-                assertion.GetMock<IEvent>().Verify(event1 => event1.Run(), Times.Once);
+                assertion.GetTheMoq<IEvent>().Verify(event1 => event1.Run(), Times.Once);
             });
-    }
     
     [Fact]
     public void Test_Example2()
     {
-        var event1 = new Mock<IEvent>();
+        var event1 = new Moq.Mock<IEvent>();
 
         GivenA<EventsRunner>
-            .AndGiven(new List<IEvent>
-            {
-                event1.Object
-            })
-            .With<List<IEvent>>()
+                .AndGiven(new List<IEvent>
+                {
+                    event1.Object
+                })
+            .WithThe<List<IEvent>>()
             .WhenIt(sut => sut.Run())
             .Then(assertion =>
             {
@@ -45,7 +43,7 @@ public class EventsRunnerTests
     [Fact]
     public void Test_Example3()
     {
-        var event1 = new Mock<IEvent>();
+        var event1 = new Moq.Mock<IEvent>();
 
         var events = new List<IEvent>
         {
@@ -64,7 +62,7 @@ public class EventsRunnerTests
     [Fact]
     public void Test_Example4()
     {
-        var event1 = new Mock<IEvent>();
+        var event1 = new Moq.Mock<IEvent>();
 
         var events = new List<IEvent>
         {
@@ -72,8 +70,8 @@ public class EventsRunnerTests
         };
 
         GivenA<EventsRunner>
-            .AndGiven(events)
-            .With<List<IEvent>>()
+                .AndGiven(events)
+            .WithThe<List<IEvent>>()
             .WhenIt(sut => sut.Run())
             .Then(assertion =>
             {
@@ -82,18 +80,32 @@ public class EventsRunnerTests
     }
     
     [Fact]
-    public void Test_Example5()
-    {
+    public void Test_Example5() =>
         GivenA<EventsRunner>
-            .AndGivenA<IEvent>()
+                .AndGivenA<IEvent>()
             .With<IEnumerable<IEvent>>(arrangement => new List<IEvent>
             {
-                arrangement.GetMockObject<IEvent>()
+                arrangement.GetTheMockObject<IEvent>()
             })
             .WhenIt(sut => sut.Run())
             .Then(assertion =>
             {
-                assertion.GetMock<IEvent>().Verify(event1 => event1.Run(), Times.Once);
+                assertion.GetTheMoq<IEvent>().Verify(event1 => event1.Run(), Times.Once);
             });
-    }
+    
+    
+    [Fact]
+    public void Test_Example6() => 
+        GivenA<EventsRunner>
+                .AndGivenA<IEvent>()
+                .AndGiven(arrangement => new List<IEvent>
+                {
+                    arrangement.GetTheMockObject<IEvent>()
+                }, "EventCollection")
+            .WithThe<List<IEvent>>("EventCollection")
+            .WhenIt(sut => sut.Run())
+            .Then(assertion =>
+            {
+                assertion.GetTheMoq<IEvent>().Verify(event1 => event1.Run(), Times.Once);
+            });
 }

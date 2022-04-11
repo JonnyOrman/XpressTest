@@ -6,40 +6,55 @@ public class ObjectBuilderCreator<TSut>
 where TSut : class
 {
     private readonly IArrangement _arrangement;
-
-    private readonly IObjectBuilderChainer<TSut> _objectBuilderChainer;
-
-    private INamedObjectBuilderChainer<TSut> _namedObjectBuilderChainer;
-
-    private readonly IExistingObjectBuilder<TSut> _existingObjectBuilder;
+    private readonly IExistingObjectDependencyBuilderCreator<TSut> _existingObjectDependencyBuilderCreator;
+    private readonly IAsserterCreator<TSut> _asserterCreator;
+    private readonly IMockSetupBuilderCreator<TSut> _mockSetupBuilderGenerator;
+    private readonly IDependencyBuilderCreator<TSut> _dependencyBuilderCreator;
+    private readonly INamedMockSetupBuilderCreator<TSut> _namedMockSetupBuilderGenerator;
+    private readonly ISutAsserterCreator<TSut> _sutAsserterCreator;
 
     public ObjectBuilderCreator(
         IArrangement arrangement,
-        IObjectBuilderChainer<TSut> objectBuilderChainer,
-        INamedObjectBuilderChainer<TSut> namedObjectBuilderChainer,
-        IExistingObjectBuilder<TSut> existingObjectBuilder
+        IExistingObjectDependencyBuilderCreator<TSut> existingObjectDependencyBuilderCreator,
+        IAsserterCreator<TSut> asserterCreator,
+        IMockSetupBuilderCreator<TSut> mockSetupBuilderGenerator,
+        IDependencyBuilderCreator<TSut> dependencyBuilderCreator,
+        INamedMockSetupBuilderCreator<TSut> namedMockSetupBuilderGenerator,
+        ISutAsserterCreator<TSut> sutAsserterCreator
         )
     {
         _arrangement = arrangement;
-        _objectBuilderChainer = objectBuilderChainer;
-        _namedObjectBuilderChainer = namedObjectBuilderChainer;
-        _existingObjectBuilder = existingObjectBuilder;
+        _existingObjectDependencyBuilderCreator = existingObjectDependencyBuilderCreator;
+        _asserterCreator = asserterCreator;
+        _mockSetupBuilderGenerator = mockSetupBuilderGenerator;
+        _dependencyBuilderCreator = dependencyBuilderCreator;
+        _namedMockSetupBuilderGenerator = namedMockSetupBuilderGenerator;
+        _sutAsserterCreator = sutAsserterCreator;
     }
     
-    public IObjectBuilder<TSut> Create<TObject>(TObject obj)
+    public IVariableBuilder<TSut> Create<TObject>(TObject obj)
     {
         var objectSetter = new ObjectSetter<TObject>(
             _arrangement
         );
+        
+        var namedObjectBuilderChainer = new VariableBuilderChainer<TSut>(
+            _asserterCreator,
+            this,
+            _mockSetupBuilderGenerator,
+            _dependencyBuilderCreator,
+            _namedMockSetupBuilderGenerator,
+            _sutAsserterCreator
+        );
 
-        return new ObjectBuilder<TSut, TObject>(
+        return new VariableBuilder<TSut, TObject, IVariableBuilderChainer<TSut>>(
             obj,
             objectSetter,
-            _objectBuilderChainer
+            namedObjectBuilderChainer
         );
     }
 
-    public INamedObjectBuilder<TSut> Create<TObject>(TObject obj, string name)
+    public IVariableBuilder<TSut> Create<TObject>(TObject obj, string name)
     {
         var namedObjectSetter = new NamedObjectSetter<TObject>(
             _arrangement
@@ -50,34 +65,33 @@ where TSut : class
             name
             );
         
-        return new NamedObjectBuilder<TSut, TObject>(
+        var namedObjectBuilderChainer = new VariableBuilderChainer<TSut>(
+            _asserterCreator,
+            this,
+            _mockSetupBuilderGenerator,
+            _dependencyBuilderCreator,
+            _namedMockSetupBuilderGenerator,
+            _sutAsserterCreator
+        );
+
+        return new VariableBuilder<TSut, INamedObject<TObject>, IVariableBuilderChainer<TSut>>(
             newNamedObject,
             namedObjectSetter,
-            _namedObjectBuilderChainer
+            namedObjectBuilderChainer
         );
     }
 
-    public IExistingObjectBuilder<TSut> Create<TObject>()
+    public IDependencyBuilder<TSut> Create<TObject>()
     {
-        var dependency = _arrangement.GetThe<TObject>();
-        
-        _arrangement.AddDependency(dependency);
-
-        return _existingObjectBuilder;
+        return _existingObjectDependencyBuilderCreator.Create<TObject>();
     }
 
-    public IExistingObjectBuilder<TSut> Create<TObject>(string name)
+    public IDependencyBuilder<TSut> Create<TObject>(string name)
     {
-        var existingObject = _arrangement.GetObject<TObject>(
-            name
-            );
-        
-        _arrangement.AddDependency(existingObject);
-        
-        return _existingObjectBuilder;
+        return _existingObjectDependencyBuilderCreator.Create<TObject>(name);
     }
 
-    public IObjectBuilder<TSut> Create<TObject>(Func<IArrangement, TObject> func)
+    public IVariableBuilder<TSut> Create<TObject>(Func<IReadArrangement, TObject> func)
     {
         var newObject = func.Invoke(_arrangement);
         
@@ -85,14 +99,23 @@ where TSut : class
             _arrangement
         );
 
-        return new ObjectBuilder<TSut, TObject>(
+        var namedObjectBuilderChainer = new VariableBuilderChainer<TSut>(
+            _asserterCreator,
+            this,
+            _mockSetupBuilderGenerator,
+            _dependencyBuilderCreator,
+            _namedMockSetupBuilderGenerator,
+            _sutAsserterCreator
+        );
+
+        return new VariableBuilder<TSut, TObject, IVariableBuilderChainer<TSut>>(
             newObject,
             objectSetter,
-            _objectBuilderChainer
+            namedObjectBuilderChainer
         );
     }
 
-    public INamedObjectBuilder<TSut> Create<TObject>(Func<IArrangement, TObject> func, string name)
+    public IVariableBuilder<TSut> Create<TObject>(Func<IReadArrangement, TObject> func, string name)
     {
         var newObject = func.Invoke(_arrangement);
         
@@ -105,17 +128,19 @@ where TSut : class
             name
             );
         
-        var builder = new NamedObjectBuilder<TSut, TObject>(
-            newNamedObject,
-            namedObjectSetter,
-            _namedObjectBuilderChainer
+        var namedObjectBuilderChainer = new VariableBuilderChainer<TSut>(
+            _asserterCreator,
+            this,
+            _mockSetupBuilderGenerator,
+            _dependencyBuilderCreator,
+            _namedMockSetupBuilderGenerator,
+            _sutAsserterCreator
         );
 
-        return builder;
-    }
-
-    public void Set(NamedObjectBuilderChainer<TSut> namedObjectBuilderChainer)
-    {
-        _namedObjectBuilderChainer = namedObjectBuilderChainer;
+        return new VariableBuilder<TSut, INamedObject<TObject>, IVariableBuilderChainer<TSut>>(
+            newNamedObject,
+            namedObjectSetter,
+            namedObjectBuilderChainer
+        );
     }
 }

@@ -1,9 +1,9 @@
 namespace XpressTest;
 
-public interface IAsyncResultPropertyTargeter<TResult>
+public interface IAsyncResultPropertyTargeter<TSut, TResult>
 :
     IResultValueAsserter<TResult>,
-    IArrangementResultValueAsserter<TResult>,
+    IArrangementResultValueAsserter<TSut, TResult>,
     INullResultAsserter
 {
 }

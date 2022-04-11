@@ -1,24 +1,20 @@
-using Moq;
-
 namespace XpressTest;
 
 public class MockDependencySetter<TDependency>
     :
-        IObjectSetter<Mock<TDependency>>
+        ArrangementSetter<IMock<TDependency>>
 where TDependency : class
 {
-    private readonly IArrangement _arrangement;
-
     public MockDependencySetter(
         IArrangement arrangement
-        )
+        ) : base(
+        arrangement,
+        (arrangement, mockDependency) =>
+        {
+            arrangement.Add(mockDependency);
+            arrangement.AddDependency(mockDependency.MoqMock.Object);
+        }
+    )
     {
-        _arrangement = arrangement;
-    }
-    
-    public void Set(Mock<TDependency> dependencyMock)
-    {
-        _arrangement.Add(dependencyMock);
-        _arrangement.AddDependency(dependencyMock.Object);
     }
 }

@@ -3,7 +3,7 @@
 public static class GivenA<TSut>
     where TSut : class
 {
-    public static INamedMockObjectBuilder<TSut, TObject> AndGivenA<TObject>(string name)
+    public static IMockSetupBuilder<TSut, TObject> AndGivenA<TObject>(string name)
         where TObject : class
     {
         return NamedMockObjectTestInitialiser<TSut, TObject>.Initialise(
@@ -11,13 +11,13 @@ public static class GivenA<TSut>
             );
     }
     
-    public static IMockObjectBuilder<TSut, TObject> AndGivenA<TObject>()
+    public static IMockSetupBuilder<TSut, TObject> AndGivenA<TObject>()
         where TObject : class
     {
         return MockObjectTestInitialiser<TSut, TObject>.Initialise();
     }
 
-    public static INamedObjectBuilder<TSut> AndGiven<TObject>(TObject obj, string name)
+    public static IVariableBuilder<TSut> AndGiven<TObject>(TObject obj, string name)
     {
         return NamedObjectTestInitialiser<TSut, TObject>.Initialise(
             obj,
@@ -25,36 +25,27 @@ public static class GivenA<TSut>
             );
     }
 
-    public static IObjectBuilder<TSut> AndGiven<TObject>(TObject obj)
+    public static IVariableBuilder<TSut> AndGiven<TObject>(TObject obj)
     {
         return ObjectTestInitialiser<TSut, TObject>.Initialise(
             obj
             );
     }
 
-    public static IMockDependencyBuilder<TSut, TDependency> WithA<TDependency>()
+    public static IMockDependencySetupBuilder<TSut, TDependency> WithA<TDependency>()
         where TDependency : class
     {
         return MockDependencyTestInitialiser<TSut>.Initialise<TDependency>();
     }
     
     public static IDependencyBuilder<TSut> With<TDependency>(TDependency dependency)
-        where TDependency : class
     {
-        return DependencyBuilderInitialiser<TSut>.Initialise(
-            dependency
-            );
-    }
-    
-    public static IValueDependencyBuilder<TSut> WithValue<TValueDependency>(TValueDependency dependency)
-    {
-        return ValueDependencyBuilderInitialiser<TSut>.Initialise(
+        return ObjectDependencyBuilderInitialiser<TSut>.Initialise(
             dependency
         );
     }
     
-    public static INamedDependencyBuilder<TSut> With<TDependency>(TDependency dependency, string name)
-        where TDependency : class
+    public static IDependencyBuilder<TSut> With<TDependency>(TDependency dependency, string name)
     {
         return NamedDependencyTestInitialiser<TSut>.Initialise(
             dependency,
@@ -62,7 +53,7 @@ public static class GivenA<TSut>
             );
     }
     
-    public static IExceptionAsserter WhenIt(System.Action<TSut> action)
+    public static IExceptionAsserter WhenIt(Action<TSut> action)
     {
         return VoidExceptionAsserterInitialiser<TSut>.Initialise(
             action
@@ -81,7 +72,7 @@ public static class GivenA<TSut>
         return Activator.CreateInstance<TSut>();
     }
 
-    public static ISutAsserter<TSut> WhenItIsConstructed()
+    public static ISutPropertyTargeter<TSut> WhenItIsConstructed()
     {
         return SutActionInitialiser<TSut>.Initialise();
     }

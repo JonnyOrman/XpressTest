@@ -1,5 +1,3 @@
-using Moq;
-
 namespace XpressTest;
 
 public class NamedMockDependencyBuilderCreator<TSut>
@@ -7,39 +5,44 @@ public class NamedMockDependencyBuilderCreator<TSut>
         INamedMockDependencyBuilderCreator<TSut>
 where TSut : class
 {
-    private readonly INamedMockDependencyBuilderChainer<TSut> _namedMockDependencyBuilderChainer;
+    private IDependencyBuilderChainer<TSut> _mockDependencyBuilderChainer;
     private readonly IArrangement _arrangement;
 
     public NamedMockDependencyBuilderCreator(
-        INamedMockDependencyBuilderChainer<TSut> namedMockDependencyBuilderChainer,
+        IDependencyBuilderChainer<TSut> mockDependencyBuilderChainer,
         IArrangement arrangement
         )
     {
-        _namedMockDependencyBuilderChainer = namedMockDependencyBuilderChainer;
+        _mockDependencyBuilderChainer = mockDependencyBuilderChainer;
         _arrangement = arrangement;
     }
     
-    public INamedMockDependencyBuilder<TSut, TDependency> Create<TDependency>(
+    public IMockDependencySetupBuilder<TSut, TDependency> Create<TDependency>(
         string dependencyName
         )
         where TDependency : class
     {
-        var newMock = new Mock<TDependency>();
-
+        var newMock = new Moq.Mock<TDependency>();
+        
         var namedMock = new NamedMock<TDependency>(
             newMock,
             dependencyName
         );
-
+        
         var objectSetter = new NamedMockDependencySetter<TDependency>(
             _arrangement
         );
-
-        return new NamedMockDependencyBuilder<TSut, TDependency>(
+        
+        return new MockDependencySetupBuilder<TSut, TDependency, INamedMock<TDependency>>(
             namedMock,
+            _arrangement,
             objectSetter,
-            _namedMockDependencyBuilderChainer,
-            _arrangement
+            _mockDependencyBuilderChainer
         );
+    }
+
+    public void Set(DependencyBuilderChainer<TSut> mockDependencyBuilderChainer)
+    {
+        _mockDependencyBuilderChainer = mockDependencyBuilderChainer;
     }
 }

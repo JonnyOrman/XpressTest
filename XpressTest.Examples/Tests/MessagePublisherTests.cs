@@ -13,13 +13,13 @@ public class MessagePublisherTests
                 .AndGivenA<IMessageClient>()
             .WithA<IMessageClientFactory>()
                 .ThatDoes(messageClientFactory => messageClientFactory.Create())
-                .AndReturns<IMessageClient>()
-            .WhenIt(action => action.Sut.Publish(action.GetMockObject<IMessage>()))
-            .Then<IMessageClientFactory>()
+                .AndReturnsTheMock<IMessageClient>()
+            .WhenIt(arrangement => arrangement.Sut.Publish(arrangement.GetTheMockObject<IMessage>()))
+            .ThenThe<IMessageClientFactory>()
                 .Should(messageClientFactory => messageClientFactory.Create())
                 .Once()
-            .Then<IMessageClient>()
-                .Should(arrangement => messageClient => messageClient.Publish(arrangement.GetMockObject<IMessage>()))
+            .ThenThe<IMessageClient>()
+                .Should(arrangement => messageClient => messageClient.Publish(arrangement.GetTheMockObject<IMessage>()))
                 .Once();
     
     [Fact]
@@ -29,16 +29,32 @@ public class MessagePublisherTests
                 .AndGivenA<IMessageClient>()
             .WithA<IMessageClientFactory>()
                 .ThatDoes(messageClientFactory => messageClientFactory.Create())
-                .AndReturns<IMessageClient>()
-            .WhenIt(action => action.Sut.Publish(action.GetMockObject<IMessage>()))
+                .AndReturnsTheMock<IMessageClient>()
+            .WhenIt(arrangement => arrangement.Sut.Publish(arrangement.GetTheMockObject<IMessage>()))
             .Then(assertion =>
             {
                 assertion
-                    .GetMock<IMessageClientFactory>()
+                    .GetTheMoq<IMessageClientFactory>()
                     .Verify(messageClientFactory => messageClientFactory.Create(), Times.Once);
                 
                 assertion
-                    .GetMock<IMessageClient>()
-                    .Verify(messageClientFactory => messageClientFactory.Publish(assertion.GetMockObject<IMessage>()), Times.Once);
+                    .GetTheMoq<IMessageClient>()
+                    .Verify(messageClientFactory => messageClientFactory.Publish(assertion.GetTheMockObject<IMessage>()), Times.Once);
             });
+    
+    [Fact]
+    public void PublishesMessage_Example3() =>
+        GivenA<MessagePublisher>
+            .AndGivenA<IMessage>("Message")
+            .AndGivenA<IMessageClient>("MessageClient")
+            .WithA<IMessageClientFactory>()
+            .ThatDoes(messageClientFactory => messageClientFactory.Create())
+            .AndReturnsTheMock<IMessageClient>()
+            .WhenIt(arrangement => arrangement.Sut.Publish(arrangement.GetTheMockObject<IMessage>()))
+            .ThenThe<IMessageClientFactory>()
+            .Should(messageClientFactory => messageClientFactory.Create())
+            .Once()
+            .ThenThe<IMessageClient>()
+            .Should(arrangement => messageClient => messageClient.Publish(arrangement.GetTheMockObject<IMessage>()))
+            .Once();
 }

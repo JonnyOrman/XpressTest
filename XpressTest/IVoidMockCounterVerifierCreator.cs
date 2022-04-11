@@ -5,6 +5,6 @@ namespace XpressTest;
 public interface IVoidMockCounterVerifierCreator<TMock, TAsserter>
 {
     IMockCounterVerifier<TAsserter> Create(
-        Expression<System.Action<TMock>> expression
+        Expression<Action<TMock>> expression
         );
 }

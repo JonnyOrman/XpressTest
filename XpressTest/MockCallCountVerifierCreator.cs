@@ -1,4 +1,3 @@
-using Moq;
 using System.Linq.Expressions;
 
 namespace XpressTest;
@@ -6,10 +5,10 @@ namespace XpressTest;
 public class MockCallCountVerifierCreator<TMock> : IMockCallCountVerifierCreator<TMock>
     where TMock : class
 {
-    private readonly Mock<TMock> _mock;
+    private readonly IMock<TMock> _mock;
 
     public MockCallCountVerifierCreator(
-        Mock<TMock> mock
+        IMock<TMock> mock
         )
     {
         _mock = mock;
@@ -26,7 +25,7 @@ public class MockCallCountVerifierCreator<TMock> : IMockCallCountVerifierCreator
     }
 
     public IMockCallCountVerifier Create(
-        Expression<System.Action<TMock>> expression
+        Expression<Action<TMock>> expression
         )
     {
         return new MockVoidCallCountVerifier<TMock>(

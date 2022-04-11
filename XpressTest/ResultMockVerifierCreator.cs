@@ -1,5 +1,3 @@
-using Moq;
-
 namespace XpressTest;
 
 public class ResultMockVerifierCreator<TSut, TSutResult>
@@ -35,7 +33,7 @@ public class ResultMockVerifierCreator<TSut, TSutResult>
     }
 
     public IAsyncResultMockVerifier<TSut, TSutResult, TMock> Create<TMock>(
-        Mock<TMock> mock,
+        IMock<TMock> mock,
         IAsyncResultAsserter<TSut, TSutResult> asserter
         )
         where TMock : class
@@ -52,7 +50,7 @@ public class ResultMockVerifierCreator<TSut, TSutResult>
     }
 
     public IResultMockVerifier<TSut, TSutResult, TMock> Create<TMock>(
-        Mock<TMock> mock,
+        IMock<TMock> mock,
         IResultAsserter<TSut, TSutResult> asserter
         )
         where TMock : class

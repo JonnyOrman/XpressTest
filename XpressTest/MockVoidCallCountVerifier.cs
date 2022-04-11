@@ -6,12 +6,12 @@ namespace XpressTest;
 public class MockVoidCallCountVerifier<TMock> : IMockCallCountVerifier
     where TMock : class
 {
-    private readonly Mock<TMock> _mock;
-    private readonly Expression<System.Action<TMock>> _expression;
+    private readonly IMock<TMock> _mock;
+    private readonly Expression<Action<TMock>> _expression;
 
     public MockVoidCallCountVerifier(
-        Mock<TMock> mock,
-        Expression<System.Action<TMock>> expression
+        IMock<TMock> mock,
+        Expression<Action<TMock>> expression
         )
     {
         _mock = mock;
@@ -20,6 +20,6 @@ public class MockVoidCallCountVerifier<TMock> : IMockCallCountVerifier
 
     public void Verify(int expectedNumberOfCalls)
     {
-        _mock.Verify(_expression, Times.Exactly(expectedNumberOfCalls));
+        _mock.MoqMock.Verify(_expression, Times.Exactly(expectedNumberOfCalls));
     }
 }

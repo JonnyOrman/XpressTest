@@ -1,5 +1,3 @@
-using Moq;
-
 namespace XpressTest;
 
 public class VoidAsserter<TSut> : IVoidAsserter<TSut>
@@ -20,7 +18,7 @@ public class VoidAsserter<TSut> : IVoidAsserter<TSut>
         _sut = sut;
     }
     
-    public IVoidMockVerifier<TSut, TMock> Then<TMock>()
+    public IVoidMockVerifier<TSut, TMock> ThenThe<TMock>()
         where TMock : class
     {
         return _voidMockVerifierCreator.Create<TMock>(
@@ -29,48 +27,56 @@ public class VoidAsserter<TSut> : IVoidAsserter<TSut>
     }
 
     public IVoidMockVerifier<TSut, TMock> Then<TMock>(
-        Mock<TMock> mock
+        Moq.Mock<TMock> moqMock
         )
         where TMock : class
     {
+        var mock = new Mock<TMock>(moqMock);
+        
         return _voidMockVerifierCreator.Create(
             mock,
             this
         );
     }
 
-    public void Then(System.Action<IAssertion> action)
+    public void Then(Action<ISutArrangement<TSut>> action)
     {
-        var sutAction = new Action<TSut>(_sut, _arrangement);
+        var sutArrangement = new SutArrangement<TSut>(
+            _sut,
+            _arrangement
+            );
         
         var assertion = new VoidAssertion<TSut>(
-            sutAction
+            sutArrangement
             );
 
         action.Invoke(assertion);
     }
 
-    public IVoidAsserter<TSut> ThenWhenIt(System.Action<IAction<TSut>> action)
+    public IVoidAsserter<TSut> ThenWhenIt(Action<ISutArrangement<TSut>> action)
     {
-        var sutAction = new Action<TSut>(_sut, _arrangement);
+        var sutArrangement = new SutArrangement<TSut>(
+            _sut,
+            _arrangement
+        );
         
-        action.Invoke(sutAction);
+        action.Invoke(sutArrangement);
 
         return this;
     }
 
     public IResultAsserter<TSut, TResult> ThenWhenIt<TResult>(Func<TSut, TResult> func)
     {
-        var action = new Action<TSut>(
+        var sutArrangement = new SutArrangement<TSut>(
             _sut,
             _arrangement
         );
         
         var result = func.Invoke(_sut);
         
-        var resultPropertyTargeter = new ResultPropertyTargeter<TResult>(
+        var resultPropertyTargeter = new ResultPropertyTargeter<TSut, TResult>(
             result,
-            _arrangement
+            sutArrangement
         );
         
         var mockCounterVerifierCreatorComposer =
@@ -90,10 +96,9 @@ public class VoidAsserter<TSut> : IVoidAsserter<TSut>
         
         return new ResultAsserter<TSut, TResult>(
             result,
-            _arrangement,
+            sutArrangement,
             resultPropertyTargeter,
-            resultMockVerifierCreator,
-            _sut
+            resultMockVerifierCreator
         );
     }
 }

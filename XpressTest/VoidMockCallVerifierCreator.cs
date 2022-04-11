@@ -19,7 +19,7 @@ where TMock : class
         _asserter = asserter;
     }
     
-    public IMockCallVerifier<TAsserter> Create(Expression<System.Action<TMock>> expression)
+    public IMockCallVerifier<TAsserter> Create(Expression<Action<TMock>> expression)
     {
         var mockCallCountVerifier = _mockCallCountVerifierCreator.Create(
             expression

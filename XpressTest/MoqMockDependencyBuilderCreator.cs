@@ -1,5 +1,3 @@
-using Moq;
-
 namespace XpressTest;
 
 public class MoqMockDependencyBuilderCreator<TSut>
@@ -8,22 +6,19 @@ public class MoqMockDependencyBuilderCreator<TSut>
 where TSut : class
 {
     private readonly IArrangement _arrangement;
-    private readonly IMockDependencyBuilderChainer<TSut> _mockDependencyBuilderChainer;
-    private readonly INamedMockDependencyBuilderChainer<TSut> _namedMockDependencyBuilderChainer;
+    private readonly IDependencyBuilderChainer<TSut> _mockDependencyBuilderChainer;
 
     public MoqMockDependencyBuilderCreator(
         IArrangement arrangement,
-        IMockDependencyBuilderChainer<TSut> mockDependencyBuilderChainer,
-        INamedMockDependencyBuilderChainer<TSut> namedMockDependencyBuilderChainer
+        IDependencyBuilderChainer<TSut> mockDependencyBuilderChainer
         )
     {
         _arrangement = arrangement;
         _mockDependencyBuilderChainer = mockDependencyBuilderChainer;
-        _namedMockDependencyBuilderChainer = namedMockDependencyBuilderChainer;
     }
     
-    public IMockDependencyBuilder<TSut, TDependency> Create<TDependency>(
-        Mock<TDependency> moqMock
+    public IMockDependencySetupBuilder<TSut, TDependency> Create<TDependency>(
+        IMock<TDependency> moqMock
         )
         where TDependency : class
     {
@@ -31,34 +26,11 @@ where TSut : class
             _arrangement
         );
         
-        return new MockDependencyBuilder<TSut, TDependency>(
+        return new MockDependencySetupBuilder<TSut, TDependency, IMock<TDependency>>(
             moqMock,
+            _arrangement,
             mockDependencySetter,
-            _mockDependencyBuilderChainer,
-            _arrangement
-        );
-    }
-
-    public INamedMockDependencyBuilder<TSut, TDependency> Create<TDependency>(
-        Mock<TDependency> moqMock,
-        string name
-        )
-        where TDependency : class
-    {
-        var namedMock = new NamedMock<TDependency>(
-            moqMock,
-            name
-        );
-        
-        var objectSetter = new NamedMockDependencySetter<TDependency>(
-            _arrangement
-        );
-        
-        return new NamedMockDependencyBuilder<TSut, TDependency>(
-            namedMock,
-            objectSetter,
-            _namedMockDependencyBuilderChainer,
-            _arrangement
+            _mockDependencyBuilderChainer
         );
     }
 }

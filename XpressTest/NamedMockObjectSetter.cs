@@ -1,19 +1,15 @@
 namespace XpressTest;
 
-public class NamedMockObjectSetter<TObject> : INamedMockObjectSetter<TObject>
+public class NamedMockObjectSetter<TObject> :
+    ArrangementSetter<INamedMock<TObject>>
     where TObject : class
 {
-    private readonly IArrangement _arrangement;
-
     public NamedMockObjectSetter(
         IArrangement arrangement
-        )
+    ) : base(
+        arrangement,
+        (arrangement, mock) => arrangement.Add(mock)
+    )
     {
-        _arrangement = arrangement;
-    }
-    
-    public void Set(INamedMock<TObject> namedMock)
-    {
-        _arrangement.Add(namedMock);
     }
 }

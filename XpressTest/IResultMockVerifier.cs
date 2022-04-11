@@ -5,7 +5,7 @@ namespace XpressTest;
 public interface IResultMockVerifier<TSut, TSutResult, TMock>
 {
     IMockCounterVerifier<IResultAsserter<TSut, TSutResult>> Should<TMockResult>(
-        Func<IArrangement, Expression<Func<TMock, TMockResult>>> func
+        Func<IReadArrangement, Expression<Func<TMock, TMockResult>>> func
         );
     
     IMockCounterVerifier<IResultAsserter<TSut, TSutResult>> Should<TMockResult>(
@@ -13,10 +13,10 @@ public interface IResultMockVerifier<TSut, TSutResult, TMock>
         );
     
     IMockCounterVerifier<IResultAsserter<TSut, TSutResult>> Should(
-        Func<IArrangement, Expression<System.Action<TMock>>> func
+        Func<IReadArrangement, Expression<Action<TMock>>> func
     );
     
     IMockCounterVerifier<IResultAsserter<TSut, TSutResult>> Should(
-        Expression<System.Action<TMock>> expression
+        Expression<Action<TMock>> expression
     );
 }

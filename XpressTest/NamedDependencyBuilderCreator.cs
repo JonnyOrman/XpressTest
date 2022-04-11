@@ -6,38 +6,43 @@ public class NamedDependencyBuilderCreator<TSut>
 where TSut : class
 {
     private readonly IArrangement _arrangement;
-    private readonly IVoidAsserterCreator<TSut> _voidAsserterCreator;
-    private IMockDependencyBuilderCreator<TSut> _mockDependencyBuilderCreator;
+
+    private IDependencyBuilderChainer<TSut> _dependencyBuilderChainer;
 
     public NamedDependencyBuilderCreator(
         IArrangement arrangement,
-        IVoidAsserterCreator<TSut> voidAsserterCreator,
-        IMockDependencyBuilderCreator<TSut> mockDependencyBuilderCreator
+        IDependencyBuilderChainer<TSut> dependencyBuilderChainer
         )
     {
         _arrangement = arrangement;
-        _voidAsserterCreator = voidAsserterCreator;
-        _mockDependencyBuilderCreator = mockDependencyBuilderCreator;
+        _dependencyBuilderChainer = dependencyBuilderChainer;
     }
     
-    public INamedDependencyBuilder<TSut> Create<TNewDependency>(
+    public IDependencyBuilder<TSut> Create<TNewDependency>(
         TNewDependency newDependency,
         string name
         )
-        where TNewDependency : class
     {
-        return new NamedDependencyBuilder<TSut, TNewDependency>(
-            _arrangement,
+        var namedDependency = new NamedDependency<TNewDependency>(
             newDependency,
-            name,
-            _voidAsserterCreator,
-            this,
-            _mockDependencyBuilderCreator
+            name
+        );
+
+        var setter = new NameDependencySetter<TNewDependency>(
+            _arrangement
+            );
+        
+        return new DependencyBuilder<TSut, INamedDependency>(
+            namedDependency,
+            setter,
+            _dependencyBuilderChainer
         );
     }
 
-    public void Set(IMockDependencyBuilderCreator<TSut> mockDependencyBuilderCreator)
+    public void Set(
+        DependencyBuilderChainer<TSut> dependencyBuilderChainer
+        )
     {
-        _mockDependencyBuilderCreator = mockDependencyBuilderCreator;
+        _dependencyBuilderChainer = dependencyBuilderChainer;
     }
 }

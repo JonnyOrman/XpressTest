@@ -16,11 +16,11 @@ public class SettingsMessagePublisherTests
                 .AndGiven(arrangement => new MessageSettings(arrangement.GetThe<string>()))
             .WithTheMock<IMessageClientFactory>()
                 .ThatDoes<IMessageClient>(arrangement => messageClientFactory => messageClientFactory.Create(arrangement.GetThe<string>()))
-                .AndReturns(arrangement => arrangement.GetMockObject<IMessageClient>())
-            .With<MessageSettings>()
-            .WhenIt(action => action.Sut.Publish(action.GetMockObject<IMessage>()))
-            .Then<IMessageClient>()
-                .Should(arrangement => messageClient => messageClient.Publish(arrangement.GetMockObject<IMessage>()))
+                .AndReturns(arrangement => arrangement.GetTheMockObject<IMessageClient>())
+            .WithThe<MessageSettings>()
+            .WhenIt(arrangement => arrangement.Sut.Publish(arrangement.GetTheMockObject<IMessage>()))
+            .ThenThe<IMessageClient>()
+                .Should(arrangement => messageClient => messageClient.Publish(arrangement.GetTheMockObject<IMessage>()))
                 .Once();
     
     [Fact]
@@ -30,20 +30,20 @@ public class SettingsMessagePublisherTests
                 .AndGivenA<IMessageClient>()
                 .AndGivenA<IMessageClientFactory>()
                     .ThatDoes<IMessageClient>(arrangement => messageClientFactory => messageClientFactory.Create(arrangement.GetThe<string>()))
-                    .AndReturns(arrangement => arrangement.GetMockObject<IMessageClient>())
+                    .AndReturns(arrangement => arrangement.GetTheMockObject<IMessageClient>())
                 .AndGivenA<IMessage>()
                 .AndGiven(arrangement => new MessageSettings(arrangement.GetThe<string>()))
             .WithTheMock<IMessageClientFactory>()
-            .With<MessageSettings>()
-            .WhenIt(action => action.Sut.Publish(action.GetMockObject<IMessage>()))
-            .Then<IMessageClient>()
-                .Should(arrangement => messageClient => messageClient.Publish(arrangement.GetMockObject<IMessage>()))
+            .WithThe<MessageSettings>()
+            .WhenIt(arrangement => arrangement.Sut.Publish(arrangement.GetTheMockObject<IMessage>()))
+            .ThenThe<IMessageClient>()
+                .Should(arrangement => messageClient => messageClient.Publish(arrangement.GetTheMockObject<IMessage>()))
                 .Once();
 
     [Fact]
     public void PublishesMessage_Example3()
     {
-        var messageClientMock = new Mock<IMessageClient>();
+        var messageClientMock = new Moq.Mock<IMessageClient>();
         
         GivenA<SettingsMessagePublisher>
                 .AndGiven("topic-name")
@@ -54,10 +54,10 @@ public class SettingsMessagePublisherTests
                 .AndGivenA<IMessage>()
                 .AndGiven(arrangement => new MessageSettings(arrangement.GetThe<string>()))
             .WithTheMock<IMessageClientFactory>()
-            .With<MessageSettings>()
-            .WhenIt(action => action.Sut.Publish(action.GetMockObject<IMessage>()))
+            .WithThe<MessageSettings>()
+            .WhenIt(arrangement => arrangement.Sut.Publish(arrangement.GetTheMockObject<IMessage>()))
             .Then(messageClientMock)
-                .Should(arrangement => messageClient => messageClient.Publish(arrangement.GetMockObject<IMessage>()))
+                .Should(arrangement => messageClient => messageClient.Publish(arrangement.GetTheMockObject<IMessage>()))
                 .Once();
     }
     
@@ -66,7 +66,7 @@ public class SettingsMessagePublisherTests
     {
         var topic = "topic-name";
         
-        var messageClientMock = new Mock<IMessageClient>();
+        var messageClientMock = new Moq.Mock<IMessageClient>();
         
         GivenA<SettingsMessagePublisher>
                 .AndGivenA<IMessageClientFactory>()
@@ -75,10 +75,10 @@ public class SettingsMessagePublisherTests
                 .AndGivenA<IMessage>()
                 .AndGiven(new MessageSettings(topic))
             .WithTheMock<IMessageClientFactory>()
-            .With<MessageSettings>()
-            .WhenIt(action => action.Sut.Publish(action.GetMockObject<IMessage>()))
+            .WithThe<MessageSettings>()
+            .WhenIt(arrangement => arrangement.Sut.Publish(arrangement.GetTheMockObject<IMessage>()))
             .Then(messageClientMock)
-                .Should(arrangement => messageClient => messageClient.Publish(arrangement.GetMockObject<IMessage>()))
+                .Should(arrangement => messageClient => messageClient.Publish(arrangement.GetTheMockObject<IMessage>()))
                 .Once();
     }
 }

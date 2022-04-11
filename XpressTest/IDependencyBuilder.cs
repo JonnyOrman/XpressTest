@@ -1,17 +1,8 @@
 namespace XpressTest;
 
 public interface IDependencyBuilder<TSut>
-    :
-        IConstructedSutAsserter<TSut>
+:
+    IDependenciesBuilder<TSut>,
+    IActor<TSut>
 {
-    IValueDependencyBuilder<TSut> With<TNewDependency>(
-        TNewDependency newDependency
-        );
-    
-    IMockDependencyBuilder<TSut, TNewDependency> WithA<TNewDependency>()
-        where TNewDependency : class;
-    
-    IVoidAsserter<TSut> WhenIt(
-        System.Action<TSut> action
-    );
 }

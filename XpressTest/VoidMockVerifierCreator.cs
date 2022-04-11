@@ -1,5 +1,3 @@
-using Moq;
-
 namespace XpressTest;
 
 public class VoidMockVerifierCreator<TSut>

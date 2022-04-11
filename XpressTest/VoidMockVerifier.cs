@@ -30,7 +30,7 @@ public class VoidMockVerifier<TSut, TMock>
     }
 
     public IMockCounterVerifier<IVoidAsserter<TSut>> Should(
-        Func<IArrangement, Expression<System.Action<TMock>>> func
+        Func<IReadArrangement, Expression<Action<TMock>>> func
         )
     {
         return _mockCounterVerifierCreator.Create(
@@ -40,7 +40,7 @@ public class VoidMockVerifier<TSut, TMock>
     }
 
     public IMockCounterVerifier<IVoidAsserter<TSut>> Should(
-        Expression<System.Action<TMock>> expression
+        Expression<Action<TMock>> expression
         )
     {
         return _mockCounterVerifierCreator.Create(

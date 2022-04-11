@@ -1,10 +1,10 @@
 ﻿namespace XpressTest;
 
-public interface IResultPropertyAsserter<TResult, TProperty>
+public interface IResultPropertyAsserter<TSut, TResult, TProperty>
 {
-    IResultPropertyTargeter<TResult> ShouldBe(TProperty expectedValue);
+    IResultPropertyTargeter<TSut, TResult> ShouldBe(TProperty expectedValue);
     
-    IResultPropertyTargeter<TResult> ShouldBe(Func<IArrangement, TProperty> expectedValueFunc);
+    IResultPropertyTargeter<TSut, TResult> ShouldBe(Func<IReadArrangement, TProperty> expectedValueFunc);
     
-    IResultPropertyTargeter<TResult> ShouldBeNull();
+    IResultPropertyTargeter<TSut, TResult> ShouldBeNull();
 }

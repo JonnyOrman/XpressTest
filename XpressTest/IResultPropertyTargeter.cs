@@ -1,11 +1,11 @@
 ﻿namespace XpressTest;
 
-public interface IResultPropertyTargeter<TResult>
+public interface IResultPropertyTargeter<TSut, TResult>
 :
     IResultValueAsserter<TResult>,
-    IArrangementResultValueAsserter<TResult>
+    IArrangementResultValueAsserter<TSut, TResult>
 {
-    IResultPropertyAsserter<TResult, TProperty> ThenTheResult<TProperty>(Func<TResult, TProperty> targetFunc);
+    IResultPropertyAsserter<TSut, TResult, TProperty> ThenTheResult<TProperty>(Func<TResult, TProperty> targetFunc);
     
     void ThenTheResultShouldBeA<TExpectedType>();
 }

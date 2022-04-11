@@ -1,5 +1,3 @@
-using Moq;
-
 namespace XpressTest;
 
 public class MockDependencyBuilderCreator<TSut>
@@ -19,32 +17,21 @@ where TSut : class
         _moqMockDependencyBuilderCreator = moqMockDependencyBuilderCreator;
     }
     
-    public IMockDependencyBuilder<TSut, TDependency> Create<TDependency>()
+    public IMockDependencySetupBuilder<TSut, TDependency> Create<TDependency>()
         where TDependency : class
     {
-        var mock = new Mock<TDependency>();
+        var moqMock = new Moq.Mock<TDependency>();
 
+        var mock = new Mock<TDependency>(moqMock);
+        
         return _moqMockDependencyBuilderCreator.Create(
             mock
             );
     }
 
-    public INamedMockDependencyBuilder<TSut, TDependency> Create<TDependency>(
-        string name
-        )
-        where TDependency : class
+    public IMockDependencySetupBuilder<TSut, TDependency> CreateExisting<TDependency>() where TDependency : class
     {
-        var newMock = new Mock<TDependency>();
-        
-        return _moqMockDependencyBuilderCreator.Create(
-            newMock,
-            name
-        );
-    }
-    
-    public IMockDependencyBuilder<TSut, TDependency> CreateExisting<TDependency>() where TDependency : class
-    {
-        var mock = _arrangement.GetMock<TDependency>();
+        var mock = _arrangement.GetTheMock<TDependency>();
         
         return _moqMockDependencyBuilderCreator.Create(
             mock

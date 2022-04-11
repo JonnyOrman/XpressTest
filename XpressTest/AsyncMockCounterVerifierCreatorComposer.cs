@@ -1,5 +1,3 @@
-using Moq;
-
 namespace XpressTest;
 
 public class AsyncMockCounterVerifierCreatorComposer<TAsserter>
@@ -20,7 +18,7 @@ public class AsyncMockCounterVerifierCreatorComposer<TAsserter>
         )
         where TMock : class
     {
-        var mock = _arrangement.GetMock<TMock>();
+        var mock = _arrangement.GetTheMock<TMock>();
         
         var mockCallCountVerifierCreator = new MockCallCountVerifierCreator<TMock>(
             mock
@@ -85,7 +83,7 @@ public class AsyncMockCounterVerifierCreatorComposer<TAsserter>
     }
 
     public IMockCounterVerifierCreator<TMock, TAsserter> Compose<TMock>(
-        Mock<TMock> mock,
+        IMock<TMock> mock,
         TAsserter asserter
         )
         where TMock : class

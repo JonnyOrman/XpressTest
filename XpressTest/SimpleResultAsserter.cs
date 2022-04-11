@@ -22,11 +22,11 @@ public class SimpleResultAsserter<TSut, TResult>
         _exceptionAsserter = exceptionAsserter;
     }
 
-    public void Then(System.Action<IAssertion<TResult>> action)
+    public void Then(Action<IResultAssertion<TResult>> action)
     {
         var result = _action.Invoke();
         
-        var sutAction = new Action<TSut>(_sut, _arrangement);
+        var sutAction = new SutArrangement<TSut>(_sut, _arrangement);
 
         var assertion = new Assertion<TSut, TResult>(
             result,

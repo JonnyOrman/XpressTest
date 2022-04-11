@@ -13,30 +13,30 @@ public class ResultMessagePublisherTests
                 .AndGivenA<IMessageClient>()
             .WithA<IMessageClientFactory>()
                 .ThatDoes(messageClientFactory => messageClientFactory.Create())
-                .AndReturns<IMessageClient>()
-            .WhenIt(action => action.Sut.Publish(action.GetMockObject<IMessage>()))
-            .Then<IMessageClientFactory>()
+                .AndReturnsTheMock<IMessageClient>()
+            .WhenIt(arrangement => arrangement.Sut.Publish(arrangement.GetTheMockObject<IMessage>()))
+            .ThenThe<IMessageClientFactory>()
                 .Should(messageClientFactory => messageClientFactory.Create())
                 .Once()
-            .Then<IMessageClient>()
-                .Should(arrangement => messageClient => messageClient.Publish(arrangement.GetMockObject<IMessage>()))
+            .ThenThe<IMessageClient>()
+                .Should(arrangement => messageClient => messageClient.Publish(arrangement.GetTheMockObject<IMessage>()))
                 .Once()
             .ThenTheResultShouldBe(true);
     
     [Fact]
     public void PublishesMessage_Example2()
     {
-        var messageMock = new Mock<IMessage>();
+        var messageMock = new Moq.Mock<IMessage>();
 
-        var messageClient = new Mock<IMessageClient>();
+        var messageClient = new Moq.Mock<IMessageClient>();
         
         GivenA<ResultMessagePublisher>
                 .AndGivenA<IMessageClient>()
             .WithA<IMessageClientFactory>()
                 .ThatDoes(messageClientFactory => messageClientFactory.Create())
                 .AndReturns(messageClient.Object)
-            .WhenIt(action => action.Sut.Publish(messageMock.Object))
-            .Then<IMessageClientFactory>()
+            .WhenIt(arrangement => arrangement.Sut.Publish(messageMock.Object))
+            .ThenThe<IMessageClientFactory>()
                 .Should(messageClientFactory => messageClientFactory.Create())
                 .Once()
             .Then(messageClient)
