@@ -21,8 +21,8 @@ public class VoidMockVerifierCreator<TSut>
     {
         var mockCounterVerifierCreator = _mockCounterVerifierCreatorComposer.Compose<TMock>(
             asserter
-            );  
-        
+            );
+
         return new VoidMockVerifier<TSut, TMock>(
             mockCounterVerifierCreator,
             asserter
@@ -30,7 +30,7 @@ public class VoidMockVerifierCreator<TSut>
     }
 
     public IVoidMockVerifier<TSut, TMock> Create<TMock>(
-        Mock<TMock> mock,
+        IMock<TMock> mock,
         IVoidAsserter<TSut> asserter
         )
         where TMock : class

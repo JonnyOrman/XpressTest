@@ -8,4 +8,10 @@ public interface IDependencyBuilderCreator<TSut>
     IDependencyBuilder<TSut> CreateObjectDependencyBuilder<TNewDependency>(Func<IReadArrangement, TNewDependency> newDependencyFunc);
     IMockDependencySetupBuilder<TSut, TNewDependency> CreateNamedMockDependencyBuilder<TNewDependency>(string name) where TNewDependency : class;
     IMockDependencySetupBuilder<TSut, TMock> CreateExistingMockDependencyBuilder<TMock>() where TMock : class;
+    
+    IDependencyBuilder<TSut> Create<TObject>();
+    
+    IDependencyBuilder<TSut> Create<TObject>(
+        string name
+    );
 }

@@ -29,9 +29,7 @@ where TObject : class
     {
         var expectedResult = func.Invoke(_arrangement);
 
-        _objectMock.MoqMock.Setup(_expression).Returns(expectedResult);
-
-        return _mockObjectBuilder;
+        return AndReturns(expectedResult);
     }
 
     public IMockSetupBuilder<TSut, TObject> AndReturns(TResult expectedResult)
@@ -44,10 +42,8 @@ where TObject : class
     public IMockSetupBuilder<TSut, TObject> AndReturnsTheMock<TMock>()
         where TMock : class, TResult
     {
-        var mockObject = _arrangement.GetTheMockObject<TMock>();
+        var expectedResult = _arrangement.GetTheMockObject<TMock>();
         
-        _objectMock.MoqMock.Setup(_expression).Returns(mockObject);
-
-        return _mockObjectBuilder;
+        return AndReturns(expectedResult);
     }
 }

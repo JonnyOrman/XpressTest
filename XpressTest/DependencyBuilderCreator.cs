@@ -5,22 +5,25 @@ public class DependencyBuilderCreator<TSut>
         IDependencyBuilderCreator<TSut>
 where TSut : class
 {
-    private IObjectDependencyBuilderCreator<TSut> _objectDependencyBuilderCreator;
-    private INamedDependencyBuilderCreator<TSut> _namedDependencyBuilderCreator;
-    private IMockDependencyBuilderCreator<TSut> _mockDependencyBuilderCreator;
-    private INamedMockDependencyBuilderCreator<TSut> _namedMockDependencyBuilderCreator;
+    private readonly IObjectDependencyBuilderCreator<TSut> _objectDependencyBuilderCreator;
+    private readonly INamedDependencyBuilderCreator<TSut> _namedDependencyBuilderCreator;
+    private readonly IMockDependencyBuilderCreator<TSut> _mockDependencyBuilderCreator;
+    private readonly INamedMockDependencyBuilderCreator<TSut> _namedMockDependencyBuilderCreator;
+    private readonly IExistingObjectDependencyBuilderCreator<TSut> _existingObjectDependencyBuilderCreator;
 
     public DependencyBuilderCreator(
         IObjectDependencyBuilderCreator<TSut> objectDependencyBuilderCreator,
         INamedDependencyBuilderCreator<TSut> namedDependencyBuilderCreator,
         IMockDependencyBuilderCreator<TSut> mockDependencyBuilderCreator,
-        INamedMockDependencyBuilderCreator<TSut> namedMockDependencyBuilderCreator
+        INamedMockDependencyBuilderCreator<TSut> namedMockDependencyBuilderCreator,
+        IExistingObjectDependencyBuilderCreator<TSut> existingObjectDependencyBuilderCreator
         )
     {
         _objectDependencyBuilderCreator = objectDependencyBuilderCreator;
         _namedDependencyBuilderCreator = namedDependencyBuilderCreator;
         _mockDependencyBuilderCreator = mockDependencyBuilderCreator;
         _namedMockDependencyBuilderCreator = namedMockDependencyBuilderCreator;
+        _existingObjectDependencyBuilderCreator = existingObjectDependencyBuilderCreator;
     }
 
     public IDependencyBuilder<TSut> CreateNamedDependencyBuilder<TNewDependency>(TNewDependency newDependency,
@@ -56,24 +59,14 @@ where TSut : class
     {
         return _mockDependencyBuilderCreator.CreateExisting<TMock>();
     }
+    
+    public IDependencyBuilder<TSut> Create<TObject>()
+    {
+        return _existingObjectDependencyBuilderCreator.Create<TObject>();
+    }
 
-    public void Set(IObjectDependencyBuilderCreator<TSut> objectDependencyBuilderCreator)
+    public IDependencyBuilder<TSut> Create<TObject>(string name)
     {
-        _objectDependencyBuilderCreator = objectDependencyBuilderCreator;
-    }
-    
-    public void Set(INamedDependencyBuilderCreator<TSut> namedDependencyBuilderCreator)
-    {
-        _namedDependencyBuilderCreator = namedDependencyBuilderCreator;
-    }
-    
-    public void Set(IMockDependencyBuilderCreator<TSut> mockDependencyBuilderCreator)
-    {
-        _mockDependencyBuilderCreator = mockDependencyBuilderCreator;
-    }
-    
-    public void Set(INamedMockDependencyBuilderCreator<TSut> namedMockDependencyBuilderCreator)
-    {
-        _namedMockDependencyBuilderCreator = namedMockDependencyBuilderCreator;
+        return _existingObjectDependencyBuilderCreator.Create<TObject>(name);
     }
 }

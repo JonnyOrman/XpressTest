@@ -2,25 +2,29 @@ using Xunit;
 
 namespace XpressTest;
 
-public class ResultAsserter<TSut, TResult> : IResultAsserter<TSut, TResult>
-    where TSut : class
+public class ResultAsserter<TSut, TResult>
+    :
+        IResultAsserter<TSut, TResult>
 {
     private readonly TResult _result;
     private readonly ISutArrangement<TSut> _sutArrangement;
     private readonly IResultPropertyTargeter<TSut, TResult> _resultPropertyTargeter;
     private readonly IResultMockVerifierCreator<TSut, TResult> _resultMockVerifierCreator;
+    private readonly IExceptionAsserter _exceptionAsserter;
 
     public ResultAsserter(
         TResult result,
         ISutArrangement<TSut> sutArrangement,
         IResultPropertyTargeter<TSut, TResult> resultPropertyTargeter,
-        IResultMockVerifierCreator<TSut, TResult> resultMockVerifierCreator
+        IResultMockVerifierCreator<TSut, TResult> resultMockVerifierCreator,
+        IExceptionAsserter exceptionAsserter
         )
     {
         _result = result;
         _sutArrangement = sutArrangement;
         _resultPropertyTargeter = resultPropertyTargeter;
         _resultMockVerifierCreator = resultMockVerifierCreator;
+        _exceptionAsserter = exceptionAsserter;
     }
     
     public void Then(
@@ -99,5 +103,10 @@ public class ResultAsserter<TSut, TResult> : IResultAsserter<TSut, TResult>
     public void ThenTheResultShouldNotBeNull()
     {
         Assert.NotNull(_result);
+    }
+    
+    public void ThenItShouldThrow<TException>() where TException : Exception
+    {
+        _exceptionAsserter.ThenItShouldThrow<TException>();
     }
 }

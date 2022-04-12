@@ -5,56 +5,64 @@ public class VoidAsserterCreator<TSut>
         IVoidAsserterCreator<TSut>
 where TSut : class
 {
-    private readonly ISutComposer<TSut> _sutComposer;
-    private readonly IArrangement _arrangement;
+    private readonly ISutArrangementCreator<TSut> _sutArrangementCreator;
 
     public VoidAsserterCreator(
-        ISutComposer<TSut> sutComposer,
-        IArrangement arrangement
+        ISutArrangementCreator<TSut> sutArrangementCreator
         )
     {
-        _sutComposer = sutComposer;
-        _arrangement = arrangement;
+        _sutArrangementCreator = sutArrangementCreator;
     }
     
     public IVoidAsserter<TSut> Create(Action<TSut> action)
     {
-        return CreateVoidAsserter(sut => action.Invoke(sut));
+        var sutArrangement = _sutArrangementCreator.Create();
+
+        action.Invoke(sutArrangement.Sut);
+
+        Action exceptionAction = () => action.Invoke(sutArrangement.Sut);
+
+        return Create(
+            sutArrangement,
+            exceptionAction
+        );
     }
 
     public IVoidAsserter<TSut> Create(Action<ISutArrangement<TSut>> action)
     {
-        return CreateVoidAsserter(sut => action.Invoke(new SutArrangement<TSut>(
-            sut,
-            _arrangement
-        )));
-    }
-    
-    private IVoidAsserter<TSut> CreateVoidAsserter(
-        Action<TSut> sutAction
-    )
-    {
-        var sut = _sutComposer.Compose();
+        var sutArrangement = _sutArrangementCreator.Create();
 
-        var sutArrangement = new SutArrangement<TSut>(
-            sut,
-            _arrangement
+        action.Invoke(sutArrangement);
+
+        var exceptionAction = () => action.Invoke(sutArrangement);
+
+        return Create(
+            sutArrangement,
+            exceptionAction
         );
+    }
 
-        sutAction.Invoke(sut);
-
-        var mockCounterVerifierCreatorComposer = new MockCounterVerifierCreatorComposer<IVoidAsserter<TSut>>(
-            _arrangement
+    private IVoidAsserter<TSut> Create(
+        ISutArrangement<TSut> sutArrangement,
+        Action exceptionAction
+        )
+    {
+        var mockCounterVerifierCreatorComposer = new MockCounterVerifierCreatorComposer<TSut, IVoidAsserter<TSut>>(
+            sutArrangement
         );
         
         var voidMockVerifierCreator = new VoidMockVerifierCreator<TSut>(
             mockCounterVerifierCreatorComposer
         );
+
+        var exceptionAsserter = new ExceptionAsserter(
+            exceptionAction
+        );
         
         return new VoidAsserter<TSut>(
             sutArrangement,
             voidMockVerifierCreator,
-            sut
+            exceptionAsserter
         );
     }
 }

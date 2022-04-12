@@ -5,16 +5,16 @@ public class NamedMockDependencyBuilderCreator<TSut>
         INamedMockDependencyBuilderCreator<TSut>
 where TSut : class
 {
-    private IDependencyBuilderChainer<TSut> _mockDependencyBuilderChainer;
     private readonly IArrangement _arrangement;
+    private readonly IDependencyBuilderChainer<TSut> _mockDependencyBuilderChainer;
 
     public NamedMockDependencyBuilderCreator(
-        IDependencyBuilderChainer<TSut> mockDependencyBuilderChainer,
-        IArrangement arrangement
+        IArrangement arrangement,
+        IDependencyBuilderChainer<TSut> mockDependencyBuilderChainer
         )
     {
-        _mockDependencyBuilderChainer = mockDependencyBuilderChainer;
         _arrangement = arrangement;
+        _mockDependencyBuilderChainer = mockDependencyBuilderChainer;
     }
     
     public IMockDependencySetupBuilder<TSut, TDependency> Create<TDependency>(
@@ -39,10 +39,5 @@ where TSut : class
             objectSetter,
             _mockDependencyBuilderChainer
         );
-    }
-
-    public void Set(DependencyBuilderChainer<TSut> mockDependencyBuilderChainer)
-    {
-        _mockDependencyBuilderChainer = mockDependencyBuilderChainer;
     }
 }

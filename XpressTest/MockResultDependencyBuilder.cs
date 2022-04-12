@@ -39,19 +39,15 @@ public class MockResultDependencyBuilder<TSut, TDependency, TResult>
         )
     {
         var expectedResult = resultFunc.Invoke(_arrangement);
-
-        _dependencyMock.MoqMock.Setup(_func).Returns(expectedResult);
-
-        return _mockDependencyBuilder;
+        
+        return AndReturns(expectedResult);
     }
 
     public IDependencyBuilder<TSut> AndReturnsTheMock<TReturn>()
         where TReturn : class, TResult
     {
-        var result = _arrangement.GetTheMockObject<TReturn>();
+        var expectedResult = _arrangement.GetTheMockObject<TReturn>();
         
-        _dependencyMock.MoqMock.Setup(_func).Returns(result);
-
-        return _mockDependencyBuilder;
+        return AndReturns(expectedResult);
     }
 }

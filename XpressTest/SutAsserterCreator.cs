@@ -4,29 +4,21 @@ public class SutAsserterCreator<TSut>
     :
         ISutAsserterCreator<TSut>
 {
-    private readonly ISutComposer<TSut> _sutComposer;
-    private readonly IArrangement _arrangement;
+    private readonly ISutArrangementCreator<TSut> _sutArrangementCreator;
 
     public SutAsserterCreator(
-        ISutComposer<TSut> sutComposer,
-        IArrangement arrangement
+        ISutArrangementCreator<TSut> sutArrangementCreator
         )
     {
-        _sutComposer = sutComposer;
-        _arrangement = arrangement;
+        _sutArrangementCreator = sutArrangementCreator;
     }
     
     public ISutPropertyTargeter<TSut> Create()
     {
-        var sut = _sutComposer.Compose();
-
-        var sutArrangement = new SutArrangement<TSut>(
-            sut,
-            _arrangement
-        );
+        var sutArrangement = _sutArrangementCreator.Create();
         
         var sutPropertyTargeter = new SutPropertyTargeter<TSut>(
-            sut,
+            sutArrangement.Sut,
             sutArrangement
         );
         

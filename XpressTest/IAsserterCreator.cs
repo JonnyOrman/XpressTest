@@ -15,4 +15,6 @@ public interface IAsserterCreator<TSut>
     Task<IAsyncResultAsserter<TSut, TResult>> CreateAsyncResultAsserter<TResult>(Func<ISutArrangement<TSut>, Task<TResult>> func);
     
     Task<IAsyncResultAsserter<TSut, TResult>> CreateAsyncResultAsserter<TResult>(Func<TSut, Task<TResult>> func);
+    
+    ISutPropertyTargeter<TSut> CreateSutAsserter();
 }

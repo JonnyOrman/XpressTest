@@ -1,21 +1,24 @@
 namespace XpressTest;
 
-public class VoidAsserter<TSut> : IVoidAsserter<TSut>
+public class VoidAsserter<TSut>
+    :
+        IVoidAsserter<TSut>
     where TSut : class
 {
-    private readonly IArrangement _arrangement;
+    private readonly ISutArrangement<TSut> _sutArrangement;
     private readonly IVoidMockVerifierCreator<TSut> _voidMockVerifierCreator;
-    private readonly TSut _sut;
+    private readonly IExceptionAsserter _exceptionAsserter;
 
     public VoidAsserter(
-        IArrangement arrangement,
+        ISutArrangement<TSut> sutArrangement,
         IVoidMockVerifierCreator<TSut> voidMockVerifierCreator,
-        TSut sut
+        IExceptionAsserter exceptionAsserter
         )
     {
-        _arrangement = arrangement;
+        _sutArrangement = sutArrangement;
+        
         _voidMockVerifierCreator = voidMockVerifierCreator;
-        _sut = sut;
+        _exceptionAsserter = exceptionAsserter;
     }
     
     public IVoidMockVerifier<TSut, TMock> ThenThe<TMock>()
@@ -24,6 +27,16 @@ public class VoidAsserter<TSut> : IVoidAsserter<TSut>
         return _voidMockVerifierCreator.Create<TMock>(
             this
             );
+    }
+
+    public IVoidMockVerifier<TSut, TMock> ThenThe<TMock>(string name) where TMock : class
+    {
+        var mock = _sutArrangement.GetTheMock<TMock>(name);
+        
+        return _voidMockVerifierCreator.Create(
+            mock,
+            this
+        );
     }
 
     public IVoidMockVerifier<TSut, TMock> Then<TMock>(
@@ -41,13 +54,8 @@ public class VoidAsserter<TSut> : IVoidAsserter<TSut>
 
     public void Then(Action<ISutArrangement<TSut>> action)
     {
-        var sutArrangement = new SutArrangement<TSut>(
-            _sut,
-            _arrangement
-            );
-        
         var assertion = new VoidAssertion<TSut>(
-            sutArrangement
+            _sutArrangement
             );
 
         action.Invoke(assertion);
@@ -55,38 +63,28 @@ public class VoidAsserter<TSut> : IVoidAsserter<TSut>
 
     public IVoidAsserter<TSut> ThenWhenIt(Action<ISutArrangement<TSut>> action)
     {
-        var sutArrangement = new SutArrangement<TSut>(
-            _sut,
-            _arrangement
-        );
-        
-        action.Invoke(sutArrangement);
+        action.Invoke(_sutArrangement);
 
         return this;
     }
 
     public IResultAsserter<TSut, TResult> ThenWhenIt<TResult>(Func<TSut, TResult> func)
     {
-        var sutArrangement = new SutArrangement<TSut>(
-            _sut,
-            _arrangement
-        );
-        
-        var result = func.Invoke(_sut);
+        var result = func.Invoke(_sutArrangement.Sut);
         
         var resultPropertyTargeter = new ResultPropertyTargeter<TSut, TResult>(
             result,
-            sutArrangement
+            _sutArrangement
         );
         
         var mockCounterVerifierCreatorComposer =
-            new MockCounterVerifierCreatorComposer<IResultAsserter<TSut, TResult>>(
-                _arrangement
+            new MockCounterVerifierCreatorComposer<TSut, IResultAsserter<TSut, TResult>>(
+                _sutArrangement
             );
         
         var asyncMockCounterVerifierCreatorComposer =
-            new AsyncMockCounterVerifierCreatorComposer<IAsyncResultAsserter<TSut, TResult>>(
-                _arrangement
+            new AsyncMockCounterVerifierCreatorComposer<TSut, IAsyncResultAsserter<TSut, TResult>>(
+                _sutArrangement
             );
         
         var resultMockVerifierCreator = new ResultMockVerifierCreator<TSut, TResult>(
@@ -96,9 +94,16 @@ public class VoidAsserter<TSut> : IVoidAsserter<TSut>
         
         return new ResultAsserter<TSut, TResult>(
             result,
-            sutArrangement,
+            _sutArrangement,
             resultPropertyTargeter,
-            resultMockVerifierCreator
+            resultMockVerifierCreator,
+            _exceptionAsserter
         );
+    }
+
+    public void ThenItShouldThrow<TException>()
+        where TException : Exception
+    {
+        _exceptionAsserter.ThenItShouldThrow<TException>();
     }
 }

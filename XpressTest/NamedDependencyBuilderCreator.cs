@@ -38,11 +38,4 @@ where TSut : class
             _dependencyBuilderChainer
         );
     }
-
-    public void Set(
-        DependencyBuilderChainer<TSut> dependencyBuilderChainer
-        )
-    {
-        _dependencyBuilderChainer = dependencyBuilderChainer;
-    }
 }

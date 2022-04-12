@@ -5,28 +5,20 @@ public class MockSetupBuilderCreator<TSut>
     IMockSetupBuilderCreator<TSut>
 where TSut : class
 {
+    private readonly ITestBuilderContainer<TSut> _testBuilderContainer;
+
     private readonly IArrangement _arrangement;
-    private readonly IAsserterCreator<TSut> _asserterCreator;
-    private IObjectBuilderCreator<TSut> _objectBuilderCreator;
-    private readonly IDependencyBuilderCreator<TSut> _dependencyBuilderCreator;
     private INamedMockSetupBuilderCreator<TSut> _namedMockSetupBuilderGenerator;
-    private readonly ISutAsserterCreator<TSut> _sutAsserterCreator;
 
     public MockSetupBuilderCreator(
+        ITestBuilderContainer<TSut> testBuilderContainer,
         IArrangement arrangement,
-        IAsserterCreator<TSut> asserterCreator,
-        IObjectBuilderCreator<TSut> objectBuilderCreator,
-        IDependencyBuilderCreator<TSut> dependencyBuilderCreator,
-        INamedMockSetupBuilderCreator<TSut> namedMockSetupBuilderGenerator,
-        ISutAsserterCreator<TSut> sutAsserterCreator
+        INamedMockSetupBuilderCreator<TSut> namedMockSetupBuilderGenerator
         )
     {
+        _testBuilderContainer = testBuilderContainer;
         _arrangement = arrangement;
-        _asserterCreator = asserterCreator;
-        _objectBuilderCreator = objectBuilderCreator;
-        _dependencyBuilderCreator = dependencyBuilderCreator;
         _namedMockSetupBuilderGenerator = namedMockSetupBuilderGenerator;
-        _sutAsserterCreator = sutAsserterCreator;
     }
     
     public IMockSetupBuilder<TSut, TObject> Create<TObject>()
@@ -41,13 +33,10 @@ where TSut : class
         );
         
         var chainer = new MockVariableBuilderChainer<TSut, TObject, IMock<TObject>>(
-            _asserterCreator,
+            _testBuilderContainer,
             this,
-            _objectBuilderCreator,
             _arrangement,
-            _dependencyBuilderCreator,
-            _namedMockSetupBuilderGenerator,
-            _sutAsserterCreator
+            _namedMockSetupBuilderGenerator
         ); 
         
         return new MockSetupBuilder<TSut, TObject, IMock<TObject>>(
@@ -60,10 +49,5 @@ where TSut : class
     public void Set(NamedMockSetupBuilderCreator<TSut> namedMockSetupBuilderGenerator)
     {
         _namedMockSetupBuilderGenerator = namedMockSetupBuilderGenerator;
-    }
-    
-    public void Set(IObjectBuilderCreator<TSut> objectBuilderCreator)
-    {
-        _objectBuilderCreator = objectBuilderCreator;
     }
 }

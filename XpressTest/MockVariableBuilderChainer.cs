@@ -13,21 +13,15 @@ public class MockVariableBuilderChainer<TSut, TMock, TVariable>
     private readonly IArrangement _arrangement;
 
     public MockVariableBuilderChainer(
-        IAsserterCreator<TSut> asserterCreator,
+        ITestBuilderContainer<TSut> testBuilderContainer,
         IMockSetupBuilderCreator<TSut> mockSetupBuilderGenerator,
-        IObjectBuilderCreator<TSut> objectBuilderCreator,
         IArrangement arrangement,
-        IDependencyBuilderCreator<TSut> dependencyBuilderCreator,
-        INamedMockSetupBuilderCreator<TSut> namedMockObjectBuilderCreator,
-        ISutAsserterCreator<TSut> sutAsserterCreator
+        INamedMockSetupBuilderCreator<TSut> namedMockObjectBuilderCreator
         )
         : base(
-            asserterCreator,
-            objectBuilderCreator,
+            testBuilderContainer,
             mockSetupBuilderGenerator,
-            dependencyBuilderCreator,
-            namedMockObjectBuilderCreator,
-            sutAsserterCreator
+            namedMockObjectBuilderCreator
         )
     {
         _arrangement = arrangement;

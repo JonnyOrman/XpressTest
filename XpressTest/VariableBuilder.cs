@@ -85,14 +85,14 @@ public class VariableBuilder<TSut, TObject, TChainer>
         Func<ISutArrangement<TSut>, TResult> func
         )
     {
-        return Chain(() => _chainer.Compose(
+        return Chain(() => _chainer.ComposeAsserter(
             func
         ));
     }
 
     public IResultAsserter<TSut, TResult> WhenIt<TResult>(Func<IReadArrangement, Func<TSut, TResult>> func)
     {
-        return Chain(() => _chainer.Compose(
+        return Chain(() => _chainer.ComposeAsserter(
             func
         ));
     }
@@ -101,7 +101,7 @@ public class VariableBuilder<TSut, TObject, TChainer>
         Action<ISutArrangement<TSut>> func
         )
     {
-        return Chain(() => _chainer.Compose(
+        return Chain(() => _chainer.ComposeAsserter(
             func
         ));
     }
@@ -166,14 +166,14 @@ public class VariableBuilder<TSut, TObject, TChainer>
 
     public IVoidAsserter<TSut> WhenIt(Action<TSut> action)
     {
-        return Chain(() => _chainer.Compose(
+        return Chain(() => _chainer.ComposeAsserter(
             action
         ));
     }
 
     public IResultAsserter<TSut, TResult> WhenIt<TResult>(Func<TSut, TResult> func)
     {
-        return Chain(() => _chainer.Compose(
+        return Chain(() => _chainer.ComposeAsserter(
             func
         ));
     }

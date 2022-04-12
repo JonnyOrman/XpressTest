@@ -1,9 +1,6 @@
 # XpressTest
-`XpressTest` is a fluent testing framework for C# .NET that avoids the need to organise the same, repetitive arrange-act-assert code blocks in every test, and keeps tests free from the clutter of loose variables.
 
-Tests are written by specifying the SUT, registering and setting up any mocks or other objects required for the test case, specifying the action to be tested and then performing assertions on the result and mocks. The SUT is automatically instantiated with the registered dependencies.
-
-Simple tests written with `XpressTest` look like this:
+Write entire unit tests with expressive, fluent syntax:
 ```cs
 [Fact]
 public void MultiplyNumbers() =>
@@ -18,7 +15,7 @@ public void DivideByZero() =>
         .ThenItShouldThrow<DivideByZeroException>();
 ```
 
-Each test has its own state that allows you to register variables during arrangement. These variables can then be used in the action and assertment:
+Register variables to the test for use in its action and assertion:
 ```cs
 [Fact]
 public void CreateEntity() =>
@@ -29,7 +26,7 @@ public void CreateEntity() =>
         .ThenTheResult(result => result.Name).ShouldBe("EntityName");
 ```
 
-Variables can be given names to identify them if multiple of the same type are registered:
+Name variables when multiple of the same type are used:
 ```cs
 [Fact]
 public void CreateEntity() =>
@@ -41,7 +38,7 @@ public void CreateEntity() =>
         .ThenTheResult(result => result.Name).ShouldBe("EntityName");
 ```
 
-Mocks can be set up and verified:
+Setup and verify mocks:
 ```cs
 [Fact]
 public void ProcessValidParameters() =>
@@ -66,9 +63,15 @@ public void ProcessValidParameters() =>
 
 See the [XpressTest.Examples](https://github.com/JonnyOrman/XpressTest/tree/main/XpressTest.Examples/Tests) project in this repository for many more examples.
 
-## Getting started
+## About XpressTest
 
-Install by running the following:
+`XpressTest` is an expressive, fluent testing framework for C# .NET that avoids the need to organise the same, repetitive arrange-act-assert code blocks in every test, and keeps tests free from the clutter of loose variables.
+
+Tests are written by specifying the SUT, registering and setting up any mocks or other objects required for the test case, specifying the action to be tested and then performing assertions on the result and mocks. The SUT is automatically instantiated with a constructor signature matching the registered dependencies.
+
+## Installation
+
+Install to a testing project by running the following:
 ```
-dotnet add package XpressTest --version 1.0.0-alpha.14
+dotnet add package XpressTest --version 1.0.0-beta.1
 ```

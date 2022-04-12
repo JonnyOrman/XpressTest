@@ -5,28 +5,20 @@ public class NamedMockSetupBuilderCreator<TSut>
     INamedMockSetupBuilderCreator<TSut>
 where TSut : class
 {
+    private readonly ITestBuilderContainer<TSut> _testBuilderContainer;
+
     private readonly IArrangement _arrangement;
-    private readonly IAsserterCreator<TSut> _asserterCreator;
     private IMockSetupBuilderCreator<TSut> _mockSetupBuilderGenerator;
-    private IObjectBuilderCreator<TSut> _objectBuilderCreator;
-    private readonly IDependencyBuilderCreator<TSut> _dependencyBuilderCreator;
-    private readonly ISutAsserterCreator<TSut> _sutAsserterCreator;
 
     public NamedMockSetupBuilderCreator(
+        ITestBuilderContainer<TSut> testBuilderContainer,
         IArrangement arrangement,
-        IAsserterCreator<TSut> asserterCreator,
-        IMockSetupBuilderCreator<TSut> mockSetupBuilderGenerator,
-        IObjectBuilderCreator<TSut> objectBuilderCreator,
-        IDependencyBuilderCreator<TSut> dependencyBuilderCreator,
-        ISutAsserterCreator<TSut> sutAsserterCreator
+        IMockSetupBuilderCreator<TSut> mockSetupBuilderGenerator
         )
     {
+        _testBuilderContainer = testBuilderContainer;
         _arrangement = arrangement;
-        _asserterCreator = asserterCreator;
         _mockSetupBuilderGenerator = mockSetupBuilderGenerator;
-        _objectBuilderCreator = objectBuilderCreator;
-        _dependencyBuilderCreator = dependencyBuilderCreator;
-        _sutAsserterCreator = sutAsserterCreator;
     }
     
     public IMockSetupBuilder<TSut, TObject> Create<TObject>(string name)
@@ -44,13 +36,10 @@ where TSut : class
         );
         
         var chainer = new MockVariableBuilderChainer<TSut, TObject, INamedMock<TObject>>(
-            _asserterCreator,
+            _testBuilderContainer,
             _mockSetupBuilderGenerator,
-            _objectBuilderCreator,
             _arrangement,
-            _dependencyBuilderCreator,
-            this,
-            _sutAsserterCreator
+            this
         );
 
         return new MockSetupBuilder<TSut, TObject, INamedMock<TObject>>(
@@ -58,10 +47,5 @@ where TSut : class
             setter,
             chainer
         );
-    }
-
-    public void Set(ObjectBuilderCreator<TSut> objectBuilderCreator)
-    {
-        _objectBuilderCreator = objectBuilderCreator;
     }
 }

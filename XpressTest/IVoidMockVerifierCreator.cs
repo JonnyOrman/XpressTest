@@ -8,7 +8,7 @@ public interface IVoidMockVerifierCreator<TSut>
         where TMock : class;
     
     IVoidMockVerifier<TSut, TMock> Create<TMock>(
-        Mock<TMock> mock,
+        IMock<TMock> mock,
         IVoidAsserter<TSut> asserter
     )
         where TMock : class;

@@ -26,7 +26,7 @@ public class DependencyBuilder<TSut, TDependency>
 
     public IVoidAsserter<TSut> WhenIt(Action<TSut> func)
     {
-        return Chain(() => _chainer.StartVoidAsserter(
+        return Chain(() => _chainer.ComposeAsserter(
             func
         ));
     }
@@ -34,18 +34,18 @@ public class DependencyBuilder<TSut, TDependency>
     public IMockDependencySetupBuilder<TSut, TMockDependency> WithA<TMockDependency>()
         where TMockDependency : class
     {
-        return Chain(() => _chainer.StartMockDependencyBuilder<TMockDependency>());
+        return Chain(() => _chainer.StartNewMockDependencyBuilder<TMockDependency>());
     }
 
     public IMockDependencySetupBuilder<TSut, TMockDependency> WithA<TMockDependency>(string name)
         where TMockDependency : class
     {
-        return Chain(() => _chainer.StartNamedMockDependencyBuilder<TMockDependency>(name));
+        return Chain(() => _chainer.StartNewNamedMockDependencyBuilder<TMockDependency>(name));
     }
 
     public IDependencyBuilder<TSut> With<TNewDependency>(TNewDependency newDependency)
     {
-        return Chain(() => _chainer.StartValueDependencyBuilder(newDependency));
+        return Chain(() => _chainer.ComposeValueDependencyBuilder(newDependency));
     }
 
     public IMockDependencySetupBuilder<TSut, TMock> WithTheMock<TMock>()
@@ -63,7 +63,7 @@ public class DependencyBuilder<TSut, TDependency>
 
     public IDependencyBuilder<TSut> WithThe<TNewDependency>()
     {
-        return Chain(() => _chainer.ComposeDependencyBuilder<TNewDependency>());
+        return Chain(() => _chainer.StartNewExistingObjectBuilder<TNewDependency>());
     }
 
     public IDependencyBuilder<TSut> With<TNewDependency>(
@@ -71,7 +71,7 @@ public class DependencyBuilder<TSut, TDependency>
         string name
     )
     {
-        return Chain(() => _chainer.ComposeDependencyBuilder(
+        return Chain(() => _chainer.StartNewNamedDependencyBuilder(
             newDependency,
             name
         ));
@@ -79,7 +79,7 @@ public class DependencyBuilder<TSut, TDependency>
 
     public IVoidAsserter<TSut> WhenIt(Action<ISutArrangement<TSut>> func)
     {
-        return Chain(() => _chainer.ComposeMockAsserter(
+        return Chain(() => _chainer.ComposeAsserter(
             func
         ));
     }
@@ -88,19 +88,21 @@ public class DependencyBuilder<TSut, TDependency>
         Func<ISutArrangement<TSut>, TResult> func
     )
     {
-        return Chain(() => _chainer.StartResultAsserter(
+        return Chain(() => _chainer.ComposeAsserter(
             func
         ));
     }
 
     public IResultAsserter<TSut, TResult> WhenIt<TResult>(Func<IReadArrangement, Func<TSut, TResult>> func)
     {
-        throw new NotImplementedException();
+        return Chain(() => _chainer.ComposeAsserter(
+            func
+        ));
     }
 
     public IResultAsserter<TSut, TResult> WhenIt<TResult>(Func<TSut, TResult> func)
     {
-        return Chain(() => _chainer.ComposeMockAsserter(
+        return Chain(() => _chainer.ComposeAsserter(
             func
         ));
     }
