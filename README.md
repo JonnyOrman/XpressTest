@@ -122,7 +122,7 @@ public void DivideByZero() =>
     GivenA<Calculator>
 ```
 
-Then perform the action of multiplying 6 by 0:
+Then perform the action of dividing 6 by 0:
 ```cs
 .WhenIt(sut => sut.Divide(6, 0))
 ```
