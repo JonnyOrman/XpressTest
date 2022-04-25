@@ -1,9 +1,11 @@
-using Moq;
 using System.Linq.Expressions;
+using Moq;
 
 namespace XpressTest;
 
-public class MockVoidCallCountVerifier<TMock> : IMockCallCountVerifier
+public class MockVoidCallCountVerifier<TMock>
+    :
+        IMockCallCountVerifier
     where TMock : class
 {
     private readonly IMock<TMock> _mock;

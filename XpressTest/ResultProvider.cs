@@ -1,6 +1,8 @@
 ﻿namespace XpressTest;
 
-public class ResultProvider<TSut, TResult> : IResultProvider<TResult>
+public class ResultProvider<TSut, TResult>
+    :
+        IResultProvider<TResult>
 {
     private readonly TSut _sut;
     private readonly Func<TSut, TResult> _func;

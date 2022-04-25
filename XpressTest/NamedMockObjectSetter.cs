@@ -8,7 +8,7 @@ public class NamedMockObjectSetter<TObject> :
         IArrangement arrangement
     ) : base(
         arrangement,
-        (arrangement, mock) => arrangement.Add(mock)
+        (arrangement, namedMock) => arrangement.Add(namedMock)
     )
     {
     }

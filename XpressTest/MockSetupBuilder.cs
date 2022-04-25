@@ -22,24 +22,24 @@ public class MockSetupBuilder<TSut, TObject, TMock>
     {
     } 
     
-    public IMockSetupResultBuilder<TSut, TObject, TResult> ThatDoes<TResult>(
+    public IMockResultBuilder<TResult, IMockSetupBuilder<TSut, TObject>> ThatDoes<TResult>(
         Func<IReadArrangement, Expression<Func<TObject, TResult>>> func
     )
     {
-        return _chainer.StartMockSetupResultBuilder(
+        return Chainer.StartMockSetupResultBuilder(
             func,
-            _obj,
+            Obj,
             this
         );
     }
     
-    public IMockSetupResultBuilder<TSut, TObject, TResult> ThatDoes<TResult>(
+    public IMockResultBuilder<TResult, IMockSetupBuilder<TSut, TObject>> ThatDoes<TResult>(
         Expression<Func<TObject, TResult>> expression
     )
     {
-        return _chainer.StartMockSetupResultBuilder(
+        return Chainer.StartMockSetupResultBuilder(
             expression,
-            _obj,
+            Obj,
             this
         );
     }

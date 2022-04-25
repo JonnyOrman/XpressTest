@@ -14,6 +14,6 @@ public static class MockDependencyTestInitialiser<TSut>
 
         var container = ContainerComposer<TSut>.Compose();
         
-        return container.MoqMockDependencyBuilderCreator.Create(dependencyMock);
+        return container.MockDependencyBuilderCreator.Create(dependencyMock);
     }
 }

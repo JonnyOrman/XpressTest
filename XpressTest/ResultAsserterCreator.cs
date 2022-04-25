@@ -81,7 +81,9 @@ public class ResultAsserterCreator<TSut>
         );
     }
 
-    public async Task<IAsyncResultAsserter<TSut, TResult>> CreateAsync<TResult>(Func<TSut, Task<TResult>> func)
+    public async Task<IAsyncResultAsserter<TSut, TResult>> CreateAsync<TResult>(
+        Func<TSut, Task<TResult>> func
+        )
     {
         var sutArrangement = _sutArrangementCreator.Create();
 
@@ -99,7 +101,7 @@ public class ResultAsserterCreator<TSut>
         )
     {
         var mockCounterVerifierCreatorComposer =
-            new MockCounterVerifierCreatorComposer<TSut, IResultAsserter<TSut, TResult>>(
+            new MockCountVerifierCreatorComposer<TSut, IResultAsserter<TSut, TResult>>(
                 sutArrangement
             );
 
@@ -132,7 +134,7 @@ public class ResultAsserterCreator<TSut>
         );
 
         var mockCounterVerifierCreatorComposer =
-            new MockCounterVerifierCreatorComposer<TSut, IResultAsserter<TSut, TResult>>(
+            new MockCountVerifierCreatorComposer<TSut, IResultAsserter<TSut, TResult>>(
                 sutArrangement
             );
 

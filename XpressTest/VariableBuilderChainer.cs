@@ -6,21 +6,21 @@ public class VariableBuilderChainer<TSut>
         IVariableBuilderChainer<TSut>
 where TSut : class
 {
-    private IMockSetupBuilderCreator<TSut> _mockObjectBuilderGenerator;
-    private readonly INamedMockSetupBuilderCreator<TSut> _namedMockObjectBuilderGenerator;
+    private readonly IMockSetupBuilderCreator<TSut> _mockObjectBuilderCreator;
+    private readonly INamedMockSetupBuilderCreator<TSut> _namedMockObjectBuilderCreator;
 
     public VariableBuilderChainer(
         ITestBuilderContainer<TSut> testBuilderContainer,
-        IMockSetupBuilderCreator<TSut> mockObjectBuilderGenerator,
-        INamedMockSetupBuilderCreator<TSut> namedMockObjectBuilderGenerator
+        IMockSetupBuilderCreator<TSut> mockObjectBuilderCreator,
+        INamedMockSetupBuilderCreator<TSut> namedMockObjectBuilderCreator
         )
         :
         base(
             testBuilderContainer
         )
     {
-        _mockObjectBuilderGenerator = mockObjectBuilderGenerator;
-        _namedMockObjectBuilderGenerator = namedMockObjectBuilderGenerator;
+        _mockObjectBuilderCreator = mockObjectBuilderCreator;
+        _namedMockObjectBuilderCreator = namedMockObjectBuilderCreator;
     }
     
     public IVariableBuilder<TSut> StartNewNamedObjectBuilder<TNewDependency>(
@@ -28,7 +28,7 @@ where TSut : class
         string name
         )
     {
-        return _testBuilderContainer.VariableBuilderCreator.Create(
+        return TestBuilderContainer.VariableBuilderCreator.Create(
             newObject,
             name
             );
@@ -39,7 +39,7 @@ where TSut : class
         string name
         )
     {
-        return _testBuilderContainer.VariableBuilderCreator.Create(
+        return TestBuilderContainer.VariableBuilderCreator.Create(
             func,
             name
         );
@@ -49,7 +49,7 @@ where TSut : class
         TNewObject newObject
         )
     {
-        return _testBuilderContainer.VariableBuilderCreator.Create(
+        return TestBuilderContainer.VariableBuilderCreator.Create(
             newObject
         );
     }
@@ -58,7 +58,7 @@ where TSut : class
         Func<IReadArrangement, TNewObject> func
         )
     {
-        return _testBuilderContainer.VariableBuilderCreator.Create(
+        return TestBuilderContainer.VariableBuilderCreator.Create(
             func
         );
     }
@@ -66,14 +66,14 @@ where TSut : class
     public IMockSetupBuilder<TSut, TNewObject> StartNewMockObjectBuilder<TNewObject>()
         where TNewObject : class
     {
-        return _mockObjectBuilderGenerator.Create<TNewObject>();
+        return _mockObjectBuilderCreator.Create<TNewObject>();
     }
 
-    public IDependencyBuilder<TSut> ComposeValueDependencyBuilder<TNewDependency>(
+    public IDependencyBuilder<TSut> StartExistingObjectDependencyBuilder<TNewDependency>(
         Func<IReadArrangement, TNewDependency> newDependencyFunc
     )
     {
-        return _testBuilderContainer.DependencyBuilderCreator.CreateObjectDependencyBuilder(
+        return TestBuilderContainer.DependencyBuilderCreator.CreateObjectDependencyBuilder(
             newDependencyFunc
         );
     }
@@ -83,7 +83,7 @@ where TSut : class
         )
         where TNewObject : class
     {
-        return _namedMockObjectBuilderGenerator.Create<TNewObject>(
+        return _namedMockObjectBuilderCreator.Create<TNewObject>(
             name
             );
     }

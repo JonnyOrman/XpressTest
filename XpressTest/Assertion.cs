@@ -4,13 +4,16 @@ public class Assertion<TSut, TResult>
     :
         IResultAssertion<TResult>
 {
+
+    private readonly ISutArrangement<TSut> _sutArrangement;
+    
     public Assertion(
         TResult result,
-        ISutArrangement<TSut> action
+        ISutArrangement<TSut> sutArrangement
         )
     {
         Result = result;
-        Action = action;
+        _sutArrangement = sutArrangement;
     }
     
     public TResult Result { get; }
@@ -25,15 +28,13 @@ public class Assertion<TSut, TResult>
 
     public T GetTheMockObject<T>(string name) where T : class => GetTheMock<T>(name).Object;
 
-    public IObjectCollection Objects => Action.Objects;
+    public IObjectCollection Objects => _sutArrangement.Objects;
 
-    public IMockObjectCollection MockObjects => Action.MockObjects;
+    public IMockObjectCollection MockObjects => _sutArrangement.MockObjects;
 
-    public IDependencyCollection Dependencies => Action.Dependencies;
+    public IDependencyCollection Dependencies => _sutArrangement.Dependencies;
 
     public T GetThe<T>() => Objects.Get<T>();
 
     public T GetThe<T>(string name) => Objects.Get<T>(name);
-
-    private ISutArrangement<TSut> Action { get; }
 }

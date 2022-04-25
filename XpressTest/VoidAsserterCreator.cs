@@ -47,12 +47,12 @@ where TSut : class
         Action exceptionAction
         )
     {
-        var mockCounterVerifierCreatorComposer = new MockCounterVerifierCreatorComposer<TSut, IVoidAsserter<TSut>>(
+        var mockCountVerifierCreatorComposer = new MockCountVerifierCreatorComposer<TSut, IVoidAsserter<TSut>>(
             sutArrangement
         );
         
         var voidMockVerifierCreator = new VoidMockVerifierCreator<TSut>(
-            mockCounterVerifierCreatorComposer
+            mockCountVerifierCreatorComposer
         );
 
         var exceptionAsserter = new ExceptionAsserter(

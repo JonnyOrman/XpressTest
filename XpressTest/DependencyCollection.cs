@@ -2,13 +2,13 @@ namespace XpressTest;
 
 public class DependencyCollection : IDependencyCollection
 {
-    private readonly IDictionary<string, IDependency> _dictionary;
     private readonly ICollection<IDependency> _collection;
 
-    public DependencyCollection()
+    public DependencyCollection(
+        ICollection<IDependency> collection
+        )
     {
-        _dictionary = new Dictionary<string, IDependency>();
-        _collection = new List<IDependency>();
+        _collection = collection;
     }
     
     public void Add(IDependency dependency)
@@ -19,11 +19,9 @@ public class DependencyCollection : IDependencyCollection
         }
     }
     
-    public void Add(INamedDependency dependency)
+    public void Add(INamedDependency namedDependency)
     {
-        _dictionary[dependency.Name] = dependency;
-        
-        _collection.Add(dependency);
+        _collection.Add(namedDependency);
     }
 
     public bool Any()

@@ -7,7 +7,7 @@ where TSut : class
 {
     private readonly IArrangement _arrangement;
 
-    private IDependencyBuilderChainer<TSut> _dependencyBuilderChainer;
+    private readonly IDependencyBuilderChainer<TSut> _dependencyBuilderChainer;
 
     public NamedDependencyBuilderCreator(
         IArrangement arrangement,

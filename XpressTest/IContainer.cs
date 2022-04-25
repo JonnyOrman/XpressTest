@@ -5,9 +5,9 @@ where TSut : class
 {
     IObjectDependencyBuilderCreator<TSut> ObjectDependencyBuilderCreator { get; }
     
-    IMockSetupBuilderCreator<TSut> MockSetupBuilderGenerator { get; }
+    IMockSetupBuilderCreator<TSut> MockSetupBuilderCreator { get; }
     
-    IMoqMockDependencyBuilderCreator<TSut> MoqMockDependencyBuilderCreator { get; }
+    IMockDependencyBuilderCreator<TSut> MockDependencyBuilderCreator { get; }
     
     INamedDependencyBuilderCreator<TSut> NamedDependencyBuilderCreator { get; }
     

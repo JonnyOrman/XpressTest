@@ -12,24 +12,24 @@ public class DependencyBuilderChainer<TSut>
 
     public DependencyBuilderChainer(
         IArrangement arrangement,
-        ITestBuilderContainer<TSut> stepBuilder
+        ITestBuilderContainer<TSut> testBuilderContainer
     )
     :
     base(
-        stepBuilder
+        testBuilderContainer
         )
     {
         _arrangement = arrangement;
     }
 
-    public IMockResultDependencyBuilder<TSut, TResult> StartMockResultDependencyBuilder<TDependency, TResult>(
+    public IMockResultBuilder<TResult, IDependencyBuilder<TSut>> StartMockResultDependencyBuilder<TDependency, TResult>(
         Expression<Func<TDependency, TResult>> expression,
         IMock<TDependency> mock,
         IDependencyBuilder<TSut> mockDependencyBuilder
     )
         where TDependency : class
     {
-        return new MockResultDependencyBuilder<TSut, TDependency, TResult>(
+        return new MockResultBuilder<TDependency, TResult, IDependencyBuilder<TSut>>(
             expression,
             mock,
             mockDependencyBuilder,

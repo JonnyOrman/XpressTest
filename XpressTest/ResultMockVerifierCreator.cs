@@ -5,12 +5,12 @@ public class ResultMockVerifierCreator<TSut, TSutResult>
         IResultMockVerifierCreator<TSut, TSutResult>
     where TSut : class
 {
-    private readonly IMockCounterVerifierCreatorComposer<IResultAsserter<TSut, TSutResult>> _mockCounterVerifierCreatorComposer;
-    private readonly IMockCounterVerifierCreatorComposer<IAsyncResultAsserter<TSut, TSutResult>> _asyncMockCounterVerifierCreatorComposer;
+    private readonly IMockCountVerifierCreatorComposer<IResultAsserter<TSut, TSutResult>> _mockCounterVerifierCreatorComposer;
+    private readonly IMockCountVerifierCreatorComposer<IAsyncResultAsserter<TSut, TSutResult>> _asyncMockCounterVerifierCreatorComposer;
 
     public ResultMockVerifierCreator(
-        IMockCounterVerifierCreatorComposer<IResultAsserter<TSut, TSutResult>> mockCounterVerifierCreatorComposer,
-        IMockCounterVerifierCreatorComposer<IAsyncResultAsserter<TSut, TSutResult>> asyncMockCounterVerifierCreatorComposer
+        IMockCountVerifierCreatorComposer<IResultAsserter<TSut, TSutResult>> mockCounterVerifierCreatorComposer,
+        IMockCountVerifierCreatorComposer<IAsyncResultAsserter<TSut, TSutResult>> asyncMockCounterVerifierCreatorComposer
         )
     {
         _mockCounterVerifierCreatorComposer = mockCounterVerifierCreatorComposer;

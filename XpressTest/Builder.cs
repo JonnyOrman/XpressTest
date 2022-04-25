@@ -2,24 +2,24 @@ namespace XpressTest;
 
 public class Builder<TObject, TChainer>
 {
-    protected readonly TObject _obj;
-    protected readonly IArrangementSetter<TObject> _objectSetter;
-    protected readonly TChainer _chainer;
+    protected readonly TObject Obj;
+    protected readonly IArrangementSetter<TObject> ObjectSetter;
+    protected readonly TChainer Chainer;
 
-    public Builder(
+    protected Builder(
         TObject obj,
         IArrangementSetter<TObject> objectSetter,
         TChainer chainer
         )
     {
-        _obj = obj;
-        _objectSetter = objectSetter;
-        _chainer = chainer;
+        Obj = obj;
+        ObjectSetter = objectSetter;
+        Chainer = chainer;
     }
     
     protected T Chain<T>(Func<T> func)
     {
-        _objectSetter.Set(_obj);
+        ObjectSetter.Set(Obj);
 
         return func.Invoke();
     }

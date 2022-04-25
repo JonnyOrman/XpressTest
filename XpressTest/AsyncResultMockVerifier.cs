@@ -6,11 +6,11 @@ public class AsyncResultMockVerifier<TSut, TSutResult, TMock>
     :
         IAsyncResultMockVerifier<TSut, TSutResult, TMock>
 {
-    private readonly IMockCounterVerifierCreator<TMock, IAsyncResultAsserter<TSut, TSutResult>> _mockCounterVerifierCreator;
+    private readonly IMockCountVerifierCreator<TMock, IAsyncResultAsserter<TSut, TSutResult>> _mockCounterVerifierCreator;
     private readonly IAsyncResultAsserter<TSut, TSutResult> _asserter;
 
     public AsyncResultMockVerifier(
-        IMockCounterVerifierCreator<TMock, IAsyncResultAsserter<TSut, TSutResult>> mockCounterVerifierCreator,
+        IMockCountVerifierCreator<TMock, IAsyncResultAsserter<TSut, TSutResult>> mockCounterVerifierCreator,
         IAsyncResultAsserter<TSut, TSutResult> asserter
         )
     {
@@ -18,7 +18,7 @@ public class AsyncResultMockVerifier<TSut, TSutResult, TMock>
         _asserter = asserter;
     }
     
-    public IMockCounterVerifier<IAsyncResultAsserter<TSut, TSutResult>> Should(
+    public IMockCountVerifier<IAsyncResultAsserter<TSut, TSutResult>> Should(
         Func<IReadArrangement, Expression<Action<TMock>>> func
         )
     {
@@ -28,7 +28,7 @@ public class AsyncResultMockVerifier<TSut, TSutResult, TMock>
         );
     }
 
-    public IMockCounterVerifier<IAsyncResultAsserter<TSut, TSutResult>> Should<TMockResult>(
+    public IMockCountVerifier<IAsyncResultAsserter<TSut, TSutResult>> Should<TMockResult>(
         Func<IReadArrangement, Expression<Func<TMock, TMockResult>>> func
         )
     {
@@ -38,7 +38,7 @@ public class AsyncResultMockVerifier<TSut, TSutResult, TMock>
         );
     }
 
-    public IMockCounterVerifier<IAsyncResultAsserter<TSut, TSutResult>> Should<TMockResult>(
+    public IMockCountVerifier<IAsyncResultAsserter<TSut, TSutResult>> Should<TMockResult>(
         Expression<Func<TMock, TMockResult>> expression
         )
     {

@@ -6,7 +6,7 @@ where TSut : class
     public static IVariableBuilder<TSut> Initialise(
         TObject obj,
         IArrangement arrangement,
-        ArrangementSetter<TObject> objectSetter
+        IArrangementSetter<TObject> objectSetter
         )
     {
         var container = ContainerComposer<TSut>.Compose(
@@ -15,7 +15,7 @@ where TSut : class
         
         var variableBuilderChainer = new VariableBuilderChainer<TSut>(
             container.TestBuilderContainer,
-            container.MockSetupBuilderGenerator,
+            container.MockSetupBuilderCreator,
             container.NamedMockSetupBuilderCreator
         );
         

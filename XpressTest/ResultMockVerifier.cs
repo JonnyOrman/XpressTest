@@ -8,11 +8,11 @@ public class ResultMockVerifier<TSut, TSutResult, TMock>
     where TSut : class
     where TMock : class
 {
-    private readonly IMockCounterVerifierCreator<TMock, IResultAsserter<TSut, TSutResult>> _mockCounterVerifierCreator;
+    private readonly IMockCountVerifierCreator<TMock, IResultAsserter<TSut, TSutResult>> _mockCounterVerifierCreator;
     private readonly IResultAsserter<TSut, TSutResult> _asserter;
 
     public ResultMockVerifier(
-        IMockCounterVerifierCreator<TMock, IResultAsserter<TSut, TSutResult>> mockCounterVerifierCreator,
+        IMockCountVerifierCreator<TMock, IResultAsserter<TSut, TSutResult>> mockCounterVerifierCreator,
         IResultAsserter<TSut, TSutResult> asserter
         )
     {
@@ -20,7 +20,7 @@ public class ResultMockVerifier<TSut, TSutResult, TMock>
         _asserter = asserter;
     }
     
-    public IMockCounterVerifier<IResultAsserter<TSut, TSutResult>> Should<TMockResult>(
+    public IMockCountVerifier<IResultAsserter<TSut, TSutResult>> Should<TMockResult>(
         Func<IReadArrangement, Expression<Func<TMock, TMockResult>>> func
         )
     {
@@ -30,7 +30,7 @@ public class ResultMockVerifier<TSut, TSutResult, TMock>
             );
     }
 
-    public IMockCounterVerifier<IResultAsserter<TSut, TSutResult>> Should<TMockResult>(
+    public IMockCountVerifier<IResultAsserter<TSut, TSutResult>> Should<TMockResult>(
         Expression<Func<TMock, TMockResult>> expression
         )
     {
@@ -39,7 +39,7 @@ public class ResultMockVerifier<TSut, TSutResult, TMock>
         );
     }
 
-    public IMockCounterVerifier<IResultAsserter<TSut, TSutResult>> Should(
+    public IMockCountVerifier<IResultAsserter<TSut, TSutResult>> Should(
         Func<IReadArrangement, Expression<Action<TMock>>> func
         )
     {
@@ -49,7 +49,7 @@ public class ResultMockVerifier<TSut, TSutResult, TMock>
         );
     }
 
-    public IMockCounterVerifier<IResultAsserter<TSut, TSutResult>> Should(
+    public IMockCountVerifier<IResultAsserter<TSut, TSutResult>> Should(
         Expression<Action<TMock>> expression
         )
     {

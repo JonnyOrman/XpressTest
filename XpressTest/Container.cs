@@ -7,16 +7,16 @@ where TSut : class
 {
     public Container(
         IObjectDependencyBuilderCreator<TSut> objectDependencyBuilderCreator,
-        IMockSetupBuilderCreator<TSut> mockSetupBuilderGenerator,
-        IMoqMockDependencyBuilderCreator<TSut> moqMockDependencyBuilderCreator,
+        IMockSetupBuilderCreator<TSut> mockSetupBuilderCreator,
+        IMockDependencyBuilderCreator<TSut> mockDependencyBuilderCreator,
         INamedDependencyBuilderCreator<TSut> namedDependencyBuilderCreator,
         INamedMockSetupBuilderCreator<TSut> namedMockSetupBuilderCreator,
         ITestBuilderContainer<TSut> testBuilderContainer
         )
     {
         ObjectDependencyBuilderCreator = objectDependencyBuilderCreator;
-        MockSetupBuilderGenerator = mockSetupBuilderGenerator;
-        MoqMockDependencyBuilderCreator = moqMockDependencyBuilderCreator;
+        MockSetupBuilderCreator = mockSetupBuilderCreator;
+        MockDependencyBuilderCreator = mockDependencyBuilderCreator;
         NamedDependencyBuilderCreator = namedDependencyBuilderCreator;
         NamedMockSetupBuilderCreator = namedMockSetupBuilderCreator;
         TestBuilderContainer = testBuilderContainer;
@@ -24,9 +24,9 @@ where TSut : class
     
     public IObjectDependencyBuilderCreator<TSut> ObjectDependencyBuilderCreator { get; }
     
-    public IMockSetupBuilderCreator<TSut> MockSetupBuilderGenerator { get; }
+    public IMockSetupBuilderCreator<TSut> MockSetupBuilderCreator { get; }
     
-    public IMoqMockDependencyBuilderCreator<TSut> MoqMockDependencyBuilderCreator { get; }
+    public IMockDependencyBuilderCreator<TSut> MockDependencyBuilderCreator { get; }
     
     public INamedDependencyBuilderCreator<TSut> NamedDependencyBuilderCreator { get; }
     

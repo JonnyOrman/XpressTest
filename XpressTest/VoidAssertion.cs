@@ -1,6 +1,8 @@
 ﻿namespace XpressTest;
 
-public class VoidAssertion<TSut> : ISutArrangement<TSut>
+public class VoidAssertion<TSut>
+    :
+        ISutArrangement<TSut>
 {
     private readonly ISutArrangement<TSut> _sutArrangement;
 
@@ -31,5 +33,5 @@ public class VoidAssertion<TSut> : ISutArrangement<TSut>
 
     public T GetTheMockObject<T>(string name) where T : class => MockObjects.Get<T>(name).Object;
 
-    public TSut Sut { get; }
+    public TSut Sut => _sutArrangement.Sut;
 }

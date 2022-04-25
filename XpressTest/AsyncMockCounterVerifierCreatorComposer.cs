@@ -2,7 +2,7 @@ namespace XpressTest;
 
 public class AsyncMockCounterVerifierCreatorComposer<TSut, TAsserter>
 :
-    IMockCounterVerifierCreatorComposer<TAsserter>
+    IMockCountVerifierCreatorComposer<TAsserter>
 {
     private readonly ISutArrangement<TSut> _arrangement;
 
@@ -13,7 +13,7 @@ public class AsyncMockCounterVerifierCreatorComposer<TSut, TAsserter>
         _arrangement = arrangement;
     }
 
-    public IMockCounterVerifierCreator<TMock, TAsserter> Compose<TMock>(
+    public IMockCountVerifierCreator<TMock, TAsserter> Compose<TMock>(
         TAsserter asserter
         )
         where TMock : class
@@ -26,7 +26,7 @@ public class AsyncMockCounterVerifierCreatorComposer<TSut, TAsserter>
             );
     }
 
-    public IMockCounterVerifierCreator<TMock, TAsserter> Compose<TMock>(
+    public IMockCountVerifierCreator<TMock, TAsserter> Compose<TMock>(
         IMock<TMock> mock,
         TAsserter asserter
         )
@@ -43,7 +43,7 @@ public class AsyncMockCounterVerifierCreatorComposer<TSut, TAsserter>
             asserter
         );
         
-        var resultMockCounterVerifierCreator = new ResultMockCounterVerifierCreator<TMock, TAsserter>(
+        var resultMockCounterVerifierCreator = new ResultMockCountVerifierCreator<TMock, TAsserter>(
             resultMockCallVerifierCreator
         );
 
@@ -56,7 +56,7 @@ public class AsyncMockCounterVerifierCreatorComposer<TSut, TAsserter>
             );
         
         var arrangementResultMockCounterVerifierCreator =
-            new ArrangementResultMockCounterVerifierCreator<TMock, TAsserter>(
+            new ArrangementResultMockCountVerifierCreator<TMock, TAsserter>(
                 arrangementResultMockCallVerifierCreator
             );
 
@@ -67,26 +67,26 @@ public class AsyncMockCounterVerifierCreatorComposer<TSut, TAsserter>
             asserter
             );
         
-        var voidMockCounterVerifierCreator = new VoidMockCounterVerifierCreator<TMock, TAsserter>(
+        var voidMockCounterVerifierCreator = new VoidMockCountVerifierCreator<TMock, TAsserter>(
             voidMockCallVerifierCreator
             );
         
         
         
         var arrangementVoidMockCallVerifierCreator =
-            new ArrangementVoidMockCallVerifierCreator<TSut, TMock, TAsserter>(
+            new ArrangementVoidMockCallVerifierCreator<TMock, TAsserter>(
                 mockCallCountVerifierCreator,
                 _arrangement
             );
         
         var arrangementVoidMockCounterVerifierCreator =
-            new ArrangementVoidMockCounterVerifierCreator<TMock, TAsserter>(
+            new ArrangementVoidMockCountVerifierCreator<TMock, TAsserter>(
                 arrangementVoidMockCallVerifierCreator
             );
         
         
         
-        return new MockCounterVerifierCreator<TMock, TAsserter>(
+        return new MockCountVerifierCreator<TMock, TAsserter>(
             resultMockCounterVerifierCreator,
             arrangementResultMockCounterVerifierCreator,
             voidMockCounterVerifierCreator,

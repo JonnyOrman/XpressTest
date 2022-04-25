@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XpressTest", "XpressTest\Xp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XpressTest.Examples", "XpressTest.Examples\XpressTest.Examples.csproj", "{BF4C3381-7E14-4426-A3D7-F4B255295FC4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XpressTest.Testing.UnitTests", "XpressTest.Testing.UnitTests\XpressTest.Testing.UnitTests.csproj", "{DBE878B3-6C27-43A7-807F-32D4C79BAB85}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{BF4C3381-7E14-4426-A3D7-F4B255295FC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BF4C3381-7E14-4426-A3D7-F4B255295FC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BF4C3381-7E14-4426-A3D7-F4B255295FC4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DBE878B3-6C27-43A7-807F-32D4C79BAB85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBE878B3-6C27-43A7-807F-32D4C79BAB85}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DBE878B3-6C27-43A7-807F-32D4C79BAB85}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DBE878B3-6C27-43A7-807F-32D4C79BAB85}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

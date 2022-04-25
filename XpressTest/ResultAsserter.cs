@@ -78,7 +78,9 @@ public class ResultAsserter<TSut, TResult>
         Assert.Null(_result);
     }
 
-    public IResultPropertyAsserter<TSut, TResult, TProperty> ThenTheResult<TProperty>(Func<TResult, TProperty> targetFunc)
+    public IResultPropertyAsserter<TSut, TResult, TProperty> ThenTheResult<TProperty>(
+        Func<TResult, TProperty> targetFunc
+        )
     {
         return _resultPropertyTargeter.ThenTheResult(targetFunc);
     }

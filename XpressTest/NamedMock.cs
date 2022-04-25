@@ -1,14 +1,10 @@
 ﻿namespace XpressTest;
 
-public class NamedMock<T> : INamedMock<T>
+public class NamedMock<T>
+    :
+        INamedMock<T>
     where T : class
 {
-    public Moq.Mock<T> MoqMock { get; }
-    
-    public T Object => MoqMock.Object;
-    
-    public string Name { get; }
-
     public NamedMock(
         Moq.Mock<T> mock,
         string name
@@ -17,4 +13,11 @@ public class NamedMock<T> : INamedMock<T>
         MoqMock = mock;
         Name = name;
     }
+    
+    public Moq.Mock<T> MoqMock { get; }
+    
+    public T Object => MoqMock.Object;
+    
+    public string Name { get; }
+
 }

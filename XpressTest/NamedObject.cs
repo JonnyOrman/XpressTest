@@ -1,6 +1,8 @@
 ﻿namespace XpressTest;
 
-public class NamedObject<T> : INamedObject<T>
+public class NamedObject<T>
+    :
+        INamedObject<T>
 {
     public NamedObject(
         T obj,

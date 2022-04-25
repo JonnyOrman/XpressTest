@@ -66,14 +66,19 @@ where TSut : class
         );
     }
 
-    public IVariableBuilder<TSut> Create<TObject>(Func<IReadArrangement, TObject> func)
+    public IVariableBuilder<TSut> Create<TObject>(
+        Func<IReadArrangement, TObject> func
+        )
     {
         var newObject = func.Invoke(_arrangement);
 
         return Create(newObject);
     }
 
-    public IVariableBuilder<TSut> Create<TObject>(Func<IReadArrangement, TObject> func, string name)
+    public IVariableBuilder<TSut> Create<TObject>(
+        Func<IReadArrangement, TObject> func,
+        string name
+        )
     {
         var newObject = func.Invoke(_arrangement);
 

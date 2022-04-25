@@ -1,40 +1,36 @@
 namespace XpressTest;
 
 public class MockDependencyBuilderCreator<TSut>
-    :
-        IMockDependencyBuilderCreator<TSut>
+:
+    IMockDependencyBuilderCreator<TSut>
 where TSut : class
 {
     private readonly IArrangement _arrangement;
-    private readonly IMoqMockDependencyBuilderCreator<TSut> _moqMockDependencyBuilderCreator;
+    private readonly IDependencyBuilderChainer<TSut> _mockDependencyBuilderChainer;
 
     public MockDependencyBuilderCreator(
         IArrangement arrangement,
-        IMoqMockDependencyBuilderCreator<TSut> moqMockDependencyBuilderCreator
+        IDependencyBuilderChainer<TSut> mockDependencyBuilderChainer
         )
     {
         _arrangement = arrangement;
-        _moqMockDependencyBuilderCreator = moqMockDependencyBuilderCreator;
+        _mockDependencyBuilderChainer = mockDependencyBuilderChainer;
     }
     
-    public IMockDependencySetupBuilder<TSut, TDependency> Create<TDependency>()
+    public IMockDependencySetupBuilder<TSut, TDependency> Create<TDependency>(
+        IMock<TDependency> mock
+        )
         where TDependency : class
     {
-        var moqMock = new Moq.Mock<TDependency>();
-
-        var mock = new Mock<TDependency>(moqMock);
+        var mockDependencySetter = new MockDependencySetter<TDependency>(
+            _arrangement
+        );
         
-        return _moqMockDependencyBuilderCreator.Create(
-            mock
-            );
-    }
-
-    public IMockDependencySetupBuilder<TSut, TDependency> CreateExisting<TDependency>() where TDependency : class
-    {
-        var mock = _arrangement.GetTheMock<TDependency>();
-        
-        return _moqMockDependencyBuilderCreator.Create(
-            mock
+        return new MockDependencySetupBuilder<TSut, TDependency, IMock<TDependency>>(
+            mock,
+            _arrangement,
+            mockDependencySetter,
+            _mockDependencyBuilderChainer
         );
     }
 }

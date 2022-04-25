@@ -8,42 +8,42 @@ public class VoidMockVerifier<TSut, TMock>
     where TSut : class
     where TMock : class
 {
-    private readonly IMockCounterVerifierCreator<TMock, IVoidAsserter<TSut>> _mockCounterVerifierCreator;
+    private readonly IMockCountVerifierCreator<TMock, IVoidAsserter<TSut>> _mockCountVerifierCreator;
     private readonly IVoidAsserter<TSut> _asserter;
 
     public VoidMockVerifier(
-        IMockCounterVerifierCreator<TMock, IVoidAsserter<TSut>> mockCounterVerifierCreator,
+        IMockCountVerifierCreator<TMock, IVoidAsserter<TSut>> mockCountVerifierCreator,
         IVoidAsserter<TSut> asserter
         )
     {
-        _mockCounterVerifierCreator = mockCounterVerifierCreator;
+        _mockCountVerifierCreator = mockCountVerifierCreator;
         _asserter = asserter;
     }
     
-    public IMockCounterVerifier<IVoidAsserter<TSut>> Should<TMockResult>(
+    public IMockCountVerifier<IVoidAsserter<TSut>> Should<TMockResult>(
         Expression<Func<TMock, TMockResult>> expression
         )
     {
-        return _mockCounterVerifierCreator.Create(
+        return _mockCountVerifierCreator.Create(
             expression
         );
     }
 
-    public IMockCounterVerifier<IVoidAsserter<TSut>> Should(
+    public IMockCountVerifier<IVoidAsserter<TSut>> Should(
         Func<IReadArrangement, Expression<Action<TMock>>> func
         )
     {
-        return _mockCounterVerifierCreator.Create(
+        return _mockCountVerifierCreator.Create(
             func,
             _asserter
         );
     }
 
-    public IMockCounterVerifier<IVoidAsserter<TSut>> Should(
+    public IMockCountVerifier<IVoidAsserter<TSut>> Should(
         Expression<Action<TMock>> expression
         )
     {
-        return _mockCounterVerifierCreator.Create(
+        return _mockCountVerifierCreator.Create(
             expression
         );
     }

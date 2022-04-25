@@ -27,43 +27,49 @@ where TMock : IMock<TObject>
         _arrangement = arrangement;
     }
     
-    public IMockResultDependencyBuilder<TSut, TResult> ThatDoes<TResult>(
+    public IMockResultBuilder<TResult, IDependencyBuilder<TSut>> ThatDoes<TResult>(
         Func<IReadArrangement, Expression<Func<TObject, TResult>>> func
         )
     {
         var expression = func.Invoke(_arrangement);
 
-        return new MockResultDependencyBuilder<TSut, TObject, TResult>(
+        return new MockResultBuilder<TObject, TResult, IDependencyBuilder<TSut>>(
             expression,
-            _obj,
+            Obj,
             this,
             _arrangement
         );
     }
 
-    public IMockResultDependencyBuilder<TSut, TResult> ThatDoes<TResult>(Expression<Func<TObject, TResult>> expression)
+    public IMockResultBuilder<TResult, IDependencyBuilder<TSut>> ThatDoes<TResult>(
+        Expression<Func<TObject, TResult>> expression
+        )
     {
-        return _chainer.StartMockResultDependencyBuilder(
+        return Chainer.StartMockResultDependencyBuilder(
             expression,
-            _obj,
+            Obj,
             this
         );
     }
 
-    public IMockAsyncResultDependencyBuilder<TSut, TResult> ThatDoesAsync<TResult>(Func<IReadArrangement, Expression<Func<TObject, Task<TResult>>>> func)
+    public IMockAsyncResultDependencyBuilder<TSut, TResult> ThatDoesAsync<TResult>(
+        Func<IReadArrangement, Expression<Func<TObject, Task<TResult>>>> func
+        )
     {
-        return _chainer.StartMockAsyncResultDependencyBuilder(
+        return Chainer.StartMockAsyncResultDependencyBuilder(
             func,
-            _obj,
+            Obj,
             this
         );
     }
 
-    public IMockAsyncResultDependencyBuilder<TSut, TResult> ThatDoesAsync<TResult>(Expression<Func<TObject, Task<TResult>>> expression)
+    public IMockAsyncResultDependencyBuilder<TSut, TResult> ThatDoesAsync<TResult>(
+        Expression<Func<TObject, Task<TResult>>> expression
+        )
     {
-        return _chainer.StartMockAsyncResultDependencyBuilder(
+        return Chainer.StartMockAsyncResultDependencyBuilder(
             expression,
-            _obj,
+            Obj,
             this
         );
     }

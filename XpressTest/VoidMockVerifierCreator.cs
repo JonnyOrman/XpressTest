@@ -5,13 +5,13 @@ public class VoidMockVerifierCreator<TSut>
         IVoidMockVerifierCreator<TSut>
     where TSut : class
 {
-    private readonly IMockCounterVerifierCreatorComposer<IVoidAsserter<TSut>> _mockCounterVerifierCreatorComposer;
+    private readonly IMockCountVerifierCreatorComposer<IVoidAsserter<TSut>> _mockCountVerifierCreatorComposer;
 
     public VoidMockVerifierCreator(
-        IMockCounterVerifierCreatorComposer<IVoidAsserter<TSut>> mockCounterVerifierCreatorComposer
+        IMockCountVerifierCreatorComposer<IVoidAsserter<TSut>> mockCountVerifierCreatorComposer
         )
     {
-        _mockCounterVerifierCreatorComposer = mockCounterVerifierCreatorComposer;
+        _mockCountVerifierCreatorComposer = mockCountVerifierCreatorComposer;
     }
     
     public IVoidMockVerifier<TSut, TMock> Create<TMock>(
@@ -19,7 +19,7 @@ public class VoidMockVerifierCreator<TSut>
         )
         where TMock : class
     {
-        var mockCounterVerifierCreator = _mockCounterVerifierCreatorComposer.Compose<TMock>(
+        var mockCounterVerifierCreator = _mockCountVerifierCreatorComposer.Compose<TMock>(
             asserter
             );
 
@@ -35,7 +35,7 @@ public class VoidMockVerifierCreator<TSut>
         )
         where TMock : class
     {
-        var mockCounterVerifierCreator = _mockCounterVerifierCreatorComposer.Compose(
+        var mockCounterVerifierCreator = _mockCountVerifierCreatorComposer.Compose(
             mock,
             asserter
         );  

@@ -11,7 +11,9 @@ public class SutAsserter<TSut> : ISutPropertyTargeter<TSut>
         _sutPropertyTargeter = sutPropertyTargeter;
     }
     
-    public ISutPropertyAsserter<TSut, TProperty> ThenIts<TProperty>(Func<TSut, TProperty> func)
+    public ISutPropertyAsserter<TSut, TProperty> ThenIts<TProperty>(
+        Func<TSut, TProperty> func
+        )
     {
         return _sutPropertyTargeter.ThenIts(func);
     }

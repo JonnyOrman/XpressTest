@@ -6,7 +6,6 @@ public class MockSetupBuilderCreator<TSut>
 where TSut : class
 {
     private readonly ITestBuilderContainer<TSut> _testBuilderContainer;
-
     private readonly IArrangement _arrangement;
     private INamedMockSetupBuilderCreator<TSut> _namedMockSetupBuilderGenerator;
 

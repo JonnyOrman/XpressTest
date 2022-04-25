@@ -27,10 +27,10 @@ where TDependency : class
     }
     
     public IDependencyBuilder<TSut> AndReturns(
-        TResult expectedResult
+        TResult result
         )
     {
-        _dependencyMock.MoqMock.Setup(_expression).ReturnsAsync(expectedResult);
+        _dependencyMock.MoqMock.Setup(_expression).ReturnsAsync(result);
 
         return _mockDependencyBuilder;
     }

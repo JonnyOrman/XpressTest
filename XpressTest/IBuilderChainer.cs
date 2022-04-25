@@ -5,54 +5,54 @@ public interface IBuilderChainer<TSut>
     IMockDependencySetupBuilder<TSut, TDependency> StartNewMockDependencyBuilder<TDependency>()
         where TDependency : class;
     
-    IMockDependencySetupBuilder<TSut, TDependency> StartNewNamedMockDependencyBuilder<TDependency>(
+    IMockDependencySetupBuilder<TSut, TDependency> StartNewMockDependencyBuilder<TDependency>(
         string name
     )
         where TDependency : class;
     
-    IMockDependencySetupBuilder<TSut, TDependency> StartExistingMockDependencyBuilder<TDependency>()
+    IMockDependencySetupBuilder<TSut, TDependency> StartNewExistingMockDependencyBuilder<TDependency>()
         where TDependency : class;
     
-    IDependencyBuilder<TSut> StartNewExistingObjectBuilder<TObject>();
+    IDependencyBuilder<TSut> StartNewExistingObjectDependencyBuilder<TObject>();
     
-    IDependencyBuilder<TSut> StartNewNamedDependencyBuilder<TNewDependency>(
+    IDependencyBuilder<TSut> StartNewObjectDependencyBuilder<TNewDependency>(
         TNewDependency newDependency,
         string name
     );
 
-    IDependencyBuilder<TSut> StartNewExistingObjectBuilder<TObject>(
+    IDependencyBuilder<TSut> StartNewExistingObjectDependencyBuilder<TObject>(
         string objectName
     );
     
-    IDependencyBuilder<TSut> ComposeValueDependencyBuilder<TNewDependency>(
+    IDependencyBuilder<TSut> StartNewObjectDependencyBuilder<TNewDependency>(
         TNewDependency newDependency
     );
     
-    IResultAsserter<TSut, TResult> ComposeAsserter<TResult>(
+    IResultAsserter<TSut, TResult> StartResultAsserter<TResult>(
         Func<TSut, TResult> func
     );
     
-    IResultAsserter<TSut, TResult> ComposeAsserter<TResult>(
+    IResultAsserter<TSut, TResult> StartResultAsserter<TResult>(
         Func<IReadArrangement, Func<TSut, TResult>> func
     );
     
-    IResultAsserter<TSut, TResult> ComposeAsserter<TResult>(
+    IResultAsserter<TSut, TResult> StartResultAsserter<TResult>(
         Func<ISutArrangement<TSut>, TResult> func
     );
     
-    IVoidAsserter<TSut> ComposeAsserter(
+    IVoidAsserter<TSut> StartVoidAsserter(
         Action<TSut> action
     );
     
-    IVoidAsserter<TSut> ComposeAsserter(
+    IVoidAsserter<TSut> StartVoidAsserter(
         Action<ISutArrangement<TSut>> action
     );
     
-    Task<IAsyncResultAsserter<TSut, TResult>> ComposeMockAsserter<TResult>(
+    Task<IAsyncResultAsserter<TSut, TResult>> StartAsyncResultAsserter<TResult>(
         Func<TSut, Task<TResult>> func
     );
     
-    Task<IAsyncResultAsserter<TSut, TResult>> ComposeMockAsserter<TResult>(
+    Task<IAsyncResultAsserter<TSut, TResult>> StartAsyncResultAsserter<TResult>(
         Func<ISutArrangement<TSut>, Task<TResult>> func
     );
     

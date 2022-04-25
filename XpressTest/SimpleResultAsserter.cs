@@ -6,25 +6,25 @@ public class SimpleResultAsserter<TSut, TResult>
 {
     private readonly TSut _sut;
     private readonly IArrangement _arrangement;
-    private readonly Func<TResult> _action;
+    private readonly Func<TResult> _func;
     private readonly IExceptionAsserter _exceptionAsserter;
 
     public SimpleResultAsserter(
         TSut sut,
         IArrangement arrangement,
-        Func<TResult> action,
+        Func<TResult> func,
         IExceptionAsserter exceptionAsserter
         )
     {
         _sut = sut;
         _arrangement = arrangement;
-        _action = action;
+        _func = func;
         _exceptionAsserter = exceptionAsserter;
     }
 
     public void Then(Action<IResultAssertion<TResult>> action)
     {
-        var result = _action.Invoke();
+        var result = _func.Invoke();
         
         var sutAction = new SutArrangement<TSut>(_sut, _arrangement);
 
@@ -37,7 +37,7 @@ public class SimpleResultAsserter<TSut, TResult>
 
     public void ThenTheResultShouldBe(TResult expectedResult)
     {
-        var result = _action.Invoke();
+        var result = _func.Invoke();
         
         result.ThenTheResultShouldBe(expectedResult);
     }

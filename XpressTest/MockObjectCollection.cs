@@ -5,10 +5,13 @@ public class MockObjectCollection : IMockObjectCollection
     private readonly IDictionary<string, IMock> _dictionary;
     private readonly ICollection<IMock> _collection;
 
-    public MockObjectCollection()
+    public MockObjectCollection(
+        IDictionary<string, IMock> dictionary,
+        ICollection<IMock> collection
+        )
     {
-        _dictionary = new Dictionary<string, IMock>();
-        _collection = new List<IMock>();
+        _dictionary = dictionary;
+        _collection = collection;
     }
     
     public void Add<T>(IMock<T> mock) where T : class
@@ -32,7 +35,7 @@ public class MockObjectCollection : IMockObjectCollection
             }
         }
         
-        throw new Exception($"No mock of type {typeof(TMock).Name} registered");
+        throw new MockNotRegisteredException($"No mock of type {typeof(TMock).Name} registered");
     }
 
     public IMock<TMock> Get<TMock>(
@@ -40,10 +43,20 @@ public class MockObjectCollection : IMockObjectCollection
         )
         where TMock : class
     {
-        var mock = _dictionary[name];
+        if (_dictionary.Any() && _dictionary.ContainsKey(name))
+        {
+            var mock = _dictionary[name];
 
-        var castMock = mock as IMock<TMock>;
+            if (mock is IMock<TMock> typedMock)
+            {
+                return typedMock;
+            }
+            else
+            {
+                throw new NamedMockDifferentTypeRegisteredException($"Expected mock with name {name} is not of type {typeof(TMock).Name}");
+            }
+        }
 
-        return castMock;
+        throw new NamedMockNotRegisteredException($"No mock of type {typeof(TMock).Name} with name {name} registered");
     }
 }

@@ -4,7 +4,7 @@ public interface IVariableBuilderChainer<TSut>
 :
     IBuilderChainer<TSut>
 {
-    IDependencyBuilder<TSut> ComposeValueDependencyBuilder<TNewDependency>(
+    IDependencyBuilder<TSut> StartExistingObjectDependencyBuilder<TNewDependency>(
         Func<IReadArrangement, TNewDependency> newDependencyFunc
     );
 

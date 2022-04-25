@@ -1,6 +1,8 @@
 ﻿namespace XpressTest;
 
-public class ResultPropertyAsserter<TSut, TResult, TProperty> : IResultPropertyAsserter<TSut, TResult, TProperty>
+public class ResultPropertyAsserter<TSut, TResult, TProperty>
+    :
+        IResultPropertyAsserter<TSut, TResult, TProperty>
 {
     private readonly IResultPropertyValueAsserter<TSut, TResult, TProperty> _resultPropertyValueAsserter;
     private readonly IResultPropertyNullAsserter<TSut, TResult> _resultPropertyNullAsserter;
@@ -17,12 +19,16 @@ public class ResultPropertyAsserter<TSut, TResult, TProperty> : IResultPropertyA
         _arrangement = arrangement;
     }
 
-    public IResultPropertyTargeter<TSut, TResult> ShouldBe(TProperty expectedValue)
+    public IResultPropertyTargeter<TSut, TResult> ShouldBe(
+        TProperty expectedValue
+        )
     {
         return _resultPropertyValueAsserter.Assert(expectedValue);
     }
 
-    public IResultPropertyTargeter<TSut, TResult> ShouldBe(Func<IReadArrangement, TProperty> expectedValueFunc)
+    public IResultPropertyTargeter<TSut, TResult> ShouldBe(
+        Func<IReadArrangement, TProperty> expectedValueFunc
+        )
     {
         var expectedValue = expectedValueFunc.Invoke(_arrangement);
         

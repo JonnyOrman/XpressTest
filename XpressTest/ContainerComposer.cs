@@ -56,12 +56,12 @@ where TSut : class
             dependencyBuilderChainer
         );
 
-        var moqMockDependencyBuilderCreator = new MoqMockDependencyBuilderCreator<TSut>(
+        var moqMockDependencyBuilderCreator = new MockDependencyBuilderCreator<TSut>(
             arrangement,
             dependencyBuilderChainer
         );
 
-        var mockDependencyBuilderCreator = new MockDependencyBuilderCreator<TSut>(
+        var mockDependencyBuilderCreator = new MockTypeDependencyBuilderCreator<TSut>(
             arrangement,
             moqMockDependencyBuilderCreator
         );

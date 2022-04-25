@@ -1,6 +1,7 @@
 ﻿namespace XpressTest;
 
-public class ExceptionAsserter : IExceptionAsserter
+public class 
+    ExceptionAsserter : IExceptionAsserter
 {
     private readonly Action _action;
 
@@ -32,7 +33,7 @@ public class ExceptionAsserter : IExceptionAsserter
 
         if (!exceptionThrown)
         {
-            throw new Exception("Expected exception not thrown");
+            throw new ExceptionNotThrownException($"Expected exception of type {typeof(TException).Name} but no exception was thrown");
         }
     }
 }

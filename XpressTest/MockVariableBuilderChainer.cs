@@ -27,29 +27,29 @@ public class MockVariableBuilderChainer<TSut, TMock, TVariable>
         _arrangement = arrangement;
     }
     
-    public IMockSetupResultBuilder<TSut, TMock, TResult> StartMockSetupResultBuilder<TResult>(
+    public IMockResultBuilder<TResult, IMockSetupBuilder<TSut, TMock>> StartMockSetupResultBuilder<TResult>(
         Func<IReadArrangement, Expression<Func<TMock, TResult>>> func,
         TVariable mock,
-        IMockSetupBuilder<TSut, TMock> mockObjectBuilder
+        IMockSetupBuilder<TSut, TMock> mockSetupBuilder
     )
     {
         var expression = func.Invoke(_arrangement);
         
-        return new MockResultObjectBuilder<TSut, TMock, TResult>(
+        return new MockResultBuilder<TMock, TResult, IMockSetupBuilder<TSut, TMock>>(
             expression,
             mock,
-            mockObjectBuilder,
+            mockSetupBuilder,
             _arrangement
         );
     }
 
-    public IMockSetupResultBuilder<TSut, TMock, TResult> StartMockSetupResultBuilder<TResult>(
+    public IMockResultBuilder<TResult, IMockSetupBuilder<TSut, TMock>> StartMockSetupResultBuilder<TResult>(
         Expression<Func<TMock, TResult>> expression,
         TVariable mock,
         IMockSetupBuilder<TSut, TMock> mockObjectBuilder
     )
     {
-        return new MockResultObjectBuilder<TSut, TMock, TResult>(
+        return new MockResultBuilder<TMock, TResult, IMockSetupBuilder<TSut, TMock>>(
             expression,
             mock,
             mockObjectBuilder,

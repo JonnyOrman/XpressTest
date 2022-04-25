@@ -7,8 +7,15 @@ public static class SutActionInitialiser<TSut>
     {
         var sut = Activator.CreateInstance<TSut>();
 
-        var sutPropertyTargeter = new SutPropertyTargeter<TSut>(
-            sut
+        var arrangement = ArrangementInitialiser.Initialise();
+
+        var sutArrangement = new SutArrangement<TSut>(
+            sut,
+            arrangement
+        );
+
+        var sutPropertyTargeter = new SutPropertyTargeter<TSut>(    
+            sutArrangement
             );
         
         return new SutAsserter<TSut>(

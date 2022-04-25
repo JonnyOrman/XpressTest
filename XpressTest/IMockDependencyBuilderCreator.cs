@@ -1,11 +1,10 @@
 namespace XpressTest;
 
 public interface IMockDependencyBuilderCreator<TSut>
-    where TSut : class
+where TSut : class
 {
-    IMockDependencySetupBuilder<TSut, TDependency> Create<TDependency>()
-        where TDependency : class;
-    
-    IMockDependencySetupBuilder<TSut, TDependency> CreateExisting<TDependency>()
+    IMockDependencySetupBuilder<TSut, TDependency> Create<TDependency>(
+        IMock<TDependency> moqMock
+        )
         where TDependency : class;
 }

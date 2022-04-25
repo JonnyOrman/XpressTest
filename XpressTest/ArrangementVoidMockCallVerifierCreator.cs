@@ -2,17 +2,17 @@ using System.Linq.Expressions;
 
 namespace XpressTest;
 
-public class ArrangementVoidMockCallVerifierCreator<TSut, TMock, TAsserter>
+public class ArrangementVoidMockCallVerifierCreator<TMock, TAsserter>
     :
         IArrangementVoidMockCallVerifierCreator<TMock, TAsserter>
 where TMock : class
 {
     private readonly IMockCallCountVerifierCreator<TMock> _mockCallCountVerifierCreator;
-    private readonly ISutArrangement<TSut> _arrangement;
+    private readonly IReadArrangement _arrangement;
 
     public ArrangementVoidMockCallVerifierCreator(
         IMockCallCountVerifierCreator<TMock> mockCallCountVerifierCreator,
-        ISutArrangement<TSut> arrangement
+        IReadArrangement arrangement
         )
     {
         _mockCallCountVerifierCreator = mockCallCountVerifierCreator;

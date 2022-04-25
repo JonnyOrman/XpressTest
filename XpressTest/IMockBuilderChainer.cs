@@ -7,15 +7,15 @@ public interface IMockBuilderChainer<TSut, TObject, TMock>
         IVariableBuilderChainer<TSut>
     where TSut : class
 {
-    IMockSetupResultBuilder<TSut, TObject, TResult> StartMockSetupResultBuilder<TResult>(
+    IMockResultBuilder<TResult, IMockSetupBuilder<TSut, TObject>> StartMockSetupResultBuilder<TResult>(
         Func<IReadArrangement, Expression<Func<TObject, TResult>>> func,
         TMock mock,
-        IMockSetupBuilder<TSut, TObject> mockObjectBuilder
+        IMockSetupBuilder<TSut, TObject> mockSetupBuilder
     );
     
-    IMockSetupResultBuilder<TSut, TObject, TResult> StartMockSetupResultBuilder<TResult>(
+    IMockResultBuilder<TResult, IMockSetupBuilder<TSut, TObject>> StartMockSetupResultBuilder<TResult>(
         Expression<Func<TObject, TResult>> expression,
         TMock mock,
-        IMockSetupBuilder<TSut, TObject> mockObjectBuilder
+        IMockSetupBuilder<TSut, TObject> mockSetupBuilder
     );
 }

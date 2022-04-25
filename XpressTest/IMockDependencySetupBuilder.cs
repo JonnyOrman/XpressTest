@@ -6,11 +6,11 @@ public interface IMockDependencySetupBuilder<TSut, TObject>
 :
     IDependencyBuilder<TSut>
 {
-    IMockResultDependencyBuilder<TSut, TResult> ThatDoes<TResult>(
+    IMockResultBuilder<TResult, IDependencyBuilder<TSut>> ThatDoes<TResult>(
         Func<IReadArrangement, Expression<Func<TObject, TResult>>> func
     );
     
-    IMockResultDependencyBuilder<TSut, TResult> ThatDoes<TResult>(
+    IMockResultBuilder<TResult, IDependencyBuilder<TSut>> ThatDoes<TResult>(
         Expression<Func<TObject, TResult>> expression
     );
     

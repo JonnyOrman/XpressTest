@@ -18,7 +18,6 @@ public class SutAsserterCreator<TSut>
         var sutArrangement = _sutArrangementCreator.Create();
         
         var sutPropertyTargeter = new SutPropertyTargeter<TSut>(
-            sutArrangement.Sut,
             sutArrangement
         );
         

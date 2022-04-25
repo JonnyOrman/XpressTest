@@ -6,11 +6,11 @@ public interface IMockSetupBuilder<TSut, TObject>
     :
         IVariableBuilder<TSut>
 {
-    IMockSetupResultBuilder<TSut, TObject, TResult> ThatDoes<TResult>(
+    IMockResultBuilder<TResult, IMockSetupBuilder<TSut, TObject>> ThatDoes<TResult>(
         Func<IReadArrangement, Expression<Func<TObject, TResult>>> func
     );
 
-    IMockSetupResultBuilder<TSut, TObject, TResult> ThatDoes<TResult>(
+    IMockResultBuilder<TResult, IMockSetupBuilder<TSut, TObject>> ThatDoes<TResult>(
         Expression<Func<TObject, TResult>> expression
     );
 }

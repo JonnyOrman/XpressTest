@@ -23,14 +23,14 @@ public class VariableBuilder<TSut, TObject, TChainer>
     public IMockSetupBuilder<TSut, TNewObject> AndGivenA<TNewObject>()
         where TNewObject : class
     {
-        return Chain(() => _chainer.StartNewMockObjectBuilder<TNewObject>());
+        return Chain(() => Chainer.StartNewMockObjectBuilder<TNewObject>());
     }
 
     public IVariableBuilder<TSut> AndGiven<TNewObject>(
         TNewObject obj
         )
     {
-        return Chain(() => _chainer.StartNewObjectBuilder(
+        return Chain(() => Chainer.StartNewObjectBuilder(
             obj
         ));
     }
@@ -40,7 +40,7 @@ public class VariableBuilder<TSut, TObject, TChainer>
         string name
         )
     {
-        return Chain(() => _chainer.StartNewNamedObjectBuilder(
+        return Chain(() => Chainer.StartNewNamedObjectBuilder(
             obj,
             name
         ));
@@ -50,7 +50,7 @@ public class VariableBuilder<TSut, TObject, TChainer>
         Func<IReadArrangement, TNewObject> func
         )
     {
-        return Chain(() => _chainer.StartNewObjectBuilder(
+        return Chain(() => Chainer.StartNewObjectBuilder(
             func
         ));
     }
@@ -60,7 +60,7 @@ public class VariableBuilder<TSut, TObject, TChainer>
         string name
         )
     {
-        return Chain(() => _chainer.StartNewNamedObjectBuilder(
+        return Chain(() => Chainer.StartNewNamedObjectBuilder(
             func,
             name
         ));
@@ -70,7 +70,7 @@ public class VariableBuilder<TSut, TObject, TChainer>
         string objectName
     )
     {
-        return Chain(() => _chainer.StartNewExistingObjectBuilder<TNamedObject>(
+        return Chain(() => Chainer.StartNewExistingObjectDependencyBuilder<TNamedObject>(
             objectName
         ));
     }
@@ -78,50 +78,52 @@ public class VariableBuilder<TSut, TObject, TChainer>
     public IMockDependencySetupBuilder<TSut, TMock> WithTheMock<TMock>()
         where TMock : class
     {
-        return Chain(() => _chainer.StartExistingMockDependencyBuilder<TMock>());
+        return Chain(() => Chainer.StartNewExistingMockDependencyBuilder<TMock>());
     }
 
     public IResultAsserter<TSut, TResult> WhenIt<TResult>(
         Func<ISutArrangement<TSut>, TResult> func
         )
     {
-        return Chain(() => _chainer.ComposeAsserter(
+        return Chain(() => Chainer.StartResultAsserter(
             func
         ));
     }
 
-    public IResultAsserter<TSut, TResult> WhenIt<TResult>(Func<IReadArrangement, Func<TSut, TResult>> func)
+    public IResultAsserter<TSut, TResult> WhenIt<TResult>(
+        Func<IReadArrangement, Func<TSut, TResult>> func
+        )
     {
-        return Chain(() => _chainer.ComposeAsserter(
+        return Chain(() => Chainer.StartResultAsserter(
             func
         ));
     }
 
     public IVoidAsserter<TSut> WhenIt(
-        Action<ISutArrangement<TSut>> func
+        Action<ISutArrangement<TSut>> action
         )
     {
-        return Chain(() => _chainer.ComposeAsserter(
-            func
+        return Chain(() => Chainer.StartVoidAsserter(
+            action
         ));
     }
 
     public IMockDependencySetupBuilder<TSut, TNewDependency> WithA<TNewDependency>()
         where TNewDependency : class
     {
-        return Chain(() => _chainer.StartNewMockDependencyBuilder<TNewDependency>());
+        return Chain(() => Chainer.StartNewMockDependencyBuilder<TNewDependency>());
     }
 
     public IDependencyBuilder<TSut> With<TNewDependency>(TNewDependency newDependency)
     {
-        return Chain(() => _chainer.ComposeValueDependencyBuilder(
+        return Chain(() => Chainer.StartNewObjectDependencyBuilder(
             newDependency
         ));
     }
 
     public IDependencyBuilder<TSut> WithThe<TNewDependency>()
     {
-        return Chain(() => _chainer.StartNewExistingObjectBuilder<TNewDependency>());
+        return Chain(() => Chainer.StartNewExistingObjectDependencyBuilder<TNewDependency>());
     }
 
     public IDependencyBuilder<TSut> With<TNewDependency>(
@@ -129,7 +131,7 @@ public class VariableBuilder<TSut, TObject, TChainer>
         string name
         )
     {
-        return Chain(() => _chainer.StartNewNamedDependencyBuilder(
+        return Chain(() => Chainer.StartNewObjectDependencyBuilder(
             newDependency,
             name
             ));
@@ -140,7 +142,7 @@ public class VariableBuilder<TSut, TObject, TChainer>
         )
         where TNewDependency : class
     {
-        return Chain(() => _chainer.StartNewNamedMockDependencyBuilder<TNewDependency>(
+        return Chain(() => Chainer.StartNewMockDependencyBuilder<TNewDependency>(
             name
         ));
     }
@@ -149,7 +151,7 @@ public class VariableBuilder<TSut, TObject, TChainer>
         Func<IReadArrangement, TNewDependency> newDependencyFunc
     )
     {
-        return Chain(() => _chainer.ComposeValueDependencyBuilder(
+        return Chain(() => Chainer.StartExistingObjectDependencyBuilder(
             newDependencyFunc
         ));
     }
@@ -159,41 +161,49 @@ public class VariableBuilder<TSut, TObject, TChainer>
         )
         where TNewObject : class
     {
-        return Chain(() => _chainer.StartNewNamedMockObjectBuilder<TNewObject>(
+        return Chain(() => Chainer.StartNewNamedMockObjectBuilder<TNewObject>(
             name
             ));
     }
 
-    public IVoidAsserter<TSut> WhenIt(Action<TSut> action)
+    public IVoidAsserter<TSut> WhenIt(
+        Action<TSut> action
+        )
     {
-        return Chain(() => _chainer.ComposeAsserter(
+        return Chain(() => Chainer.StartVoidAsserter(
             action
         ));
     }
 
-    public IResultAsserter<TSut, TResult> WhenIt<TResult>(Func<TSut, TResult> func)
+    public IResultAsserter<TSut, TResult> WhenIt<TResult>(
+        Func<TSut, TResult> func
+        )
     {
-        return Chain(() => _chainer.ComposeAsserter(
+        return Chain(() => Chainer.StartResultAsserter(
             func
         ));
     }
 
-    public IAsyncResultAsserter<TSut, TResult> WhenItAsync<TResult>(Func<ISutArrangement<TSut>, Task<TResult>> func)
+    public IAsyncResultAsserter<TSut, TResult> WhenItAsync<TResult>(
+        Func<ISutArrangement<TSut>, Task<TResult>> func
+        )
     {
-        _objectSetter.Set(_obj);
+        ObjectSetter.Set(Obj);
         
-        Task<IAsyncResultAsserter<TSut, TResult>> task = Task.Run(async () => await _chainer.ComposeMockAsserter(
+        Task<IAsyncResultAsserter<TSut, TResult>> task = Task.Run(async () => await Chainer.StartAsyncResultAsserter(
             func
         ));
 
         return task.Result;
     }
 
-    public IAsyncResultAsserter<TSut, TResult> WhenItAsync<TResult>(Func<TSut, Task<TResult>> func)
+    public IAsyncResultAsserter<TSut, TResult> WhenItAsync<TResult>(
+        Func<TSut, Task<TResult>> func
+        )
     {
-        _objectSetter.Set(_obj);
+        ObjectSetter.Set(Obj);
         
-        Task<IAsyncResultAsserter<TSut, TResult>> task = Task.Run(async () => await _chainer.ComposeMockAsserter(
+        Task<IAsyncResultAsserter<TSut, TResult>> task = Task.Run(async () => await Chainer.StartAsyncResultAsserter(
             func
         ));
 
@@ -202,6 +212,6 @@ public class VariableBuilder<TSut, TObject, TChainer>
 
     public ISutPropertyTargeter<TSut> WhenItIsConstructed()
     {
-        return Chain(() => _chainer.StartSutAsserter());
+        return Chain(() => Chainer.StartSutAsserter());
     }
 }

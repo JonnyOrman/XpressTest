@@ -16,7 +16,6 @@ public class VoidAsserter<TSut>
         )
     {
         _sutArrangement = sutArrangement;
-        
         _voidMockVerifierCreator = voidMockVerifierCreator;
         _exceptionAsserter = exceptionAsserter;
     }
@@ -29,7 +28,10 @@ public class VoidAsserter<TSut>
             );
     }
 
-    public IVoidMockVerifier<TSut, TMock> ThenThe<TMock>(string name) where TMock : class
+    public IVoidMockVerifier<TSut, TMock> ThenThe<TMock>(
+        string name
+        )
+        where TMock : class
     {
         var mock = _sutArrangement.GetTheMock<TMock>(name);
         
@@ -52,7 +54,9 @@ public class VoidAsserter<TSut>
         );
     }
 
-    public void Then(Action<ISutArrangement<TSut>> action)
+    public void Then(
+        Action<ISutArrangement<TSut>> action
+        )
     {
         var assertion = new VoidAssertion<TSut>(
             _sutArrangement
@@ -68,7 +72,9 @@ public class VoidAsserter<TSut>
         return this;
     }
 
-    public IResultAsserter<TSut, TResult> ThenWhenIt<TResult>(Func<TSut, TResult> func)
+    public IResultAsserter<TSut, TResult> ThenWhenIt<TResult>(
+        Func<TSut, TResult> func
+        )
     {
         var result = func.Invoke(_sutArrangement.Sut);
         
@@ -78,7 +84,7 @@ public class VoidAsserter<TSut>
         );
         
         var mockCounterVerifierCreatorComposer =
-            new MockCounterVerifierCreatorComposer<TSut, IResultAsserter<TSut, TResult>>(
+            new MockCountVerifierCreatorComposer<TSut, IResultAsserter<TSut, TResult>>(
                 _sutArrangement
             );
         

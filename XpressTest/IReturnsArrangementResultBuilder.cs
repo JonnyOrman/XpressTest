@@ -1,8 +1,8 @@
 namespace XpressTest;
 
-public interface IReturnsArrangementResultBuilder<TSut, TResult>
+public interface IReturnsArrangementResultBuilder<TResult, TBuilder>
 {
-    IDependencyBuilder<TSut> AndReturns(
-        Func<IReadArrangement, TResult> expectedResultFunc
+    TBuilder AndReturns(
+        Func<IReadArrangement, TResult> resultFunc
     );
 }

@@ -8,7 +8,7 @@ public interface IDependencyBuilderChainer<TSut>
     where TSut : class
 
 {
-    IMockResultDependencyBuilder<TSut, TResult> StartMockResultDependencyBuilder<TDependency, TResult>(
+    IMockResultBuilder<TResult, IDependencyBuilder<TSut>> StartMockResultDependencyBuilder<TDependency, TResult>(
         Expression<Func<TDependency, TResult>> expression,
         IMock<TDependency> mock,
         IDependencyBuilder<TSut> mockDependencyBuilder
