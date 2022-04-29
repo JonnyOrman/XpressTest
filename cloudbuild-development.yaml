@@ -1,9 +1,4 @@
 steps:
-  - id: 'format'
-    name: 'mcr.microsoft.com/dotnet/sdk:6.0.102-focal'
-    entrypoint: dotnet
-    args: ['format', '--verify-no-changes', '-v', 'diagnostic', '--no-restore']
-
   - id: 'build'
     name: 'mcr.microsoft.com/dotnet/sdk:6.0.102-focal'
     entrypoint: 'dotnet'
