@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XpressTest", "XpressTest\XpressTest.csproj", "{5F1E4DE1-751F-437B-BE5D-B60A74DED077}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XpressTest", "Code\XpressTest\XpressTest.csproj", "{5F1E4DE1-751F-437B-BE5D-B60A74DED077}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XpressTest.Examples", "XpressTest.Examples\XpressTest.Examples.csproj", "{BF4C3381-7E14-4426-A3D7-F4B255295FC4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XpressTest.Examples", "Code\XpressTest.Examples\XpressTest.Examples.csproj", "{BF4C3381-7E14-4426-A3D7-F4B255295FC4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XpressTest.Testing.UnitTests", "XpressTest.Testing.UnitTests\XpressTest.Testing.UnitTests.csproj", "{DBE878B3-6C27-43A7-807F-32D4C79BAB85}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XpressTest.Testing.UnitTests", "Code\XpressTest.Testing.UnitTests\XpressTest.Testing.UnitTests.csproj", "{DBE878B3-6C27-43A7-807F-32D4C79BAB85}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

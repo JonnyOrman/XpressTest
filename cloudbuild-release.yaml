@@ -1,0 +1,16 @@
+steps:
+  - id: 'build'
+    name: 'mcr.microsoft.com/dotnet/sdk:6.0.102-focal'
+    entrypoint: 'dotnet'
+    args: ['build', '--configuration', 'Release']
+
+  - id: 'publish'
+    name: 'mcr.microsoft.com/dotnet/sdk:6.0.102-focal'
+    entrypoint: bash
+    args: ['-c', 'dotnet nuget push Code/CloudBuildTest/bin/Release/*.nupkg --source nuget --api-key $$NugetKey']
+    secretEnv: ['NugetKey']
+
+availableSecrets:
+  secretManager:
+  - versionName: projects/$PROJECT_NUMBER/secrets/NugetKey/versions/latest
+    env: 'NugetKey'
