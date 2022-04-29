@@ -71,7 +71,7 @@ Tests are written by specifying the SUT, registering and setting up any mocks or
 
 Install to a testing project by running the following:
 ```
-dotnet add package XpressTest --version 1.0.0-beta.1
+dotnet add package XpressTest
 ```
 
 ## Writing tests
