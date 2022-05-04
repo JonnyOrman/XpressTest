@@ -7,7 +7,7 @@ steps:
   - id: 'publish'
     name: 'mcr.microsoft.com/dotnet/sdk:6.0.102-focal'
     entrypoint: bash
-    args: ['-c', 'dotnet nuget push Code/XpressTest/bin/Release/*.nupkg --source nuget --api-key $$NugetKey' --skip-duplicate]
+    args: ['-c', 'dotnet nuget push Code/XpressTest/bin/Release/*.nupkg --source nuget --api-key $$NugetKey --skip-duplicate']
     secretEnv: ['NugetKey']
 
 availableSecrets:
