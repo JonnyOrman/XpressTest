@@ -1,5 +1,7 @@
 # XpressTest
 
+[![NuGet](http://img.shields.io/nuget/vpre/XpressTest.svg?label=NuGet)](https://www.nuget.org/packages/XpressTest/)
+
 Write entire unit tests with expressive, fluent syntax:
 ```cs
 [Fact]
@@ -60,6 +62,8 @@ public void ProcessValidParameters() =>
             .Once()
         .ThenTheResultShouldBe(arrangement => arrangement.GetThe<Entity>());
 ```
+
+See [XpressTest.Examples](https://github.com/JonnyOrman/XpressTest.Examples) for a wide range of usage examples.
 
 ## About XpressTest
 
@@ -318,7 +322,3 @@ Finally, verify that the returned `Entity` is as expected:
 ```cs
 .ThenTheResultShouldBe(arrangement => arrangement.GetThe<Entity>());
 ```
-
-## More examples
-
-Many more different types of test scenarios are possible with `XpressTest`. See the [XpressTest.Examples](https://github.com/JonnyOrman/XpressTest/tree/main/XpressTest.Examples/Tests) project in this repository for more examples.
