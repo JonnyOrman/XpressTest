@@ -101,6 +101,27 @@ public class GivenAVoidAsserter
     }
 
     [Fact]
+    public void WhenItVerifiesAnotherSutActionThenItInvokesTheActionAndReturnsTheVoidAsserter()
+    {
+        var actionInvoked = false;
+
+        Action<object> action = sutArrangement => { actionInvoked = true; };
+
+        var sutArrangement = Substitute.For<ISutArrangement<object>>();
+
+        var sut = new VoidAsserter<object>(
+            sutArrangement,
+            null,
+            null
+        );
+
+        var result = sut.ThenWhenIt(action);
+
+        actionInvoked.Should().BeTrue();
+
+        result.Should().Be(sut);
+    }
+    [Fact]
     public void WhenItVerifiesAnotherSutArrangementActionThenItInvokesTheActionAndReturnsTheVoidAsserter()
     {
         var actionInvoked = false;
@@ -123,9 +144,29 @@ public class GivenAVoidAsserter
     }
 
     [Fact]
-    public void WhenItVerifiesAFuncThenItReturnsAResultAsserter()
+    public void WhenItVerifiesASutFuncThenItReturnsAResultAsserter()
     {
         Func<object, object> func = obj => new object();
+
+        var sutArrangement = Substitute.For<ISutArrangement<object>>();
+
+        var exceptionAsserter = Substitute.For<IExceptionAsserter>();
+
+        var sut = new VoidAsserter<object>(
+            sutArrangement,
+            null,
+            exceptionAsserter
+        );
+
+        var result = sut.ThenWhenIt(func);
+
+        result.Should().BeOfType<ResultAsserter<object, object>>();
+    }
+    
+    [Fact]
+    public void WhenItVerifiesASutArrangementFuncThenItReturnsAResultAsserter()
+    {
+        Func<ISutArrangement<object>, object> func = obj => new object();
 
         var sutArrangement = Substitute.For<ISutArrangement<object>>();
 
