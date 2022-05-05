@@ -121,6 +121,7 @@ public class GivenAVoidAsserter
 
         result.Should().Be(sut);
     }
+    
     [Fact]
     public void WhenItVerifiesAnotherSutArrangementActionThenItInvokesTheActionAndReturnsTheVoidAsserter()
     {
