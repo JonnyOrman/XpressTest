@@ -4,11 +4,12 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <Version>1.0.0</Version>
+    <Version>1.1.0</Version>
     <IsTestProject>false</IsTestProject>
     <Authors>Jonathan Orman</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <ProjectUrl>https://github.com/JonnyOrman/XpressTest</ProjectUrl>
+    <PackageProjectUrl>https://github.com/JonnyOrman/XpressTest</PackageProjectUrl>
+    <PackageDescription>Write expressive, fluent BDD style unit tests in C# .NET</PackageDescription>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
