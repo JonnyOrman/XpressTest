@@ -3,7 +3,7 @@ using Xunit;
 
 namespace XpressTest.Testing.UnitTests;
 
-public class GivebANamedObjectSetter
+public class GivenANamedObjectSetter
 {
     [Fact]
     public void WhenItSetsANamedObjectThenItAddsTheNamedObjectToTheArrangement()

@@ -65,6 +65,13 @@ public class VoidAsserter<TSut>
         action.Invoke(assertion);
     }
 
+    public IVoidAsserter<TSut> ThenWhenIt(Action<TSut> action)
+    {
+        action.Invoke(_sutArrangement.Sut);
+
+        return this;
+    }
+
     public IVoidAsserter<TSut> ThenWhenIt(Action<ISutArrangement<TSut>> action)
     {
         action.Invoke(_sutArrangement);
@@ -77,6 +84,41 @@ public class VoidAsserter<TSut>
         )
     {
         var result = func.Invoke(_sutArrangement.Sut);
+
+        var resultPropertyTargeter = new ResultPropertyTargeter<TSut, TResult>(
+            result,
+            _sutArrangement
+        );
+
+        var mockCounterVerifierCreatorComposer =
+            new MockCountVerifierCreatorComposer<TSut, IResultAsserter<TSut, TResult>>(
+                _sutArrangement
+            );
+
+        var asyncMockCounterVerifierCreatorComposer =
+            new AsyncMockCounterVerifierCreatorComposer<TSut, IAsyncResultAsserter<TSut, TResult>>(
+                _sutArrangement
+            );
+
+        var resultMockVerifierCreator = new ResultMockVerifierCreator<TSut, TResult>(
+            mockCounterVerifierCreatorComposer,
+            asyncMockCounterVerifierCreatorComposer
+        );
+
+        return new ResultAsserter<TSut, TResult>(
+            result,
+            _sutArrangement,
+            resultPropertyTargeter,
+            resultMockVerifierCreator,
+            _exceptionAsserter
+        );
+    }
+
+    public IResultAsserter<TSut, TResult> ThenWhenIt<TResult>(
+        Func<ISutArrangement<TSut>, TResult> func
+        )
+    {
+        var result = func.Invoke(_sutArrangement);
 
         var resultPropertyTargeter = new ResultPropertyTargeter<TSut, TResult>(
             result,
