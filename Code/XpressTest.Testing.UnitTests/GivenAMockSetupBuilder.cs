@@ -2,6 +2,8 @@ using FluentAssertions;
 using NSubstitute;
 using System;
 using System.Linq.Expressions;
+using XpressTest.Narration;
+using XpressTest.Testing.UnitTests.TestClasses;
 using Xunit;
 
 namespace XpressTest.Testing.UnitTests;
@@ -11,18 +13,23 @@ public class GivenAMockSetupBuilder
     [Fact]
     public void WhenItSetsUpWithAnArrangementExpressionThenItStartsAMockSetupResultBuilder()
     {
-        Func<IReadArrangement, Expression<Func<object, object>>> func = arrangement => obj => new object();
+        Expression<Func<ITestObject, object>> expression = obj => obj.ReturnObject();
+        
+        Func<IReadArrangement, Expression<Func<ITestObject, object>>> func = arrangement => expression;
 
-        var obj = new object();
+        var obj = Substitute.For<ITestObject>();
 
-        var chainer = Substitute.For<IMockBuilderChainer<object, object, object>>();
+        var chainer = Substitute.For<IMockBuilderChainer<object, ITestObject, ITestObject>>();
 
-        var mockResultBuilder = Substitute.For<IMockResultBuilder<object, IMockSetupBuilder<object, object>>>();
+        var mockResultBuilder = Substitute.For<IMockResultBuilder<object, IMockSetupBuilder<object, ITestObject>>>();
 
-        var sut = new MockSetupBuilder<object, object, object>(
+        var functionNarrator = Substitute.For<IFunctionNarrator<ITestObject>>();
+
+        var sut = new MockSetupBuilder<object, ITestObject, ITestObject>(
             obj,
             null,
-            chainer
+            chainer,
+            functionNarrator
             );
 
         chainer.StartMockSetupResultBuilder(
@@ -32,6 +39,8 @@ public class GivenAMockSetupBuilder
         ).Returns(mockResultBuilder);
 
         var result = sut.ThatDoes(func);
+        
+        functionNarrator.Received(1).Narrate(expression);
 
         result.Should().Be(mockResultBuilder);
     }
@@ -39,18 +48,21 @@ public class GivenAMockSetupBuilder
     [Fact]
     public void WhenItSetsUpWithAnExpressionThenItStartsAMockSetupResultBuilder()
     {
-        Expression<Func<object, object>> expression = obj => new object();
+        Expression<Func<ITestObject, object>> expression = obj => obj.ReturnObject();
 
-        var obj = new object();
+        var obj = Substitute.For<ITestObject>();
 
-        var chainer = Substitute.For<IMockBuilderChainer<object, object, object>>();
+        var chainer = Substitute.For<IMockBuilderChainer<object, ITestObject, ITestObject>>();
 
-        var mockResultBuilder = Substitute.For<IMockResultBuilder<object, IMockSetupBuilder<object, object>>>();
+        var mockResultBuilder = Substitute.For<IMockResultBuilder<object, IMockSetupBuilder<object, ITestObject>>>();
 
-        var sut = new MockSetupBuilder<object, object, object>(
+        var functionNarrator = Substitute.For<IFunctionNarrator<ITestObject>>();
+
+        var sut = new MockSetupBuilder<object, ITestObject, ITestObject>(
             obj,
             null,
-            chainer
+            chainer,
+            functionNarrator
             );
 
         chainer.StartMockSetupResultBuilder(
@@ -60,6 +72,8 @@ public class GivenAMockSetupBuilder
         ).Returns(mockResultBuilder);
 
         var result = sut.ThatDoes(expression);
+        
+        functionNarrator.Received(1).Narrate(expression);
 
         result.Should().Be(mockResultBuilder);
     }

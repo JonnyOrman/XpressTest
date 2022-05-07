@@ -1,3 +1,5 @@
+using XpressTest.Narration;
+
 namespace XpressTest;
 
 public class NamedMockSetupBuilderCreator<TSut>
@@ -41,10 +43,13 @@ where TSut : class
             this
         );
 
+        var functionNarrator = new FunctionNarrator<TObject>();
+
         return new MockSetupBuilder<TSut, TObject, INamedMock<TObject>>(
             mock,
             setter,
-            chainer
+            chainer,
+            functionNarrator
         );
     }
 }

@@ -2,6 +2,7 @@ using FluentAssertions;
 using NSubstitute;
 using System;
 using System.Linq.Expressions;
+using XpressTest.Narration;
 using XpressTest.Testing.UnitTests.TestClasses;
 using Xunit;
 
@@ -23,17 +24,22 @@ public class GivenAMockResultDependencyBuilder
 
         var mockDependencyBuilder = Substitute.For<IDependencyBuilder<object>>();
 
+        var resultNarrator = Substitute.For<IValueNarrator<int>>();
+
         var sut = new MockResultBuilder<ITestObject, int, object>(
             expression,
             dependencyMock,
             mockDependencyBuilder,
-            null
+            null,
+            resultNarrator
             );
 
         var result = sut.AndReturns(setupResult);
 
         var mockResult = moqMock.Object.Execute();
         mockResult.Should().Be(123);
+        
+        resultNarrator.Received(1).Narrate(123);
 
         result.Should().Be(mockDependencyBuilder);
     }
@@ -51,18 +57,23 @@ public class GivenAMockResultDependencyBuilder
         dependencyMock.MoqMock.Returns(moqMock);
 
         var mockDependencyBuilder = Substitute.For<IDependencyBuilder<object>>();
+        
+        var resultNarrator = Substitute.For<IValueNarrator<int>>();
 
         var sut = new MockResultBuilder<ITestObject, int, object>(
             expression,
             dependencyMock,
             mockDependencyBuilder,
-            null
+            null,
+            resultNarrator
         );
 
         var result = sut.AndReturns(func);
 
         var mockResult = moqMock.Object.Execute();
         mockResult.Should().Be(123);
+        
+        resultNarrator.Received(1).Narrate(123);
 
         result.Should().Be(mockDependencyBuilder);
     }
@@ -84,17 +95,22 @@ public class GivenAMockResultDependencyBuilder
         var arrangement = Substitute.For<IArrangement>();
         arrangement.GetTheMockObject<object>().Returns(obj);
 
+        var resultNarrator = Substitute.For<IValueNarrator<object>>();
+        
         var sut = new MockResultBuilder<ITestObject, object, object>(
             expression,
             dependencyMock,
             mockDependencyBuilder,
-            arrangement
+            arrangement,
+            resultNarrator
         );
 
         var result = sut.AndReturnsTheMock<object>();
 
         var mockResult = moqMock.Object.ReturnObject();
         mockResult.Should().Be(obj);
+        
+        resultNarrator.Received(1).Narrate(obj);
 
         result.Should().Be(mockDependencyBuilder);
     }

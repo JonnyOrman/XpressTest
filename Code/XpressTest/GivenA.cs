@@ -9,7 +9,10 @@ public static class GivenA<TSut>
     public static IMockSetupBuilder<TSut, TObject> AndGivenA<TObject>(string name)
         where TObject : class
     {
-        NarrationInitialiser<TSut>.Initialise();
+        var narration = NarrationInitialiser<TSut>.Initialise();
+
+        var actionNarrator = new NamedVariableNarrator(name);
+        actionNarrator.Narrate();
         
         return NamedMockObjectTestInitialiser<TSut, TObject>.Initialise(
             name

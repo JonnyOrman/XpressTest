@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using XpressTest.Narration;
 
 namespace XpressTest;
 
@@ -29,11 +30,14 @@ public class DependencyBuilderChainer<TSut>
     )
         where TDependency : class
     {
+        var functionResultNarrator = new FunctionResultNarrator<TResult>();
+        
         return new MockResultBuilder<TDependency, TResult, IDependencyBuilder<TSut>>(
             expression,
             mock,
             mockDependencyBuilder,
-            _arrangement
+            _arrangement,
+            functionResultNarrator
         );
     }
 

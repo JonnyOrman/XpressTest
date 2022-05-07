@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using XpressTest.Narration;
 
 namespace XpressTest;
 
@@ -33,11 +34,14 @@ where TMock : IMock<TObject>
     {
         var expression = func.Invoke(_arrangement);
 
+        var resultNarrator = new FunctionResultNarrator<TResult>();
+        
         return new MockResultBuilder<TObject, TResult, IDependencyBuilder<TSut>>(
             expression,
             Obj,
             this,
-            _arrangement
+            _arrangement,
+            resultNarrator
         );
     }
 

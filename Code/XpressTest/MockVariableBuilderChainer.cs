@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using XpressTest.Narration;
 
 namespace XpressTest;
 
@@ -34,12 +35,15 @@ public class MockVariableBuilderChainer<TSut, TMock, TVariable>
     )
     {
         var expression = func.Invoke(_arrangement);
+        
+        var resultNarrator = new FunctionResultNarrator<TResult>();
 
         return new MockResultBuilder<TMock, TResult, IMockSetupBuilder<TSut, TMock>>(
             expression,
             mock,
             mockSetupBuilder,
-            _arrangement
+            _arrangement,
+            resultNarrator
         );
     }
 
@@ -49,11 +53,14 @@ public class MockVariableBuilderChainer<TSut, TMock, TVariable>
         IMockSetupBuilder<TSut, TMock> mockObjectBuilder
     )
     {
+        var resultNarrator = new FunctionResultNarrator<TResult>();
+        
         return new MockResultBuilder<TMock, TResult, IMockSetupBuilder<TSut, TMock>>(
             expression,
             mock,
             mockObjectBuilder,
-            _arrangement
+            _arrangement,
+            resultNarrator
         );
     }
 }
