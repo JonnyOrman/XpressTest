@@ -1,6 +1,7 @@
 using FluentAssertions;
 using NSubstitute;
 using System;
+using XpressTest.Narration;
 using Xunit;
 using Xunit.Sdk;
 
@@ -26,6 +27,7 @@ public class GivenASimpleResultAsserter
             testSut,
             arrangement,
             resultFunc,
+            null,
             null
             );
 
@@ -52,6 +54,7 @@ public class GivenASimpleResultAsserter
             testSut,
             arrangement,
             resultFunc,
+            null,
             null
         );
 
@@ -67,15 +70,24 @@ public class GivenASimpleResultAsserter
 
         Func<object> resultFunc = () => expectedResult;
 
+        var resultNarrator = Substitute.For<IResultNarrator<object>>();
+
         var sut = new SimpleResultAsserter<object, object>(
             null,
             null,
             resultFunc,
-            null
+            null,
+            resultNarrator
         );
 
         var result = Record.Exception(() => sut.ThenTheResultShouldBe(expectedResult));
 
+        resultNarrator.Received(1).NarrateExpectedResult(expectedResult);
+        resultNarrator.Received(1).NarrateValidResult();
+        resultNarrator.Received(1).NarratePassedTest();
+        resultNarrator.Received(0).NarrateInvalidResult(Arg.Any<object>());
+        resultNarrator.Received(0).NarrateFailedTest();
+        
         result.Should().BeNull();
     }
 
@@ -84,16 +96,27 @@ public class GivenASimpleResultAsserter
     {
         var expectedResult = new object();
 
-        Func<object> resultFunc = () => new object();
+        var actualResult = new object();
+
+        Func<object> resultFunc = () => actualResult;
+
+        var resultNarrator = Substitute.For<IResultNarrator<object>>();
 
         var sut = new SimpleResultAsserter<object, object>(
             null,
             null,
             resultFunc,
-            null
+            null,
+            resultNarrator
         );
 
         var result = Record.Exception(() => sut.ThenTheResultShouldBe(expectedResult));
+
+        resultNarrator.Received(1).NarrateExpectedResult(expectedResult);
+        resultNarrator.Received(0).NarrateValidResult();
+        resultNarrator.Received(0).NarratePassedTest();
+        resultNarrator.Received(1).NarrateInvalidResult(actualResult);
+        resultNarrator.Received(1).NarrateFailedTest();
 
         result.Should().BeOfType<EqualException>();
     }
@@ -107,7 +130,8 @@ public class GivenASimpleResultAsserter
             null,
             null,
             null,
-            exceptionAsserter
+            exceptionAsserter,
+            null
         );
 
         sut.ThenItShouldThrow<Exception>();

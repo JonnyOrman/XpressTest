@@ -1,3 +1,5 @@
+using XpressTest.Narration;
+
 namespace XpressTest;
 
 public class SimpleResultAsserter<TSut, TResult>
@@ -8,18 +10,21 @@ public class SimpleResultAsserter<TSut, TResult>
     private readonly IArrangement _arrangement;
     private readonly Func<TResult> _func;
     private readonly IExceptionAsserter _exceptionAsserter;
+    private readonly IResultNarrator<TResult> _resultNarrator;
 
     public SimpleResultAsserter(
         TSut sut,
         IArrangement arrangement,
         Func<TResult> func,
-        IExceptionAsserter exceptionAsserter
+        IExceptionAsserter exceptionAsserter,
+        IResultNarrator<TResult> resultNarrator
         )
     {
         _sut = sut;
         _arrangement = arrangement;
         _func = func;
         _exceptionAsserter = exceptionAsserter;
+        _resultNarrator = resultNarrator;
     }
 
     public void Then(Action<IResultAssertion<TResult>> action)
@@ -37,9 +42,26 @@ public class SimpleResultAsserter<TSut, TResult>
 
     public void ThenTheResultShouldBe(TResult expectedResult)
     {
+        _resultNarrator.NarrateExpectedResult(expectedResult);
+
         var result = _func.Invoke();
 
-        result.ThenTheResultShouldBe(expectedResult);
+        try
+        {
+            result.ThenTheResultShouldBe(expectedResult);
+        }
+        catch (Exception exception)
+        {
+            _resultNarrator.NarrateInvalidResult(result);
+            
+            _resultNarrator.NarrateFailedTest();
+            
+            throw;
+        }
+
+        _resultNarrator.NarrateValidResult();
+        
+        _resultNarrator.NarratePassedTest();
     }
 
     public void ThenItShouldThrow<TException>()

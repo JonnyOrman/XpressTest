@@ -1,5 +1,6 @@
 using FluentAssertions;
 using System;
+using System.Linq.Expressions;
 using XpressTest.Testing.UnitTests.TestClasses;
 using Xunit;
 
@@ -11,16 +12,16 @@ public class GivenAResultProvider
     public void WhenItGetsTheResultThenItReturnsTheResultFromTheSutFunc()
     {
         var testSut = new TestResult(123);
-
-        Func<TestResult, int> testResultFunc = testResult => testResult.Value;
-
+        
+        Expression<Func<TestResult, int>> testResultExpression = testResult => testResult.Value;
+        
         var sut = new ResultProvider<TestResult, int>(
             testSut,
-            testResultFunc
+            testResultExpression
         );
-
+        
         var result = sut.Get();
-
+        
         result.Should().Be(123);
     }
 }

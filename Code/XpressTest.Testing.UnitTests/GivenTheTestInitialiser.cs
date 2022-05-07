@@ -1,4 +1,5 @@
 using FluentAssertions;
+using XpressTest.Testing.UnitTests.TestClasses;
 using Xunit;
 
 namespace XpressTest.Testing.UnitTests;
@@ -80,7 +81,7 @@ public class GivenTheTestInitialiser
     [Fact]
     public void WhenItInitialisesATestWithAFuncThenItInitialisesASimpleResultAsserter()
     {
-        var result = GivenA<object>.WhenIt(sut => new object());
+        var result = GivenA<TestMemberClass>.WhenIt(sut => sut.Member());
 
         result.Should().NotBeNull();
     }

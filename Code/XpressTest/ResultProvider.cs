@@ -1,15 +1,17 @@
-﻿namespace XpressTest;
+﻿using System.Linq.Expressions;
+
+namespace XpressTest;
 
 public class ResultProvider<TSut, TResult>
     :
         IResultProvider<TResult>
 {
     private readonly TSut _sut;
-    private readonly Func<TSut, TResult> _func;
+    private readonly Expression<Func<TSut, TResult>> _func;
 
     public ResultProvider(
         TSut sut,
-        Func<TSut, TResult> func
+        Expression<Func<TSut, TResult>> func
         )
     {
         _sut = sut;
@@ -18,6 +20,6 @@ public class ResultProvider<TSut, TResult>
 
     public TResult Get()
     {
-        return _func.Invoke(_sut);
+        return _func.Compile().Invoke(_sut);
     }
 }
